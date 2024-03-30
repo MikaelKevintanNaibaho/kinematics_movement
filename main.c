@@ -25,13 +25,15 @@ int main() {
     int pwm_duty_cycle_90 = (int)(duty_cycle_90 / 100 * 4095);
     int pwm_duty_cycle_180 = (int)(duty_cycle_180 / 100 * 4095);
 
-    // Set PWM duty cycles for angles
-    set_pwm_duty(1, pwm_duty_cycle_0);     // 0 degrees
-    usleep(1000000); // Wait for 1 second
-    set_pwm_duty(1, pwm_duty_cycle_90);    // 90 degrees
-    usleep(1000000); // Wait for 1 second
-    set_pwm_duty(1, pwm_duty_cycle_180);   // 180 degrees
-    usleep(1000000); // Wait for 1 second
+    // Loop through angles continuously
+    while (1) {
+        set_pwm_duty(1, pwm_duty_cycle_0);     // 0 degrees
+        usleep(1000000); // Wait for 1 second
+        set_pwm_duty(1, pwm_duty_cycle_90);    // 90 degrees
+        usleep(1000000); // Wait for 1 second
+        set_pwm_duty(1, pwm_duty_cycle_180);   // 180 degrees
+        usleep(1000000); // Wait for 1 second
+    }
 
     // Close I2C device (Unreachable in this loop, added for completeness)
     close(i2c_fd);
