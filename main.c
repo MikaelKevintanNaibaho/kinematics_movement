@@ -1,12 +1,9 @@
-#include "pwm_servo.h"
 #include <stdio.h>
 #include <unistd.h>
+#include "pwm_servo.h"
 
-int i2c_fd;
-
-
-#define MIN_DUTY_CYCLE 150  // Minimum duty cycle for servo (approx. 0 degrees)
-#define MAX_DUTY_CYCLE 600  // Maximum duty cycle for servo (approx. 180 degrees)
+#define MIN_DUTY_CYCLE 150  // Duty cycle for 0 degrees (approx. 5%)
+#define MAX_DUTY_CYCLE 600  // Duty cycle for 180 degrees (approx. 10%)
 #define SWEEP_DELAY_MS 10   // Delay between PWM duty cycle changes in milliseconds
 
 int main() {
@@ -24,7 +21,7 @@ int main() {
         // Set PWM duty cycle
         set_pwm_duty(1, dutyCycle);
 
-        // Print current position (approximate angle)
+        // Print current angle (approximate)
         int angle = map(dutyCycle, MIN_DUTY_CYCLE, MAX_DUTY_CYCLE, 0, 180);
         printf("Current angle: %d degrees\n", angle);
 
