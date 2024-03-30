@@ -10,7 +10,7 @@
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 
-#define I2C_DEVICE "/dev/12c-1"
+#define I2C_DEVICE "/dev/i2c-1"
 #define PCA9685 0x40
 #define MODE1_REG 0x00
 #define PRE_SCALE 0xFE
