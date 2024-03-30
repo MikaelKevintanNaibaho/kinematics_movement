@@ -1,17 +1,28 @@
 #include "pwm_servo.h"
 
-int open_i2_device()
+int open_i2c_device(const char *device)
 {
-    i2c_fd = open(I2C_DEVICE, O_RDWR);
-    if (i2c_fd < 0) {
-        perror("Error opening i2c device");
-        return -1;
+  int file;
+
+  // open i2c device
+  if ((file = open(device, O_RDWR)) < 0) {
+    perror("failed to open the i2c device");
+    return -1;
+  }
+
+  return file;
+}
+
+int init_pca9685(const char* device)
+{
+    int file;
+    file = open_i2c_device(device);
+    if (file < 0) {
+        return file;
     }
 
-    return 0;
-}
-int init_pca9685()
-{
+     return file;
+
     uint8_t buf[2];
     //set pca9685 to sleep mode
     buf[0] = MODE1_REG;

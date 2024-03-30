@@ -19,8 +19,8 @@
 
 extern int i2c_fd;
 
-int open_i2_device();
-int init_pca9685();
+int open_i2_device(const char *device);
+int i2c_init(const char *device);
 void set_servo_position(int channel, int position);
 
 

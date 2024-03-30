@@ -3,11 +3,8 @@
 int i2c_fd;
 
 int main(void) {
-    if (open_i2_device() != 0) {
-        return -1;
-    }
 
-    if (init_pca9685() != 0) {
+    if (init_pca9685(I2C_DEVICE) != 0) {
         close(i2c_fd);  // Close I2C device before exiting
         return -1;
     }
