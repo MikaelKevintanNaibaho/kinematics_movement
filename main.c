@@ -4,13 +4,18 @@ int i2c_fd;
 
 int main(void) {
 
-    if (init_pca9685(I2C_DEVICE) != 0) {
-        close(i2c_fd);  // Close I2C device before exiting
-        return -1;
-    }
+    PCA9685_init();
 
-    set_servo_position(0, 1500);  // Set servo on channel 0 to midpoint
+    set_pwm_freq(1000);
 
-    close(i2c_fd);  // Close I2C device after use
+    set_pwm_duty(1, 1024.0);
+
+    int pwmValue = get_pwm(0);
+
+
+    printf("Current PWM value for channel 1: %d\n", pwmValue);
+
+    // Close I2C device
+    close(i2c_fd);
     return 0;
 }

@@ -1,65 +1,77 @@
 #include "pwm_servo.h"
 
-int open_i2c_device(const char *device)
+void PCA9685_init()
 {
-  int file;
-
-  // open i2c device
-  if ((file = open(device, O_RDWR)) < 0) {
-    perror("failed to open the i2c device");
-    return -1;
-  }
-
-  return file;
-}
-
-int init_pca9685(const char* device)
-{
-    int file;
-    file = open_i2c_device(device);
-    if (file < 0) {
-        return file;
+    i2c_fd = open(I2C_DEVICE, O_RDWR);
+    if (i2c_fd < 0) {
+        perror("Failed to open the i2c device");
+        return;
     }
 
-     return file;
+    if (ioctl(i2c_fd, I2C_SLAVE, PCA9685_SLAVE_ADDR) < 0) {
+        perror("Error to set i2c address");
+        close(i2c_fd);
+        return;
+    }
 
+    //init
+    write_byte(MODE1, 0x00);
+    write_byte(MODE2, 0x04);
+}
+
+void write_byte(uint8_t reg, uint8_t val)
+{
     uint8_t buf[2];
-    //set pca9685 to sleep mode
-    buf[0] = MODE1_REG;
-    buf[1] = 0x10; //sleep
-    if (write(i2c_fd, buf, 2) != 2) {
-        perror("Error writing to pca9685");
-        return -1;
+    buf[0] = reg;
+    buf[1] = val;
+    if(write(i2c_fd, buf, 2) != 0) {
+        perror("Error writing byte");
+        return;
     }
-
-    buf[0] = PRE_SCALE;
-    buf[1] = 0x79 ;//50hz
-    if (write(i2c_fd, buf, 2) != 2) {
-        perror("Error writing to pac9685");
-        return -1;
-    }
-
-    //wake pca9685 from sleep mode
-    buf[0] = MODE1_REG;
-    buf[0] = 0x00;
-       if (write(i2c_fd, buf, 2) != 2) {
-        perror("Error writing to pac9685");
-        return -1;
-    }
-
-    return 0;
 }
-void set_servo_position(int channel, int position)
+
+uint8_t read_byte(uint8_t reg) {
+    uint8_t buf[1];
+    buf[0] = reg;
+    if (write(i2c_fd, buf, 1) != 1) {
+        perror("Write failed");
+        return 0;
+    }
+    if (read(i2c_fd, buf, 1) != 1) {
+        perror("Read failed");
+        return 0;
+    }
+    return buf[0];
+}
+
+void set_pwm_freq(int freq)
 {
-    uint8_t buf[5];
-    uint16_t on_time = (uint16_t)(position * 4);
+    uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 / freq) - 1);
+    write_byte(MODE1, 0x10); //sleep
+    write_byte(PRE_SCALE, prescale_val);
+    write_byte(MODE1, 0x80); //restart
+    write_byte(MODE2, 0x04); //totem pole (default)
+}
+void set_pwm_duty(uint8_t led, int value)
+{
+    set_pwm(led, 0, value);
+}
 
-    buf[0] = LED0_ON_L + 4 * channel;
-    buf[1] = 0x00; //on time low byte
-    buf[2] = 0x00; //on time high byte
-    buf[3] = on_time & 0xFF; //off time low byte
-    buf[4] = (on_time) >> 8;
 
-    write(i2c_fd, buf, 5);
+void set_pwm(uint8_t led, int on_value, int off_value)
+{
+    write_byte(LED0_ON_L + LED_MULTIPLIER * (led - 1), on_value & 0xFF);
+    write_byte(LED0_ON_L + LED_MULTIPLIER * (led - 1) + 1, on_value >> 8);
+    write_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1), off_value & 0xFF);
+    write_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1) + 1, off_value >> 8);
+}
 
+
+int get_pwm(uint8_t led)
+{
+    int led_value = 0;
+    led_value = read_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1));
+    led_value |= (read_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1) + 1) << 8);
+
+    return led_value;
 }
