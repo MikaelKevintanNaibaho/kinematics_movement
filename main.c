@@ -4,7 +4,7 @@ int i2c_fd;
 
 int main(void) 
 {
-    if (open_i2_device(I2C_DEVICE) != 0) {
+    if (open_i2_device() != 0) {
         return -1;
     }
 

@@ -1,8 +1,8 @@
 #include "pwm_servo.h"
 
-int open_i2_device(const char* device)
+int open_i2_device()
 {
-    i2c_fd = open(device, O_RDWR);
+    i2c_fd = open(I2C_DEVICE, O_RDWR);
     if (i2c_fd < 0) {
         perror("Error opening i2c device");
         return -1;
