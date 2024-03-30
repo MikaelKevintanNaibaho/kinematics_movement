@@ -26,7 +26,7 @@ void write_byte(uint8_t reg, uint8_t val)
     uint8_t buf[2];
     buf[0] = reg;
     buf[1] = val;
-    if(write(i2c_fd, buf, 2) != 0) {
+    if(write(i2c_fd, buf, 2) != 2) {
         perror("Error writing byte");
         return;
     }
