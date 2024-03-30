@@ -1,5 +1,7 @@
 #include "pwm_servo.h"
 
+int i2c_fd;
+
 void PCA9685_init()
 {
     i2c_fd = open(I2C_DEVICE, O_RDWR);
