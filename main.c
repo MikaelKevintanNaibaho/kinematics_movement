@@ -2,26 +2,36 @@
 #include <unistd.h>
 #include "pwm_servo.h"
 
-#define MIN_DUTY_CYCLE 500   // Duty cycle for 0 degrees (approx. 500μs pulse width at 1000Hz)
-#define MAX_DUTY_CYCLE 2500  // Duty cycle for 180 degrees (approx. 2500μs pulse width at 1000Hz)
-#define DELAY_US 1000000   // Delay between movements in microseconds (1 second)
+// PWM frequency and period
+#define PWM_FREQUENCY 50    // PWM frequency in Hz
+#define PWM_PERIOD_US (1000000 / PWM_FREQUENCY)  // PWM period in microseconds
+
+// Servo angle pulse widths in microseconds
+#define ANGLE_0_PULSE_WIDTH_US 500    // Pulse width for 0 degrees
+#define ANGLE_90_PULSE_WIDTH_US 1000  // Pulse width for 90 degrees
+#define ANGLE_180_PULSE_WIDTH_US 2000 // Pulse width for 180 degrees
 
 int main() {
     // Initialize PCA9685
     PCA9685_init();
 
-    // Set PWM frequency to 1000Hz (within the specified 50-330Hz range)
-    set_pwm_freq(50);
+    // Calculate duty cycles based on pulse widths and PWM period
+    float duty_cycle_0 = (float)ANGLE_0_PULSE_WIDTH_US / PWM_PERIOD_US * 100;
+    float duty_cycle_90 = (float)ANGLE_90_PULSE_WIDTH_US / PWM_PERIOD_US * 100;
+    float duty_cycle_180 = (float)ANGLE_180_PULSE_WIDTH_US / PWM_PERIOD_US * 100;
 
-    while (1) {
-        // Move servo to 0 degrees (500μs pulse width)
-        set_pwm_duty(1, MIN_DUTY_CYCLE);
-        usleep(DELAY_US); // Wait for 1 second
+    // Convert duty cycles to PWM range (0-4095 for 12-bit resolution)
+    int pwm_duty_cycle_0 = (int)(duty_cycle_0 / 100 * 4095);
+    int pwm_duty_cycle_90 = (int)(duty_cycle_90 / 100 * 4095);
+    int pwm_duty_cycle_180 = (int)(duty_cycle_180 / 100 * 4095);
 
-        // Move servo to 180 degrees (2500μs pulse width)
-        set_pwm_duty(1, MAX_DUTY_CYCLE);
-        usleep(DELAY_US); // Wait for 1 second
-    }
+    // Set PWM duty cycles for angles
+    set_pwm_duty(1, pwm_duty_cycle_0);     // 0 degrees
+    usleep(1000000); // Wait for 1 second
+    set_pwm_duty(1, pwm_duty_cycle_90);    // 90 degrees
+    usleep(1000000); // Wait for 1 second
+    set_pwm_duty(1, pwm_duty_cycle_180);   // 180 degrees
+    usleep(1000000); // Wait for 1 second
 
     // Close I2C device (Unreachable in this loop, added for completeness)
     close(i2c_fd);
