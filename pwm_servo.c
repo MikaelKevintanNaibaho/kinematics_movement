@@ -56,7 +56,7 @@ void set_pwm_freq(int freq)
 }
 void set_pwm_duty(uint8_t led, int value)
 {
-    set_pwm(led, value, value);
+    set_pwm(led, 0, value);
 }
 
 
