@@ -6,12 +6,12 @@ int main(void)
 {
     PCA9685_init();
 
-    set_pwm_freq(50);
+    set_pwm_freq(200);
 
     int angle;
     for(angle =  0; angle <= ANGLE_RANGE; angle ++)
     {
-        set_servo_angle(1, angle, 50);
+        set_servo_angle(1, angle, 200);
         usleep(500000);
     }
 
