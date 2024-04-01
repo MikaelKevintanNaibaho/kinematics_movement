@@ -7,7 +7,13 @@ int main(void)
 {
     PCA9685_init();
 
-    float starx = 0.0, starty = 0.0, startz = 0.0;
+    set_pwm_angle(1, 90, 50);
+    set_pwm_angle(2, 123, 50);
+    set_pwm_angle(3, 10, 50);
+
+    sleep(5);
+
+    float starx = 123.0, starty = 0.0, startz = 0.0;
     float endx = 100.0, endy = 0.0, endz = 0.0;
     int steps = 50;
     int freq = 50;
