@@ -88,6 +88,10 @@ void set_servo_angle(uint8_t led, int angle, int freq)
 {
     int pulse_width = map(angle, 0, ANGLE_RANGE, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
 
+    int pulse_for_freq = map(freq, 50, 330, 1000000 / MAX_PULSE_WIDTH, 1000000 / MIN_PULSE_WIDTH);
+
+    pulse_width = map(pulse_width, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, pulse_for_freq, 4095 - pulse_for_freq);
+
     int duty_cycle = map(pulse_width, 0, 4095, 0, 100);
 
     set_pwm_duty(led, duty_cycle);
