@@ -2,41 +2,26 @@
 #include <unistd.h>
 #include "pwm_servo.h"
 
-// PWM frequency and period
-#define PWM_FREQUENCY 200    // PWM frequency in Hz
-#define PWM_PERIOD_US (1000000 / PWM_FREQUENCY)  // PWM period in microseconds
 
-// Servo angle pulse widths in microseconds
-#define ANGLE_0_PULSE_WIDTH_US 500    // Pulse width for 0 degrees
-#define ANGLE_90_PULSE_WIDTH_US 1000  // Pulse width for 90 degrees
-#define ANGLE_180_PULSE_WIDTH_US 2000 // Pulse width for 180 degrees
+// Define constants for servo operation
+#define MIN_PULSE_WIDTH 130 // Minimum pulse width in microseconds for max speed
+#define MAX_PULSE_WIDTH 2500 // Maximum pulse width in microseconds
+#define PWM_FREQUENCY 50 // PWM frequency in Hz
+
+// Other code remains unchanged
 
 int main() {
-    // Initialize PCA9685
     PCA9685_init();
+    set_pwm_freq(PWM_FREQUENCY); // Set PWM frequency
+    
+    // Calculate duty cycle for max speed (for 180 degrees)
+    int duty_cycle = (MIN_PULSE_WIDTH * 4096) / (1000000 / PWM_FREQUENCY);
+    
+    // Set PWM duty cycle for servo
+    set_pwm_duty(1, duty_cycle);
 
-    // Calculate duty cycles based on pulse widths and PWM period
-    float duty_cycle_0 = (float)ANGLE_0_PULSE_WIDTH_US / PWM_PERIOD_US * 100;
-    float duty_cycle_90 = (float)ANGLE_90_PULSE_WIDTH_US / PWM_PERIOD_US * 100;
-    float duty_cycle_180 = (float)ANGLE_180_PULSE_WIDTH_US / PWM_PERIOD_US * 100;
-
-    // Convert duty cycles to PWM range (0-4095 for 12-bit resolution)
-    int pwm_duty_cycle_0 = (int)(duty_cycle_0 / 100 * 4095);
-    int pwm_duty_cycle_90 = (int)(duty_cycle_90 / 100 * 4095);
-    int pwm_duty_cycle_180 = (int)(duty_cycle_180 / 100 * 4095);
-
-    // Loop through angles continuously
-    while (1) {
-        set_pwm_duty(1, pwm_duty_cycle_0);     // 0 degrees
-        usleep(1000000); // Wait for 1 second
-        set_pwm_duty(1, pwm_duty_cycle_90);    // 90 degrees
-        usleep(1000000); // Wait for 1 second
-        set_pwm_duty(1, pwm_duty_cycle_180);   // 180 degrees
-        usleep(1000000); // Wait for 1 second
-    }
-
-    // Close I2C device (Unreachable in this loop, added for completeness)
-    close(i2c_fd);
+    // Continue with your program logic or testing
 
     return 0;
 }
+
