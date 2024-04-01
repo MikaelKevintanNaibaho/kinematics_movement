@@ -8,15 +8,15 @@ int main(void)
 
 
     while(1){
-        set_pwm_angle(1, 0, 60);
+        set_pwm_angle(1, 0, 100);
 
         sleep(1);
 
-        set_pwm_angle(1, 90, 60);
+        set_pwm_angle(1, 90, 100);
 
         sleep(1);
 
-        set_pwm_angle(1, 179, 60);
+        set_pwm_angle(1, 179, 100);
 
         sleep(1);
     }
