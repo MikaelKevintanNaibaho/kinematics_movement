@@ -7,15 +7,15 @@ int main(void)
     PCA9685_init();
 
     while(1){
-        set_pwm_angle(2, 0, 60);
+        set_pwm_angle(2, 0, 50);
 
         sleep(1);
 
-        set_pwm_angle(2, 90, 60);
+        set_pwm_angle(2, 90, 50);
 
         sleep(1);
 
-        set_pwm_angle(2, 180, 60);
+        set_pwm_angle(2, 180, 50);
 
 
         sleep(1);
