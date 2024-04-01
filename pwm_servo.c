@@ -77,3 +77,18 @@ int get_pwm(uint8_t led)
 
     return led_value;
 }
+
+int map(int value, int from_low, int from_high, int to_low, int to_high)
+{
+    return (value - from_low) * (to_high - to_low) / (from_high - from_low) + to_low;
+
+}
+
+void set_servo_angle(uint8_t led, int angle, int freq)
+{
+    int pulse_width = map(angle, 0, ANGLE_RANGE, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
+
+    int duty_cycle = map(pulse_width, 0, 4095, 0, 100);
+
+    set_pwm_duty(led, duty_cycle);
+}

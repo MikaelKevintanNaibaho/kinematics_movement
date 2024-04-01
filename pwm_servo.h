@@ -30,6 +30,11 @@
 #define ALLLED_OFF_H 0xFD	//load all the LEDn_OFF registers, byte 1 (turn 8-15 channels off)
 #define PRE_SCALE 0xFE		//prescaler for output frequency
 #define CLOCK_FREQ 25000000.0 //25MHz default osc clock
+#define ANGLE_RANGE 180
+#define MIN_PULSE_WIDTH 500
+#define MAX_PULSE_WIDTH 2500
+#define NEUTRAL_PULSE_WIDHT 1500
+
 
 
 extern int i2c_fd;
@@ -38,9 +43,14 @@ void PCA9685_init();
 void write_byte(uint8_t reg, uint8_t val);
 void set_pwm_freq(int freq);
 void set_pwm_duty(uint8_t led, int value);
-uint8_t read_byte(uint8_t reg);
 void set_pwm(uint8_t led, int on_value, int off_value);
+void set_servo_angle(uint8_t led, int angle, int freq);
+
 int get_pwm(uint8_t led);
+int map(int value, int from_low, int from_high, int to_low, int to_high);
+
+
+uint8_t read_byte(uint8_t reg);
 
 
 
