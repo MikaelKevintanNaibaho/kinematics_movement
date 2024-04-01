@@ -9,15 +9,17 @@ int main(void)
 
     while(1){
         set_pwm_angle(1, 0, 50);
+        printf("0\n");
 
         sleep(1);
 
         set_pwm_angle(1, 90, 50);
+        printf("90\n");
 
         sleep(1);
 
         set_pwm_angle(1, 179, 50);
-
+        printf("180\n");
         sleep(1);
     }
 
