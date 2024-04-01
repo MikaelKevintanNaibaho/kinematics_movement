@@ -12,6 +12,7 @@ int main(void)
     for(angle =  0; angle <= ANGLE_RANGE; angle ++)
     {
         set_servo_angle(1, angle, 50);
+        usleep(500000);
     }
 
     return 0;
