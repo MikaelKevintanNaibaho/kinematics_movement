@@ -79,8 +79,14 @@ int get_pwm(uint8_t led)
 }
 
 void set_pwm_angle(uint8_t channel, int angle, int freq)
-{
-    int pulse_width = MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * angle / 180);
+{   
+    if (angle < 0) {
+        angle = 0;
+    } else if (angle > 180) {
+        angle = 180;
+    }
+
+    int pulse_width = MIN_PULSE_WIDTH + (angle * 10);
 
     set_pwm_duty(channel, pulse_width);
 
