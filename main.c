@@ -29,10 +29,10 @@ int main() {
     while (1) {
         set_pwm_duty(1, pwm_duty_cycle_0);     // 0 degrees
         usleep(1000000); // Wait for 1 second
-        // set_pwm_duty(1, pwm_duty_cycle_90);    // 90 degrees
-        // usleep(1000000); // Wait for 1 second
-        // set_pwm_duty(1, pwm_duty_cycle_180);   // 180 degrees
-        // usleep(1000000); // Wait for 1 second
+        set_pwm_duty(1, pwm_duty_cycle_90);    // 90 degrees
+        usleep(1000000); // Wait for 1 second
+        set_pwm_duty(1, pwm_duty_cycle_180);   // 180 degrees
+        usleep(1000000); // Wait for 1 second
     }
 
     // Close I2C device (Unreachable in this loop, added for completeness)
