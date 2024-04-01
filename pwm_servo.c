@@ -82,7 +82,7 @@ void set_pwm_angle(uint8_t channel, int angle, int freq)
 {
     int pulse_width = (angle * (2500 - 500) / 180) + 500;
 
-    set_pwm(channel, pulse_width, pulse_width);
+    set_pwm_duty(channel, pulse_width);
 
     set_pwm_freq(freq);
 }
