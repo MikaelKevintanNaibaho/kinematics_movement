@@ -14,13 +14,13 @@ int main(void)
         sleep(1);
 
         set_pwm_angle(2, 90, 50);
-        int pwm_value = get_pwm(2);
+        pwm_value = get_pwm(2);
         printf("pwm: %d", pwm_value);
 
         sleep(1);
 
         set_pwm_angle(2, 180, 50);
-        int pwm_value = get_pwm(2);
+        pwm_value = get_pwm(2);
         printf("pwm: %d", pwm_value);
 
         sleep(1);
