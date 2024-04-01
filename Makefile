@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -std=c99
 LDFLAGS = -lm
 
 # Source files
-SRC = main.c pwm_servo.c
+SRC = main.c pwm_servo.c ik.c
 
 # Object files directory
 OBJ_DIR = build/obj
@@ -58,4 +58,3 @@ cppcheck:
 
 clean:
 	rm -rf build
-

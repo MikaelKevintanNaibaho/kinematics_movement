@@ -1,25 +1,18 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "pwm_servo.h"
+#include "ik.h"
 
 int main(void)
 {
     PCA9685_init();
 
-    while(1){
-        set_pwm_angle(2, 0, 50);
+    float starx = 0.0, starty = 0.0, startz = 0.0;
+    float endx = 100.0, endy = 0.0, endz = 0.0;
+    int steps = 50;
+    int freq = 50;
 
-        sleep(1);
-
-        set_pwm_angle(2, 90, 50);
-
-        sleep(1);
-
-        set_pwm_angle(2, 180, 50);
-
-
-        sleep(1);
-    }
+    move_leg(starx, starty, startz, endx, endy, endz, steps, freq);
 
 
     return 0;
