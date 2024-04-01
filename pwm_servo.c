@@ -48,7 +48,7 @@ uint8_t read_byte(uint8_t reg) {
 
 void set_pwm_freq(int freq)
 {
-    uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 / freq) - 1);
+    uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 * freq) - 1);
     write_byte(MODE1, 0x10); //sleep
     write_byte(PRE_SCALE, prescale_val);
     write_byte(MODE1, 0x80); //restart
@@ -86,7 +86,7 @@ void set_pwm_angle(uint8_t channel, int angle, int freq)
         angle = 180;
     }
 
-    int pulse_width =  angle;
+    int pulse_width = MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * angle / 180);
 
     set_pwm_duty(channel, pulse_width);
 
