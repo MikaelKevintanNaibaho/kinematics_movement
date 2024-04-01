@@ -3,7 +3,7 @@
 #include "pwm_servo.h"
 
 // PWM frequency and period
-#define PWM_FREQUENCY 300   // PWM frequency in Hz
+#define PWM_FREQUENCY 150   // PWM frequency in Hz
 #define PWM_PERIOD_US (1000000 / PWM_FREQUENCY)  // PWM period in microseconds
 
 // Servo angle pulse widths in microseconds
