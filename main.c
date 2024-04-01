@@ -16,7 +16,7 @@ int main(void)
 
         sleep(1);
 
-        set_pwm_angle(1, 150, 200);
+        set_pwm_angle(1, 170, 200);
 
         sleep(1);
     }
