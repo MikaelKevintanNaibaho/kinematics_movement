@@ -17,8 +17,11 @@ int main() {
     // Calculate duty cycle for max speed (for 180 degrees)
     int duty_cycle = (MIN_PULSE_WIDTH * 4096) / (1000000 / PWM_FREQUENCY);
     
-    // Set PWM duty cycle for servo
-    set_pwm_duty(1, duty_cycle);
+    while(1){
+            // Set PWM duty cycle for servo
+        set_pwm_duty(1, duty_cycle);
+    }
+
 
     // Continue with your program logic or testing
 
