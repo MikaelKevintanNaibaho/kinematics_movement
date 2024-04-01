@@ -33,7 +33,6 @@
 #define ANGLE_RANGE 180
 #define MIN_PULSE_WIDTH 500
 #define MAX_PULSE_WIDTH 2500
-#define NEUTRAL_PULSE_WIDHT 1500
 
 
 
@@ -44,10 +43,9 @@ void write_byte(uint8_t reg, uint8_t val);
 void set_pwm_freq(int freq);
 void set_pwm_duty(uint8_t led, int value);
 void set_pwm(uint8_t led, int on_value, int off_value);
-void set_servo_angle(uint8_t led, int angle, int freq);
+void set_pwm_angle(uint8_t channel, int angle, int freq);
 
 int get_pwm(uint8_t led);
-int map(int value, int from_low, int from_high, int to_low, int to_high);
 
 
 uint8_t read_byte(uint8_t reg);
