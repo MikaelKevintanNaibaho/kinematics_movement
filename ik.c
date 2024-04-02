@@ -24,6 +24,10 @@ void calculate_ik(float x, float y, float z, float* angles)
         angles[2] = INITIAL_ANGLE3; // Replace INITIAL_ANGLE_3 with the initial angle for joint 3
     }
 
+    if (isnan(angles[0])) {
+        angles[0] = INITIAL_ANGLE1;
+    }
+
      // Print the calculated angles
     printf("Calculated Joint Angles:\n");
     printf("Angle 1: %f\n", angles[0]);
