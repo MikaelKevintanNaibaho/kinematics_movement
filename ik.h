@@ -5,8 +5,8 @@
 #include "pwm_servo.h"
 
 #define COXA_LENGTH 75.0
-#define FEMUR_LEGTH 80.0
-#define TIBIA_LEGTH 170.0
+#define FEMUR_LENGTH 80.0
+#define TIBIA_LENGTH 170.0
 #define PI 3.141559265359
 
 void calculate_ik(float x, float y, float z, float* angles);
