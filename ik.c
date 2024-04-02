@@ -15,6 +15,12 @@ void calculate_ik(float x, float y, float z, float* angles)
     angles[1] = PI/2 - alpha - atan2(z, dist_xy);
 
     angles[2] = PI - beta;
+
+     // Print the calculated angles
+    printf("Calculated Joint Angles:\n");
+    printf("Angle 1: %f\n", angles[0]);
+    printf("Angle 2: %f\n", angles[1]);
+    printf("Angle 3: %f\n", angles[2]);
 }
 
 void move_leg(float startx, float starty, float startz, float endx, float endy, float endz, int steps, int freq)
