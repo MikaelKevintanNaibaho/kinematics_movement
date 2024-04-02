@@ -86,12 +86,8 @@ void set_pwm_angle(uint8_t channel, int angle, int freq)
         angle = 180;
     }
 
-    int pulse_width;
-    if(channel == 3) {
-        pulse_width = MIN_PULSE_WIDTH - ((MAX_PULSE_WIDTH + MIN_PULSE_WIDTH) * angle / 180);
-    }else{
-        pulse_width = MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * angle / 180);
-    }
+    int pulse_width = MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * angle / 180);
+
     set_pwm_duty(channel, pulse_width);
 
     set_pwm_freq(freq);
