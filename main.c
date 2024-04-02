@@ -9,7 +9,7 @@ int main(void)
 
     set_pwm_angle(1, 90, 50);
     set_pwm_angle(2, 30, 50);
-    set_pwm_angle(3, 110, 50);
+    set_pwm_angle(3, 180, 50);
 
     sleep(5);
 
