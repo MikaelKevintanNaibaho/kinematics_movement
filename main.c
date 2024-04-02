@@ -14,7 +14,7 @@ int main(void)
     sleep(5);
 
     float starx = 0.0, starty = 0.0, startz = 0.0;
-    float endx = 100.0, endy = 30.0, endz = 0.0;
+    float endx = 100.0, endy = 0.0, endz = 0.0;
     int steps = 50;
     int freq = 50;
 
