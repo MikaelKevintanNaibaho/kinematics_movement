@@ -3,13 +3,16 @@
 #include "pwm_servo.h"
 #include "ik.h"
 
+#define INITIAL_ANGLE2 90
+#define INITIAL_ANGLE3 90
+
 int main(void)
 {
     PCA9685_init();
 
     set_pwm_angle(1, 90, 50);
-    set_pwm_angle(2, 90, 50);
-    set_pwm_angle(3, 90, 50);
+    set_pwm_angle(2, INITIAL_ANGLE2, 50);
+    set_pwm_angle(3, INITIAL_ANGLE3, 50);
 
     sleep(5);
 

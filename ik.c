@@ -16,6 +16,14 @@ void calculate_ik(float x, float y, float z, float* angles)
 
     angles[2] = PI - beta;
 
+    if (isnan(angles[1])) {
+        angles[1] = INITIAL_ANGLE2; // Replace INITIAL_ANGLE_2 with the initial angle for joint 2
+    }
+
+    if (isnan(angles[2])) {
+        angles[2] = INITIAL_ANGLE3; // Replace INITIAL_ANGLE_3 with the initial angle for joint 3
+    }
+
      // Print the calculated angles
     printf("Calculated Joint Angles:\n");
     printf("Angle 1: %f\n", angles[0]);
