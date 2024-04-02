@@ -3,8 +3,7 @@
 #include "pwm_servo.h"
 #include "ik.h"
 
-#define INITIAL_ANGLE2 90
-#define INITIAL_ANGLE3 90
+
 
 int main(void)
 {
