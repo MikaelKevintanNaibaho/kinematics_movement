@@ -101,7 +101,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
 
     float phi2 = atan2f(z, r1);
 
-    float phi3 = 90 - phi2;
+    float phi3 = acosf((powf(H, 2) + powf(leg->TIBIA, 2) - powf(leg->FEMUR, 2)) / (2 * H * leg->TIBIA));
 
     float phi1 = acosf((powf(leg->FEMUR, 2) + powf(H, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
 
