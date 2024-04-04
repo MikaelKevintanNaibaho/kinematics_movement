@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+
+
 // Define a small epsilon value for floating-point comparisons
 #define EPSILON 1e-3
 

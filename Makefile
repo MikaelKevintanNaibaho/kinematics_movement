@@ -42,7 +42,7 @@ $(TARGET): $(OBJ) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
