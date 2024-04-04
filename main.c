@@ -31,7 +31,7 @@ int main() {
     // Set initial joint angles (example values)
     leg.theta1 = 90.0;
     leg.theta2 = 30.0;
-    leg.theta3 = 20.0;
+    leg.theta3 = 5.0;
 
     set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
     set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
