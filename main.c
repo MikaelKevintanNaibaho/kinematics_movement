@@ -30,6 +30,10 @@ int main(void)
     {
         printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg1.joints[i][0], leg1.joints[i][1], leg1.joints[i][2]);
     }
+    printf("Angles after forward kinematics:\n");
+    printf("Theta 1: %.2f degrees\n", leg1.theta1);
+    printf("Theta 2: %.2f degrees\n", leg1.theta2);
+    printf("Theta 3: %.2f degrees\n", leg1.theta3);
 
     // Define target position for inverse kinematics
     double target[3] = {leg1.joints[3][0] + 30, leg1.joints[3][1], leg1.joints[3][2]};
@@ -42,6 +46,10 @@ int main(void)
     {
         printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg1.joints[i][0], leg1.joints[i][1], leg1.joints[i][2]);
     }
+    printf("Angles after inverse kinematics:\n");
+    printf("Theta 1: %.2f degrees\n", leg1.theta1);
+    printf("Theta 2: %.2f degrees\n", leg1.theta2);
+    printf("Theta 3: %.2f degrees\n", leg1.theta3);
 
     sleep(2);
 
