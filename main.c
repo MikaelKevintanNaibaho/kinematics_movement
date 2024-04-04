@@ -47,7 +47,7 @@ int main() {
     }
 
     // Get the target position (example value)
-    float target[3] = {110, 100, 100};
+    float target[3] = {200, 200, 50};
 
     // Perform inverse kinematics to calculate joint angles for the target position
     inverse_kinematics(&leg, target);
