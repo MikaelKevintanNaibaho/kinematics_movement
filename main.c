@@ -14,6 +14,7 @@
 
 int main(void)
 {
+    PCA9685_init();
     // Initialize SpiderLeg with initial joint angles
     SpiderLeg leg1 = {"leg1", COXA_LENGTH, FEMUR_LENGTH, TIBIA_LENGTH, 90.0, 30.0, 0.0, {{0}}};
 
