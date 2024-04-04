@@ -21,6 +21,10 @@ int main(void)
     // Perform forward kinematics to compute initial joint positions
     forward_kinematics(&leg1);
 
+    set_pwm_angle(SERVO_CHANNEL_1, leg1.theta1, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_2, leg1.theta2, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_3, leg1.theta3, PWM_FREQ);
+
     printf("Joint positions after forward kinematics (default position):\n");
     for (int i = 0; i < 4; i++)
     {
