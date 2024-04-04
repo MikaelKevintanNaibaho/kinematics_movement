@@ -5,7 +5,7 @@
 // #include "pwm_servo.h"
 
 
-#define M_PI 3.141559265359
+
 
 typedef struct {
     char name[20];
