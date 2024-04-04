@@ -67,6 +67,8 @@ int main() {
         printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
     }
 
+    sleep(2);
+
     set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
     set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
     set_pwm_angle(SERVO_CHANNEL_3, leg.theta3, PWM_FREQ);
