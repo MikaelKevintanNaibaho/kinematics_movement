@@ -123,6 +123,16 @@ void inverse_kinematics(SpiderLeg *leg, double target[3]) {
 
   theta1 = to_degrees(theta1) ;
 
+  if(theta1 < 0){
+    theta1 += 180;
+  }
+  if(theta2 < 0){
+    theta2 += 180;
+  }
+  if(theta3 < 0){
+    theta3 += 180;
+  }
+
   double angles[3] = {theta1, theta2, theta3};
   set_angles(leg, angles);
   forward_kinematics(leg);
