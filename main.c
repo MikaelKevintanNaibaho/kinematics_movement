@@ -50,7 +50,7 @@ int main() {
     {
         float target[3];
 
-        target[0] += 200.0;
+        target[0] += 100.0;
 
         inverse_kinematics(&leg, target);
 
