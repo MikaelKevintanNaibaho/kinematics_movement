@@ -101,9 +101,9 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
 
     float phi2 = atan2f(z, r1);
 
-    float phi3 = 180 - (90 + phi2);
+    float phi3 = 90 - phi2;
 
-    float phi1 = (powf(leg->FEMUR, 2) + powf(H, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * H);
+    float phi1 = acosf((powf(leg->FEMUR, 2) + powf(H, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
 
     float theta2  = (phi1 - phi2);
 
@@ -112,7 +112,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
     float theta3 = 180 - phi4;
 
 
-    float angles[3] = {degrees(theta1), degrees(theta2)};
+    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
 
     forward_kinematics(leg);    
