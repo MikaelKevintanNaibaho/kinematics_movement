@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 // Define a small epsilon value for floating-point comparisons
-#define EPSILON 1e-6
+#define EPSILON 1e-3
 
 float degrees(float rad) {
     return rad * (180.0 / M_PI);
@@ -84,7 +84,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float minY = 0.0;
     float maxZ = leg->FEMUR + leg->TIBIA;
     float minZ = -maxZ;
-    
+
     if (x < minX || x > maxX || y < minY || y > maxY || z < minZ || z > maxZ) {
         printf("Error: Target position is out of reach for the leg.\n");
         return;
@@ -94,7 +94,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     if (fabs(x) < EPSILON) {
         theta1 = (y > 0) ? M_PI / 2.0 : -M_PI / 2.0;
     } else {
-        theta1 = atan(y / x);
+        theta1 = atan2(y, x);
     }
 
     float Xa = leg->COXA * cos(theta1);
@@ -103,7 +103,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float Xb = x - Xa;
     float Yb = y - Ya;
 
-    float P = Xb / cos(theta1);
+    float P = sqrt(pow(Xb, 2) + pow(Yb, 2));
 
     float G = fabs(z);
 
@@ -117,20 +117,19 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float phi3 = asin(G / H);
 
     float phi2Acos = ((pow(leg->TIBIA, 2)) + (pow(H, 2)) - (pow(leg->FEMUR, 2))) / (2 * leg->TIBIA * H);
-    if (phi2Acos > 1.0) phi2Acos = 1.0;
-    if (phi2Acos < -1.0) phi2Acos = -1.0;
-
+    phi2Acos = fminf(fmaxf(phi2Acos, -1.0), 1.0);  // Clamp to valid range for acos
     float phi2 = acos(phi2Acos);
 
     float phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
 
-    float theta2, theta3;
-    if (z > 0) {
-        theta2 = phi1 + phi3;
-    } else {
-        theta2 = phi1 - phi3;
+    float theta2 = phi1 + phi3;
+    float theta3 = phi1 + phi2;
+
+    // Check for invalid angles near singularities
+    if (isnan(theta2) || isnan(theta3)) {
+        printf("Error: Unable to calculate valid joint angles for the target position.\n");
+        return;
     }
-    theta3 = phi1 + phi2;
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);

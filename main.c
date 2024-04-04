@@ -3,9 +3,9 @@
 #include "pwm_servo.h"
 #include "ik.h"
 
-#define COXA_LENGTH 75.0 
-#define FEMUR_LENGTH 80.0 
-#define TIBIA_LENGTH 170.0 
+#define COXA_LENGTH 65.0 
+#define FEMUR_LENGTH 75.0 
+#define TIBIA_LENGTH 165.0 
 #define PWM_FREQ 50
 
 #define SERVO_CHANNEL_1 1
@@ -47,7 +47,7 @@ int main() {
     }
 
     // Get the target position (example value)
-    float target[3] = {100, 100, -100};
+    float target[3] = {0, 30, -100};
 
     // Perform inverse kinematics to calculate joint angles for the target position
     inverse_kinematics(&leg, target);
