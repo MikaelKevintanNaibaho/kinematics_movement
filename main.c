@@ -3,9 +3,9 @@
 #include "pwm_servo.h"
 #include "ik.h"
 
-#define COXA_LENGTH 75.0
-#define FEMUR_LENGTH 80.0
-#define TIBIA_LENGTH 170.0
+#define COXA_LENGTH 75.0 
+#define FEMUR_LENGTH 80.0 
+#define TIBIA_LENGTH 170.0 
 #define PWM_FREQ 50
 
 #define SERVO_CHANNEL_1 1
@@ -14,7 +14,7 @@
 
 int main(void)
 {
-    PCA9685_init();
+    // PCA9685_init();
     // Initialize SpiderLeg with initial joint angles
     SpiderLeg leg1 = {"leg1", COXA_LENGTH, FEMUR_LENGTH, TIBIA_LENGTH, 90.0, 30.0, 0.0, {{0}}};
 
