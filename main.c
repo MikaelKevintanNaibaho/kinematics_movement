@@ -36,7 +36,7 @@ int main(void)
     printf("Theta 3: %.2f degrees\n", leg1.theta3);
 
     // Define target position for inverse kinematics
-    double target[3] = {leg1.joints[3][0] + 30, leg1.joints[3][1], leg1.joints[3][2]};
+    double target[3] = {leg1.joints[3][0], leg1.joints[3][1] + 30, leg1.joints[3][2]};
 
     // Perform inverse kinematics to move to the target position
     inverse_kinematics(&leg1, target);
