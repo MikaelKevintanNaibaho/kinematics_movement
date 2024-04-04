@@ -47,12 +47,11 @@ int main() {
     }
 
     // Get the target position (example value)
-    float target[3] = {200, 200, 0};
+    float target[3] = {200, 0, 0};
 
     // Update the first two elements of the target array for horizontal movement
-    target[0] += 50; // Example: Move 50 units in the x-direction
-    target[1] -= 50; // Example: Move 50 units in the y-direction
-
+     // Example: Move 50 units in the x-direction
+ 
     // Perform inverse kinematics to calculate joint angles for the target position
     inverse_kinematics(&leg, target);
 
