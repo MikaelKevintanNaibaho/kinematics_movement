@@ -17,12 +17,15 @@ float radians(float deg) {
 }
 
 float normalize_angle(float angle) {
-    if (angle > 180.0)
-        return angle - 360.0;
-    else if (angle < -180.0)
-        return angle + 360.0;
-    else
-        return angle;
+    angle = fmodf(angle, 360.0);  // Ensure angle is within the range of -360.0 to 360.0
+    
+    // Convert negative angles to their corresponding positive angles within the same position
+    if (angle < 0) angle += 360.0;
+
+    // Ensure angle is within the range of 0.0 to 180.0
+    if (angle > 180.0) angle = 360.0 - angle;
+
+    return angle;
 }
 
 void set_angles(SpiderLeg *leg, float angles[3]) {
@@ -112,5 +115,5 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
     float angles[3] = {degrees(theta1), degrees(theta2)};
     set_angles(leg, angles);
 
-    forward_kinematics(leg);
+    forward_kinematics(leg);    
 }
