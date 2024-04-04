@@ -32,7 +32,7 @@ void set_angles(SpiderLeg *leg, double angles[3]) {
 void forward_kinematics(SpiderLeg *leg) {
     double theta1 = to_radians(leg->theta1) - 90;
     double theta2 = to_radians(leg->theta2) - 90;
-    double theta3 = to_radians(leg->theta3) -90;
+    double theta3 = to_radians(leg->theta3) ;
 
     // Forward kinematics calculations
     double Xa = leg->COXA * cos(theta1);
