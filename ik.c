@@ -76,74 +76,41 @@ float *get_target(SpiderLeg *leg) {
 }
 
 
-void inverse_kinematics(SpiderLeg *leg, float *target) {
+void inverse_kinematics(SpiderLeg *leg, float *target)
+{
     float x = target[0];
     float y = target[1];
     float z = target[2];
 
-    // Validate target position within the leg's reachable workspace
-    float maxX = leg->COXA + leg->FEMUR + leg->TIBIA;
-    float minX = -maxX;
-    float maxY = leg->FEMUR + leg->TIBIA;
-    float minY = 0.0;
-    float maxZ = leg->FEMUR + leg->TIBIA;
-    float minZ = -maxZ;
+    z = fabsf(z);
 
-    if (x < minX || x > maxX || y < minY || y > maxY || z < minZ || z > maxZ) {
-        printf("Error: Target position is out of reach for the leg.\n");
-        return;
-    }
+    float theta1 = atan2f(y, x);
 
-    // Calculate theta1 (angle of the first joint)
-    float theta1;
-    if (fabs(x) < EPSILON) {
-        theta1 = (y > 0) ? M_PI / 2.0 : -M_PI / 2.0;
-    } else {
-        theta1 = atan2(y, x);
-    }
+    float xa = leg->COXA * cosf(theta1);
+    float ya = leg->COXA * sinf(theta1);
 
-    // Calculate positions of joint A
-    float Xa = leg->COXA * cos(theta1);
-    float Ya = leg->COXA * sin(theta1);
+    float xb = x - xa;
+    float yb = y - ya;
 
-    // Calculate positions of joint B relative to joint A
-    float Xb = x - Xa;
-    float Yb = y - Ya;
+    float r1 = sqrtf((powf(x, 2) + powf(y, 2)));
 
-    // Calculate distance between joint A and joint B
-    float P = sqrt(pow(Xb, 2) + pow(Yb, 2));
+    float H = sqrtf((powf(r1, 2) + powf(z, 2)));
 
-    // Calculate absolute height of joint B
-    float G = fabs(z);
+    float phi2 = atan2f(z, r1);
 
-    // Calculate distance from joint A to joint B in 3D space
-    float H = sqrt(pow(P, 2) + pow(G, 2));
+    float phi3 = 180 - (90 + phi2);
 
-    // Check for invalid target position
-    if (fabs(H) < EPSILON) {
-        printf("Error: Invalid target position for inverse kinematics.\n");
-        return;
-    }
+    float phi1 = (powf(leg->FEMUR, 2) + powf(H, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * H);
 
-    // Calculate joint angles using trigonometric relations
-    float phi3 = asin(G / H);
-    float phi2Acos = ((pow(leg->TIBIA, 2)) + (pow(H, 2)) - (pow(leg->FEMUR, 2))) / (2 * leg->TIBIA * H);
-    phi2Acos = fminf(fmaxf(phi2Acos, -1.0), 1.0);  // Clamp to valid range for acos
-    float phi2 = acos(phi2Acos);
-    float phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
-    float theta2 = phi1 + phi3;
-    float theta3 = phi1 + phi2;
+    float theta2  = (phi1 - phi2);
 
-    // Check for invalid angles near singularities
-    if (isnan(theta2) || isnan(theta3)) {
-        printf("Error: Unable to calculate valid joint angles for the target position.\n");
-        return;
-    }
+    float phi4 = 180 - (phi2 + phi3);
 
-    // Convert angles to degrees and set them for the leg
-    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
+    float theta3 = 180 - phi4;
+
+
+    float angles[3] = {degrees(theta1), degrees(theta2)};
     set_angles(leg, angles);
 
-    // Perform forward kinematics to update joint positions
     forward_kinematics(leg);
 }

@@ -46,38 +46,35 @@ int main() {
         printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
     }
 
-    while (1)
-    {
-        float target[3];
+    // Get the target position (example value)
+    float target[3] = {200, 200, -200};
 
-        target[0] += 100.0;
+    // Update the first two elements of the target array for horizontal movement
+     // Example: Move 50 units in the x-direction
+ 
+    // Perform inverse kinematics to calculate joint angles for the target position
+    inverse_kinematics(&leg, target);
 
-        inverse_kinematics(&leg, target);
+    // Display joint angles after inverse kinematics
+    printf("\nAngles after inverse kinematics:\n");
+    printf("Theta 1: %.2f degrees\n", leg.theta1);
+    printf("Theta 2: %.2f degrees\n", leg.theta2);
+    printf("Theta 3: %.2f degrees\n", leg.theta3);
 
-         // Display joint angles after inverse kinematics
-        printf("\nAngles after inverse kinematics:\n");
-        printf("Theta 1: %.2f degrees\n", leg.theta1);
-        printf("Theta 2: %.2f degrees\n", leg.theta2);
-        printf("Theta 3: %.2f degrees\n", leg.theta3);
+    // Perform forward kinematics again to verify the calculated joint angles
+    forward_kinematics(&leg);
 
-        // Perform forward kinematics again to verify the calculated joint angles
-        forward_kinematics(&leg);
-
-        // Display joint positions after applying inverse kinematics
-        printf("\nJoint positions after inverse kinematics:\n");
-        for (int i = 0; i < NUM_JOINTS; ++i) {
-            printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
-        }
-
-        set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
-        set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
-        set_pwm_angle(SERVO_CHANNEL_3, leg.theta3, PWM_FREQ);
-
-        usleep(100000);
+    // Display joint positions after applying inverse kinematics
+    printf("\nJoint positions after inverse kinematics:\n");
+    for (int i = 0; i < NUM_JOINTS; ++i) {
+        printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
     }
-    
 
-    
+    sleep(2);
+
+    set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_3, leg.theta3, PWM_FREQ);
 
     return 0;
 }
