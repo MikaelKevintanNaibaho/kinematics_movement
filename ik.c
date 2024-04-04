@@ -11,17 +11,9 @@ double to_radians(double degrees)
 }
 
 void set_angles(SpiderLeg *leg, double angles[3]) {
-    // Normalize angles to be in the range [-180, 180] degrees
     for (int i = 0; i < 3; i++) {
         double ang = angles[i];
-        int sign = 1;
-        if (ang < 0) {
-            sign = -1;
-        }
-        angles[i] = sign * (fabs(ang) - (360.0 * floor(fabs(ang) / 360.0)));
-        if (fabs(ang) > 180.0) {
-            angles[i] = angles[i] - (360.0 * sign);
-        }
+        angles[i] = fmax(0.0, fmin(ang, 180.0));  // Ensure angles are within 0 to 180 degrees
     }
     leg->theta1 = angles[0];
     leg->theta2 = angles[1];
@@ -121,7 +113,16 @@ void inverse_kinematics(SpiderLeg *leg, double target[3]) {
   }
   theta3 = to_degrees(phi1 + phi2 );
 
-  theta1 = to_degrees(theta1) ;
+  theta1 = to_degrees(theta1);
+
+    if (theta1 < 0) theta1 += 180;
+    if (theta2 < 0) theta2 += 180;
+    if (theta3 < 0) theta3 += 180;
+
+    // Ensure angles are within 0 to 180 degrees
+    theta1 = fmax(0.0, fmin(theta1, 180.0));
+    theta2 = fmax(0.0, fmin(theta2, 180.0));
+    theta3 = fmax(0.0, fmin(theta3, 180.0));
 
   double angles[3] = {theta1, theta2, theta3};
   set_angles(leg, angles);
