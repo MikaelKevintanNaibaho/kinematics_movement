@@ -12,50 +12,65 @@
 #define SERVO_CHANNEL_2 2
 #define SERVO_CHANNEL_3 3
 
-int main(void)
-{
+#define NUM_JOINTS 4
+
+#include <stdio.h>
+#include "ik.h"
+
+int main() {
+
     PCA9685_init();
-    // Initialize SpiderLeg with initial joint angles
-    SpiderLeg leg1 = {"leg1", COXA_LENGTH, FEMUR_LENGTH, TIBIA_LENGTH, 90.0, 30.0, 0.0, {{0}}};
+    // Create a SpiderLeg object
+    SpiderLeg leg;
 
-    // Perform forward kinematics to compute initial joint positions
-    forward_kinematics(&leg1);
+    // Set leg dimensions
+    leg.COXA = COXA_LENGTH;  // Example value, replace with your actual values
+    leg.FEMUR = FEMUR_LENGTH;
+    leg.TIBIA = TIBIA_LENGTH;
 
-    set_pwm_angle(SERVO_CHANNEL_1, leg1.theta1, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_2, leg1.theta2, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_3, leg1.theta3, PWM_FREQ);
+    // Set initial joint angles (example values)
+    leg.theta1 = 90.0;
+    leg.theta2 = 30.0;
+    leg.theta3 = 0.0;
 
-    printf("Joint positions after forward kinematics (default position):\n");
-    for (int i = 0; i < 4; i++)
-    {
-        printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg1.joints[i][0], leg1.joints[i][1], leg1.joints[i][2]);
+    set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_3, leg.theta3, PWM_FREQ);
+
+    // Perform forward kinematics to calculate joint positions
+    forward_kinematics(&leg);
+
+    // Display joint positions after forward kinematics
+    printf("Joint positions after forward kinematics:\n");
+    for (int i = 0; i < NUM_JOINTS; ++i) {
+        printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
     }
-    printf("Angles after forward kinematics:\n");
-    printf("Theta 1: %.2f degrees\n", leg1.theta1);
-    printf("Theta 2: %.2f degrees\n", leg1.theta2);
-    printf("Theta 3: %.2f degrees\n", leg1.theta3);
 
-    // Define target position for inverse kinematics
-    double target[3] = {leg1.joints[3][0] , leg1.joints[3][1] + 30, leg1.joints[3][2]};
+    // Get the target position (example value)
+    float target[3] = {100, 100, -100};
 
-    // Perform inverse kinematics to move to the target position
-    inverse_kinematics(&leg1, target);
+    // Perform inverse kinematics to calculate joint angles for the target position
+    inverse_kinematics(&leg, target);
 
-    printf("\nJoint positions after inverse kinematics (target position):\n");
-    for (int i = 0; i < 4; i++)
-    {
-        printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg1.joints[i][0], leg1.joints[i][1], leg1.joints[i][2]);
+    // Display joint angles after inverse kinematics
+    printf("\nAngles after inverse kinematics:\n");
+    printf("Theta 1: %.2f degrees\n", leg.theta1);
+    printf("Theta 2: %.2f degrees\n", leg.theta2);
+    printf("Theta 3: %.2f degrees\n", leg.theta3);
+
+    // Perform forward kinematics again to verify the calculated joint angles
+    forward_kinematics(&leg);
+
+    // Display joint positions after applying inverse kinematics
+    printf("\nJoint positions after inverse kinematics:\n");
+    for (int i = 0; i < NUM_JOINTS; ++i) {
+        printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
     }
-    printf("Angles after inverse kinematics:\n");
-    printf("Theta 1: %.2f degrees\n", leg1.theta1);
-    printf("Theta 2: %.2f degrees\n", leg1.theta2);
-    printf("Theta 3: %.2f degrees\n", leg1.theta3);
 
-    sleep(2);
-
-    set_pwm_angle(SERVO_CHANNEL_1, leg1.theta1, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_2, leg1.theta2, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_3, leg1.theta3, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_3, leg.theta3, PWM_FREQ);
 
     return 0;
 }
+

@@ -1,59 +1,56 @@
-#include <stdio.h>
 #include "ik.h"
+#include <stdbool.h>
+#include <stdio.h>
 
-double to_degrees(double radians)
-{
-    return radians * (180.0 / PI);
-}
-double to_radians(double degrees)
-{
-    return degrees * (PI / 180.0);
-}
+// Define a small epsilon value for floating-point comparisons
+#define EPSILON 1e-6
 
-void set_angles(SpiderLeg *leg, double angles[3]) {
-    // Normalize angles to be in the range [-180, 180] degrees
-    for (int i = 0; i < 3; i++) {
-        double ang = angles[i];
-        int sign = 1;
-        if (ang < 0) {
-            sign = -1;
-        }
-        angles[i] = sign * (fabs(ang) - (360.0 * floor(fabs(ang) / 360.0)));
-        if (fabs(ang) > 180.0) {
-            angles[i] = angles[i] - (360.0 * sign);
-        }
-    }
-    leg->theta1 = angles[0];
-    leg->theta2 = angles[1];
-    leg->theta3 = angles[2];
+float degrees(float rad) {
+    return rad * (180.0 / M_PI);
 }
 
+float radians(float deg) {
+    return deg * (M_PI / 180.0);
+}
+
+float normalize_angle(float angle) {
+    if (angle > 180.0)
+        return angle - 360.0;
+    else if (angle < -180.0)
+        return angle + 360.0;
+    else
+        return angle;
+}
+
+void set_angles(SpiderLeg *leg, float angles[3]) {
+    leg->theta1 = normalize_angle(angles[0]);
+    leg->theta2 = normalize_angle(angles[1]);
+    leg->theta3 = normalize_angle(angles[2]);
+}
 
 void forward_kinematics(SpiderLeg *leg) {
-    double theta1 = to_radians(leg->theta1) - 90;
-    double theta2 = to_radians(leg->theta2) - 90;
-    double theta3 = to_radians(leg->theta3) ;
+    float theta1 = radians(leg->theta1);
+    float theta2 = radians(leg->theta2);
+    float theta3 = radians(leg->theta3);
+    
 
-    // Forward kinematics calculations
-    double Xa = leg->COXA * cos(theta1);
-    double Ya = leg->COXA * sin(theta1);
-    double G2 = sin(theta2) * leg->FEMUR;
-    double P1 = cos(theta2) * leg->FEMUR;
-    double Xc = cos(theta1) * P1;
-    double Yc = sin(theta1) * P1;
+    float Xa = leg->COXA * cos(theta1);
+    float Ya = leg->COXA * sin(theta1);
+    float G2 = sin(theta2) * leg->FEMUR;
+    float P1 = cos(theta2) * leg->FEMUR;
+    float Xc = cos(theta1) * P1;
+    float Yc = sin(theta1) * P1;
 
-    // Position of the tip of the leg (end effector)
-    double H = sqrt(pow(leg->TIBIA, 2) + pow(leg->FEMUR, 2) - (2 * leg->TIBIA * leg->FEMUR * cos(PI - theta3)));
-    double phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
-    double phi2 = PI - (PI - theta3) - phi1;
-    double phi3 = (phi1 - theta2);
-    double Pp = cos(phi3) * H;
-    double P2 = Pp - P1;
-    double Yb = sin(theta1) * Pp;
-    double Xb = cos(theta1) * Pp;
-    double G1 = -sin(phi3) * H;
+    float H = sqrt(pow(leg->TIBIA, 2) + pow(leg->FEMUR, 2) - (2 * leg->TIBIA * leg->FEMUR * cos(M_PI - theta3)));
+    float phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
+    float phi2 = M_PI - (M_PI - theta3) - phi1;
+    float phi3 = (phi1 - theta2);
+    float Pp = cos(phi3) * H;
+    float P2 = Pp - P1;
+    float Yb = sin(theta1) * Pp;
+    float Xb = cos(theta1) * Pp;
+    float G1 = -sin(phi3) * H;
 
-    // Store joint positions in leg's joints array
     leg->joints[0][0] = 0;
     leg->joints[0][1] = 0;
     leg->joints[0][2] = 0;
@@ -71,70 +68,71 @@ void forward_kinematics(SpiderLeg *leg) {
     leg->joints[3][2] = G1;
 }
 
-
-void inverse_kinematics(SpiderLeg *leg, double target[3]) {
-  double x = target[0];
-  double y = target[1];
-  double z = target[2];
-
-  // Calculate theta1 using arctangent
-  double theta1 = atan2(y, x);
-
-  // Intermediate values
-  double Xa = leg->COXA * cos(theta1);
-  double Ya = leg->COXA * sin(theta1);
-
-  double Xb = x - Xa;
-  double Yb = y - Ya;
-
-  double P = Xb / cos(theta1);
-  double G = fabs(z);
-  double H = sqrt(pow(P, 2) + pow(G, 2));
-
-  // Check for reachability using leg limits
-  double max_reach23 = leg->FEMUR + leg->TIBIA; // Combined maximum reach of joints 2 and 3
-  if (H > max_reach23) {
-    printf("target unreachabel\n");
-    // Target unreachable, handle the case (e.g., return error code)
-    return; // Replace with your desired unreachable target handling
-  }
-
-  double phi3 = asin(G / H);
-
-  // Limit calculation of phi2 based on reachability
-  double phi2Acos = (pow(leg->TIBIA, 2) + pow(H, 2) - pow(leg->FEMUR, 2)) / (2 * leg->TIBIA * H);
-  double phi2;
-  if (phi2Acos <= 1 && phi2Acos >= 0) {
-    phi2 = acos(phi2Acos);
-  } else {
-    // Target partially reachable, adjust phi2 to reach limit
-    phi2 = max_reach23 - phi3; // Adjust based on your desired behavior (e.g., prioritize reaching z)
-  }
-
-  double phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
-
-  double theta2, theta3;
-  if (z > 0) {
-    theta2 = to_degrees(phi1 + phi3 );
-  } else {
-    theta2 = to_degrees(phi1 - phi3 );
-  }
-  theta3 = to_degrees(phi1 + phi2 );
-
-  theta1 = to_degrees(theta1) ;
-
-  if(theta1 < 0){
-    theta1 += 180;
-  }
-  if(theta2 < 0){
-    theta2 += 180;
-  }
-  if(theta3 < 0){
-    theta3 += 180;
-  }
-
-  double angles[3] = {theta1, theta2, theta3};
-  set_angles(leg, angles);
-  forward_kinematics(leg);
+float *get_target(SpiderLeg *leg) {
+    return leg->joints[3];
 }
 
+
+void inverse_kinematics(SpiderLeg *leg, float *target) {
+    float x = target[0];
+    float y = target[1];
+    float z = target[2];
+
+    float maxX = leg->COXA + leg->FEMUR + leg->TIBIA;
+    float minX = -maxX;
+    float maxY = leg->FEMUR + leg->TIBIA;
+    float minY = 0.0;
+    float maxZ = leg->FEMUR + leg->TIBIA;
+    float minZ = -maxZ;
+    
+    if (x < minX || x > maxX || y < minY || y > maxY || z < minZ || z > maxZ) {
+        printf("Error: Target position is out of reach for the leg.\n");
+        return;
+    }
+
+    float theta1;
+    if (fabs(x) < EPSILON) {
+        theta1 = (y > 0) ? M_PI / 2.0 : -M_PI / 2.0;
+    } else {
+        theta1 = atan(y / x);
+    }
+
+    float Xa = leg->COXA * cos(theta1);
+    float Ya = leg->COXA * sin(theta1);
+
+    float Xb = x - Xa;
+    float Yb = y - Ya;
+
+    float P = Xb / cos(theta1);
+
+    float G = fabs(z);
+
+    float H = sqrt(pow(P, 2) + pow(G, 2));
+
+    if (fabs(H) < EPSILON) {
+        printf("Error: Invalid target position for inverse kinematics.\n");
+        return;
+    }
+
+    float phi3 = asin(G / H);
+
+    float phi2Acos = ((pow(leg->TIBIA, 2)) + (pow(H, 2)) - (pow(leg->FEMUR, 2))) / (2 * leg->TIBIA * H);
+    if (phi2Acos > 1.0) phi2Acos = 1.0;
+    if (phi2Acos < -1.0) phi2Acos = -1.0;
+
+    float phi2 = acos(phi2Acos);
+
+    float phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
+
+    float theta2, theta3;
+    if (z > 0) {
+        theta2 = phi1 + phi3;
+    } else {
+        theta2 = phi1 - phi3;
+    }
+    theta3 = phi1 + phi2;
+
+    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
+    set_angles(leg, angles);
+    forward_kinematics(leg);
+}

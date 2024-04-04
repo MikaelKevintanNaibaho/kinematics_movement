@@ -5,25 +5,27 @@
 // #include "pwm_servo.h"
 
 
-#define PI 3.141559265359
+#define M_PI 3.141559265359
 
 typedef struct {
     char name[20];
-    double COXA;
-    double FEMUR;
-    double TIBIA;
-    double theta1;
-    double theta2;
-    double theta3;
-    double joints[4][3]; // [x, y, z] coordinates of each joint
+    float COXA;
+    float FEMUR;
+    float TIBIA;
+    float theta1;
+    float theta2;
+    float theta3;
+    float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur joint, [2] - femur-tibia joint, [3] - tip of the leg
 } SpiderLeg;
 
-double to_degrees(double radians);
-double to_radians(double degrees);
+float to_degrees(float radians);
+float to_radians(float degrees);
+float normalize_angle(float angle);
+float *get_target(SpiderLeg *leg);
 
-void set_angles(SpiderLeg *leg, double angles[3]);
+void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg);
-void inverse_kinematics(SpiderLeg *leg, double target[3]);
+void inverse_kinematics(SpiderLeg *leg, float *target);
 
 
 #endif /*IK_H*/
