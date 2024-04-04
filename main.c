@@ -31,7 +31,7 @@ int main() {
     // Set initial joint angles (example values)
     leg.theta1 = 90.0;
     leg.theta2 = 30.0;
-    leg.theta3 = 90.0;
+    leg.theta3 = 30.0;
 
     set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
     set_pwm_angle(SERVO_CHANNEL_2, leg.theta2, PWM_FREQ);
@@ -47,7 +47,7 @@ int main() {
     }
 
     // Get the target position (example value)
-    float target[3] = {100, 100, 50};
+    float target[3] = {0, 100, -0};
 
     // Update the first two elements of the target array for horizontal movement
      // Example: Move 50 units in the x-direction
