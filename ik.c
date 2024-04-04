@@ -1,58 +1,117 @@
+#include <stdio.h>
 #include "ik.h"
 
-void calculate_ik(float x, float y, float z, float* angles)
+double to_degrees(double radians)
 {
-    angles[0] = atan2(y, x);
-
-    float dist_xy = sqrt(x*x + y*y) - COXA_LENGTH;
-
-    float dist_xyz = sqrt(dist_xy*dist_xy + z*z);
-
-    if (dist_xyz > FEMUR_LENGTH + TIBIA_LENGTH || dist_xyz < fabs(FEMUR_LENGTH - TIBIA_LENGTH))
-    {
-        // Invalid position, set angles to initial values
-        angles[1] = INITIAL_ANGLE2;
-        angles[2] = INITIAL_ANGLE3;
-    }
-    else
-    {
-        float alpha = acos((FEMUR_LENGTH*FEMUR_LENGTH + TIBIA_LENGTH*TIBIA_LENGTH - dist_xyz*dist_xyz) / (2 * FEMUR_LENGTH * TIBIA_LENGTH));
-        float beta = acos((dist_xy*dist_xyz + FEMUR_LENGTH*FEMUR_LENGTH - TIBIA_LENGTH*TIBIA_LENGTH) / (2 * dist_xyz * FEMUR_LENGTH));
-
-        angles[1] = PI/2 - alpha - atan2(z, dist_xy);
-        angles[2] = PI - beta;
-    }
-
-    // Print the calculated angles
-    printf("Calculated Joint Angles:\n");
-    printf("Angle 1: %f\n", angles[0]);
-    printf("Angle 2: %f\n", angles[1]);
-    printf("Angle 3: %f\n", angles[2]);
+    return radians * (180.0 / PI);
+}
+double to_radians(double degrees)
+{
+    return degrees * (PI / 180.0);
 }
 
-void move_leg(float startx, float starty, float startz, float endx, float endy, float endz, int steps, int freq)
+void set_angles(SpiderLeg *leg, double angles[3])
 {
-    float current_x = startx;
-    float current_y = starty;
-    float current_z = startz;
+    // Normalize angles to be in range [0, 180] degrees
+    for (int i = 0; i < 3; i++) {
+        double angle = angles[i];
 
-    float step_x = (endx - startx) / steps;
-    float step_y = (endy - starty) / steps;
-    float step_z = (endz - startz) / steps;
+        // Normalize angle to be within [0, 180] degrees
+        while (angle > 180.0) {
+            angle -= 180.0;
+        }
+        while (angle < 0.0) {
+            angle += 180.0;
+        }
 
-    float joint_angles[3];
-
-    for (int i = 0; i <= steps; i++){
-        calculate_ik(current_x, current_y, current_z, joint_angles);
-
-        set_pwm_angle(1, joint_angles[0], freq);
-        set_pwm_angle(2, joint_angles[1], freq);
-        set_pwm_angle(3, joint_angles[2], freq);
-
-        current_x += step_x;
-        current_y += step_y;
-        current_z += step_z; // Corrected incrementing z axis
-
-        usleep(1000000 / freq);
+        angles[i] = angle;
     }
+
+    // Assign angles to the leg
+    leg->theta1 = angles[0];
+    leg->theta2 = angles[1];
+    leg->theta3 = angles[2];
 }
+
+void forward_kinematics(SpiderLeg *leg)
+{
+    double theta1 = to_radians(leg->theta1);
+    double theta2 = to_radians(leg->theta2);
+    double theta3 = to_radians(leg->theta3);
+
+    // Forward kinematics calculation
+    double Xa = 0.0;  // X-coordinate of joint 1
+    double Ya = 0.0;  // Y-coordinate of joint 1
+    double G1 = 0.0;  // Z-coordinate of joint 1
+
+    double Xb = leg->COXA * cos(theta1);  // X-coordinate of joint 2
+    double Yb = leg->COXA * sin(theta1);  // Y-coordinate of joint 2
+    double G2 = 0.0;  // Z-coordinate of joint 2
+
+    double Xc = Xb + leg->FEMUR * cos(theta1 + theta2);  // X-coordinate of joint 3
+    double Yc = Yb + leg->FEMUR * sin(theta1 + theta2);  // Y-coordinate of joint 3
+    double G3 = -leg->FEMUR * sin(theta2);  // Z-coordinate of joint 3
+
+    double Xd = Xc + leg->TIBIA * cos(theta1 + theta2 + theta3);  // X-coordinate of joint 4
+    double Yd = Yc + leg->TIBIA * sin(theta1 + theta2 + theta3);  // Y-coordinate of joint 4
+    double G4 = G3;  // Z-coordinate of joint 4
+
+    // Store joint positions in leg's joints array
+    leg->joints[0][0] = Xa;
+    leg->joints[0][1] = Ya;
+    leg->joints[0][2] = G1;
+
+    leg->joints[1][0] = Xb;
+    leg->joints[1][1] = Yb;
+    leg->joints[1][2] = G2;
+
+    leg->joints[2][0] = Xc;
+    leg->joints[2][1] = Yc;
+    leg->joints[2][2] = G3;
+
+    leg->joints[3][0] = Xd;
+    leg->joints[3][1] = Yd;
+    leg->joints[3][2] = G4;
+}
+
+
+void inverse_kinematics(SpiderLeg *leg, double target[3])
+{
+    double x = target[0];
+    double y = target[1];
+    double z = target[2];
+
+    // Calculate theta1 using arctangent
+    double theta1 = atan2(y, x);
+
+    // Intermediate values
+    double Xa = leg->COXA * cos(theta1);
+    double Ya = leg->COXA * sin(theta1);
+
+    double Xb = x - Xa;
+    double Yb = y - Ya;
+
+    double P = Xb / cos(theta1);
+    double G = fabs(z);
+    double H = sqrt(pow(P, 2) + pow(G, 2));
+
+    double phi3 = asin(G / H);
+
+    double phi2Acos = (pow(leg->TIBIA, 2) + pow(H, 2) - pow(leg->FEMUR, 2)) / (2 * leg->TIBIA * H);
+    double phi2 = acos(phi2Acos);
+
+    double phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
+
+    double theta2, theta3;
+    if (z > 0) {
+        theta2 = phi1 + phi3;
+    } else {
+        theta2 = phi1 - phi3;
+    }
+    theta3 = phi1 + phi2;
+
+    double angles[3] = {to_degrees(theta1), to_degrees(theta2), to_degrees(theta3)};
+    set_angles(leg, angles);
+    forward_kinematics(leg);
+}
+

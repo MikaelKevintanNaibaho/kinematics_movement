@@ -2,17 +2,28 @@
 #define IK_H
 
 #include <math.h>
-#include "pwm_servo.h"
+// #include "pwm_servo.h"
 
-#define COXA_LENGTH 75.0
-#define FEMUR_LENGTH 80.0
-#define TIBIA_LENGTH 170.0
-#define INITIAL_ANGLE2 90
-#define INITIAL_ANGLE1 90
-#define INITIAL_ANGLE3 120
+
 #define PI 3.141559265359
 
-void calculate_ik(float x, float y, float z, float* angles);
-void move_leg(float startx, float starty, float startz, float endx, float endy, float endz, int steps, int freq);
+typedef struct {
+    char name[20];
+    double COXA;
+    double FEMUR;
+    double TIBIA;
+    double theta1;
+    double theta2;
+    double theta3;
+    double joints[4][3]; // [x, y, z] coordinates of each joint
+} SpiderLeg;
+
+double to_degrees(double radians);
+double to_radians(double degrees);
+
+void set_angles(SpiderLeg *leg, double angles[3]);
+void forward_kinematics(SpiderLeg *leg);
+void inverse_kinematics(SpiderLeg *leg, double target[3]);
+
 
 #endif /*IK_H*/
