@@ -72,18 +72,23 @@ void forward_kinematics(SpiderLeg *leg) {
     leg->joints[2][1] = Ya + Yc;
     leg->joints[2][2] = G2;
 
-    leg->joints[3][0] = Xa + Xb;
-    leg->joints[3][1] = Ya + Yb;
-    leg->joints[3][2] = G1;
+        // Calculate the position of Joint 4 based on the positions of the previous joints
+    leg->joints[3][0] = leg->joints[2][0] + Xb;
+    leg->joints[3][1] = leg->joints[2][1] + Yb;
+    leg->joints[3][2] = leg->joints[2][2] + G1;
 }
 float *get_target(SpiderLeg *leg) {
     return leg->joints[3];
 }
 
 void inverse_kinematics(SpiderLeg *leg, float *target) {
-    float x = target[0];
-    float y = target[1];
-    float z = target[2];
+    float x = leg->joints[3][0] + target[0];
+    float y = leg->joints[3][1] + target[1];
+    float z = leg->joints[3][2] + target[2];
+
+    printf ("x = %.2f\n", x);
+    printf ("y = %.2f\n", y);
+    printf ("z = %.2f\n", z);
 
     float theta1 = atan2f(y, x);
 
