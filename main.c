@@ -12,7 +12,6 @@
 #define SERVO_CHANNEL_2 2
 #define SERVO_CHANNEL_3 3
 
-#define NUM_JOINTS 4
 
 #include <stdio.h>
 #include "ik.h"
@@ -47,7 +46,7 @@ int main() {
     }
 
     // Get the target position (example value)
-    float target[3] = {0.0, 100.0, 0.0};
+    float target[3] = {100.0, 0.0, 0.0};
 
     // Update the first two elements of the target array for horizontal movement
      // Example: Move 50 units in the x-direction

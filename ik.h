@@ -6,6 +6,8 @@
 
 
 #define M_PI 3.141559265359
+#define NUM_JOINTS 4
+
 
 typedef struct {
     char name[20];

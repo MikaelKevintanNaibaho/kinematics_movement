@@ -32,30 +32,33 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     leg->theta1 = normalize_angle(angles[0]);
     leg->theta2 = normalize_angle(angles[1]);
     leg->theta3 = normalize_angle(angles[2]);
+
+    printf("Theta1: %.4f degrees\n", leg->theta1);
+    printf("Theta2: %.4f degrees\n", leg->theta2);
+    printf("Theta3: %.4f degrees\n", leg->theta3);
 }
 
 void forward_kinematics(SpiderLeg *leg) {
-    float theta1 = radians(leg->theta1);
-    float theta2 = radians(leg->theta2);
-    float theta3 = radians(leg->theta3);
-    
+    double theta1 = radians(leg->theta1);
+    double theta2 = radians(leg->theta2);
+    double theta3 = radians(leg->theta3);
 
-    float Xa = leg->COXA * cos(theta1);
-    float Ya = leg->COXA * sin(theta1);
-    float G2 = sin(theta2) * leg->FEMUR;
-    float P1 = cos(theta2) * leg->FEMUR;
-    float Xc = cos(theta1) * P1;
-    float Yc = sin(theta1) * P1;
+    double Xa = leg->COXA * cos(theta1);
+    double Ya = leg->COXA * sin(theta1);
+    double G2 = sin(theta2) * leg->FEMUR;
+    double P1 = cos(theta2) * leg->FEMUR;
+    double Xc = cos(theta1) * P1;
+    double Yc = sin(theta1) * P1;
 
-    float H = sqrt(pow(leg->TIBIA, 2) + pow(leg->FEMUR, 2) - (2 * leg->TIBIA * leg->FEMUR * cos(M_PI - theta3)));
-    float phi1 = acos((pow(leg->FEMUR, 2) + pow(H, 2) - pow(leg->TIBIA, 2)) / (2 * leg->FEMUR * H));
-    float phi2 = M_PI - (M_PI - theta3) - phi1;
-    float phi3 = (phi1 - theta2);
-    float Pp = cos(phi3) * H;
-    float P2 = Pp - P1;
-    float Yb = sin(theta1) * Pp;
-    float Xb = cos(theta1) * Pp;
-    float G1 = -sin(phi3) * H;
+    double H = sqrt(leg->TIBIA * leg->TIBIA + leg->FEMUR * leg->FEMUR - 2 * leg->TIBIA * leg->FEMUR * cos(M_PI - theta3));
+    double phi1 = acos((leg->FEMUR * leg->FEMUR + H * H - leg->TIBIA * leg->TIBIA) / (2 * leg->FEMUR * H));
+    double phi2 = M_PI - (M_PI - theta3) - phi1;
+    double phi3 = (phi1 - theta2);
+    double Pp = cos(phi3) * H;
+    double P2 = Pp - P1;
+    double Yb = sin(theta1) * Pp;
+    double Xb = cos(theta1) * Pp;
+    double G1 = -sin(phi3) * H;
 
     leg->joints[0][0] = 0;
     leg->joints[0][1] = 0;
@@ -71,56 +74,61 @@ void forward_kinematics(SpiderLeg *leg) {
 
     leg->joints[3][0] = Xa + Xb;
     leg->joints[3][1] = Ya + Yb;
-    leg->joints[3][2] = leg->joints[2][2] + leg->TIBIA;
+    leg->joints[3][2] = G1;
 }
-
 float *get_target(SpiderLeg *leg) {
     return leg->joints[3];
 }
 
-void inverse_kinematics(SpiderLeg *leg, float *target)
-{
+void inverse_kinematics(SpiderLeg *leg, float *target) {
     float x = target[0];
     float y = target[1];
     float z = target[2];
 
-    // Calculate theta1
     float theta1 = atan2f(y, x);
 
-    // Calculate the projected distance on the x-y plane
-    float projected_distance = sqrtf(x * x + y * y);
+    float ya = leg->COXA * sinf(theta1);
 
-    // Calculate the remaining distance
-    float remaining_distance =  leg->joints[3][2];
+    float xa = leg->COXA * cosf(theta1);
 
-    // Calculate the total distance to the target
-    float total_distance = sqrtf(projected_distance * projected_distance + remaining_distance * remaining_distance);
+    float yb = x - ya;
+    float xb = x - xa;
 
-    // Calculate theta2 and theta3 using law of cosines
-    float cos_theta2 = (powf(total_distance, 2) + powf(leg->FEMUR, 2) - powf(leg->TIBIA, 2)) / (2 * total_distance * leg->FEMUR);
-    float theta2 = acosf(cos_theta2);
+    float r1 = sqrtf((xb * xb) + (yb * yb));
 
-    float cos_theta3 = (powf(leg->FEMUR, 2) + powf(leg->TIBIA, 2) - powf(total_distance, 2)) / (2 * leg->FEMUR * leg->TIBIA);
-    float theta3 = acosf(cos_theta3);
+    float h = sqrtf((r1 * r1) + (z * z));
 
-    // Set the calculated angles
+    // Check if h is zero to avoid division by zero
+    if (h == 0) {
+        printf("Error: Target position is at the origin.\n");
+        return;
+    }
+
+    float phi3_cos = (powf(leg->TIBIA, 2) + powf(h, 2) - powf(leg->FEMUR, 2)) / (2 * leg->TIBIA * h);
+    // Ensure that phi3_cos is within the valid range [-1, 1]
+    if (phi3_cos < -1 || phi3_cos > 1) {
+        printf("Error: Invalid cosine value for phi3 calculation.\n");
+        return;
+    }
+    float phi3 = acosf(phi3_cos);
+
+    float phi1_cos = (powf(leg->FEMUR, 2) + powf(h, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * h);
+    // Ensure that phi1_cos is within the valid range [-1, 1]
+    if (phi1_cos < -1 || phi1_cos > 1) {
+        printf("Error: Invalid cosine value for phi1 calculation.\n");
+        return;
+    }
+    float phi1 = acosf(phi1_cos);
+
+    float theta2 = phi1 - atan2f(z, r1);
+
+    float theta3 = 180 - (phi1 + phi3);
+
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
+
     set_angles(leg, angles);
 
-    // Print the results or use them as needed
-    printf("Theta1: %.4f degrees\n", leg->theta1);
-    printf("Theta2: %.4f degrees\n", leg->theta2);
-    printf("Theta3: %.4f degrees\n", leg->theta3);
-
-    // Perform forward kinematics to update joint positions
     forward_kinematics(leg);
-
-    // Debug print statements
-    printf("x: %.4f\n", x);
-    printf("y: %.4f\n", y);
-    printf("z: %.4f\n", z);
-    printf("Theta1: %.4f degrees\n", degrees(theta1));
-    printf("Theta2: %.4f degrees\n", degrees(theta2));
-    printf("Theta3: %.4f degrees\n", degrees(theta3));
 }
+
 
