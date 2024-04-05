@@ -85,7 +85,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
     float y = target[1];
     float z = target[2];
 
-    z = fmaxf(z, 0.01);
+
 
     float theta1 = atan2f(y, x);
 
@@ -97,15 +97,52 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
 
     float r1 = sqrtf(powf(xb, 2) + powf(yb, 2));
 
-    float cos_theta2 = (powf(r1, 2) + powf(z, 2) - powf(leg->FEMUR, 2)) / (2 * r1 * z);
-    float theta2  = acosf(cos_theta2) + atanf(z /r1);
+    float cos_theta2;
+    if (fabs(2 * r1 * z) < EPSILON) {
+    // Handle the case where the denominator is close to zero (within a small epsilon value)
+    // For example, set cos_theta2 to a default value or handle it according to your application logic
+        cos_theta2 = cosf(leg->theta2); // Replace DEFAULT_VALUE with the value you want to assign
+    } else {
+    // Calculate cos_theta2 normally
+        cos_theta2 = (powf(r1, 2) + powf(z, 2) - powf(leg->FEMUR, 2)) / (2 * r1 * z);
+    }
+    float theta2, theta3;
+    if (!isnan(cos_theta2)) {
+        // Calculate theta2
+        theta2 = acosf(cos_theta2) + atanf(z / r1);
 
+        // Calculate theta3
+        theta3 = atan2f(yb, xb) - theta2;
 
-    float theta3 = atan2f(yb, xb) - theta2;
+        // Set the calculated angles
+        float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
+        set_angles(leg, angles);
 
+        // Print the results or use them as needed
+        printf("Theta1: %.4f degrees\n", leg->theta1);
+        printf("Theta2: %.4f degrees\n", leg->theta2);
+        printf("Theta3: %.4f degrees\n", leg->theta3);
+    } else {
+        // Handle invalid cos_theta2 (set default angles)
+        printf("Invalid input or calculation. Setting default angles.\n");
+        leg->theta1 = 0.0;
+        leg->theta2 = 0.0;
+        leg->theta3 = 0.0;
+    }
 
-    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
-    set_angles(leg, angles);
+    forward_kinematics(leg);   
 
-    forward_kinematics(leg);    
+    printf("x: %.4f\n", x);
+    printf("y: %.4f\n", y);
+    printf("z: %.4f\n", z);
+    printf("Theta1: %.4f degrees\n", degrees(theta1));
+    printf("Xa: %.4f\n", xa);
+    printf("Ya: %.4f\n", ya);
+    printf("Xb: %.4f\n", xb);
+    printf("Yb: %.4f\n", yb);
+    printf("R1: %.4f\n", r1);
+    printf("Cos_theta2: %.4f\n", cos_theta2);
+    printf("Theta2: %.4f degrees\n", degrees(theta2));
+    printf("Theta3: %.4f degrees\n", degrees(theta3));
+    
 }
