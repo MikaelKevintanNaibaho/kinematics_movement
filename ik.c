@@ -71,7 +71,7 @@ void forward_kinematics(SpiderLeg *leg) {
 
     leg->joints[3][0] = Xa + Xb;
     leg->joints[3][1] = Ya + Yb;
-    leg->joints[3][2] = G1;
+    leg->joints[3][2] = leg->joints[2][2] + leg->TIBIA;
 }
 
 float *get_target(SpiderLeg *leg) {
@@ -91,7 +91,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
     float projected_distance = sqrtf(x * x + y * y);
 
     // Calculate the remaining distance
-    float remaining_distance = z - leg->joints[3][2];
+    float remaining_distance =  leg->joints[3][2];
 
     // Calculate the total distance to the target
     float total_distance = sqrtf(projected_distance * projected_distance + remaining_distance * remaining_distance);
