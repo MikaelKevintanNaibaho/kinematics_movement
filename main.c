@@ -60,15 +60,6 @@ int main() {
     printf("Theta 2: %.2f degrees\n", leg.theta2);
     printf("Theta 3: %.2f degrees\n", leg.theta3);
 
-    // Perform forward kinematics again to verify the calculated joint angles
-    forward_kinematics(&leg);
-
-    // Display joint positions after applying inverse kinematics
-    printf("\nJoint positions after inverse kinematics:\n");
-    for (int i = 0; i < NUM_JOINTS; ++i) {
-        printf("Joint %d: (%.2f, %.2f, %.2f)\n", i + 1, leg.joints[i][0], leg.joints[i][1], leg.joints[i][2]);
-    }
-
     sleep(2);
 
     set_pwm_angle(SERVO_CHANNEL_1, leg.theta1, PWM_FREQ);
