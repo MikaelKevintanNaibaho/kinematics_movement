@@ -78,7 +78,6 @@ float *get_target(SpiderLeg *leg) {
     return leg->joints[3];
 }
 
-
 void inverse_kinematics(SpiderLeg *leg, float *target)
 {
     float x = target[0];
@@ -91,23 +90,16 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
     // Calculate the projected distance on the x-y plane
     float projected_distance = sqrtf(x * x + y * y);
 
-    // If the target only specifies x and y (z = 0), use the current z-coordinate
-    if (fabs(z) < EPSILON) {
-        // If z-coordinate is close to zero, use the current leg position for z
-        z = leg->joints[3][2];
-    }
-
-    // Calculate the remaining distances
+    // Calculate the remaining distance
     float remaining_distance = z - leg->joints[3][2];
 
     // Calculate the total distance to the target
     float total_distance = sqrtf(projected_distance * projected_distance + remaining_distance * remaining_distance);
 
-    // Calculate theta2
-    float cos_theta2 = (powf(total_distance, 2) - powf(leg->FEMUR, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * leg->TIBIA);
+    // Calculate theta2 and theta3 using law of cosines
+    float cos_theta2 = (powf(total_distance, 2) + powf(leg->FEMUR, 2) - powf(leg->TIBIA, 2)) / (2 * total_distance * leg->FEMUR);
     float theta2 = acosf(cos_theta2);
 
-    // Calculate theta3
     float cos_theta3 = (powf(leg->FEMUR, 2) + powf(leg->TIBIA, 2) - powf(total_distance, 2)) / (2 * leg->FEMUR * leg->TIBIA);
     float theta3 = acosf(cos_theta3);
 
@@ -131,3 +123,4 @@ void inverse_kinematics(SpiderLeg *leg, float *target)
     printf("Theta2: %.4f degrees\n", degrees(theta2));
     printf("Theta3: %.4f degrees\n", degrees(theta3));
 }
+
