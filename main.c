@@ -28,7 +28,7 @@ int main() {
     forward_kinematics(&leg);
     sleep(2);
     // Move the leg forward by a specified distance
-    float target[3] = {100.0, 0.0, 0.0}; // Example distance to move forward
+    float target[3] = {100.0, 100.0, 100.0}; // Example distance to move forward
     move_forward(&leg, target);
     forward_kinematics(&leg);
 
