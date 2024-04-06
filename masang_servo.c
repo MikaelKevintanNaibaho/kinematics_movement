@@ -13,9 +13,9 @@ int main(void)
     PCA9685_init();
 
     
-    set_pwm_angle(SERVO_CHANNEL_1, 90, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_2, 90, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_3, 130, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_1, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_2, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_3, 0, PWM_FREQ);
 
     return 0;
 }
