@@ -121,7 +121,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float phi2 = atan2f(z, h);
 
-    float theta2 = (phi1 + phi2);
+    float theta2 = (phi1 + phi2) * (180/M_PI);
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
 
