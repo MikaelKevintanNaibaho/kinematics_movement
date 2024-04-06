@@ -21,7 +21,7 @@ int main() {
     leg.TIBIA = TIBIA_LENGTH;  // Example dimensions, replace with actual values // Example PWM channel, replace with actual channel number
 
     // Set initial joint angles for the leg
-    float initial_angles[3] = {90, 150.0, 150};  // Example angles, replace with desired initial angles
+    float initial_angles[3] = {45, 150.0, 150};  // Example angles, replace with desired initial angles
 
 
     set_angles(&leg, initial_angles);
