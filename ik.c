@@ -94,7 +94,7 @@ float *get_target(SpiderLeg *leg) {
 
 void inverse_kinematics(SpiderLeg *leg, float *target) {
     float x = target[0];
-    float y = 90+ target[1];
+    float y = 50+ target[1];
     float z = -50 + target[2];
 
     printf ("x = %.2f\n", x);
@@ -114,13 +114,13 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float l = sqrtf(powf(h, 2) + powf(z, 2));
 
     float theta3_raw = acosf((powf(leg->FEMUR, 2) + powf(leg->TIBIA, 2) - powf(l, 2)) / (2 * leg->FEMUR * leg->TIBIA));
-    float theta3  =  theta3_raw + 30;
+    float theta3  =  theta3_raw ;
 
     float phi1 = acosf((powf(leg->FEMUR, 2) + powf(l, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * l));
 
     float phi2 = atan2f(z, h);
 
-    float theta2 = 90 - (phi1 + phi2);
+    float theta2 = 90  - (phi1 + phi2);
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
 
