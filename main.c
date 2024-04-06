@@ -23,8 +23,9 @@ int main() {
     // Set initial joint angles for the leg
     float initial_angles[3] = {90, 30.0, 30.0};  // Example angles, replace with desired initial angles
 
-    set_angles(&leg, initial_angles);
 
+    set_angles(&leg, initial_angles);
+    forward_kinematics(&leg);
     sleep(2);
     // Move the leg forward by a specified distance
     float target[3] = {0.0, 100.0, 0.0}; // Example distance to move forward
