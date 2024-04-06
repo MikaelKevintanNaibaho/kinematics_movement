@@ -94,7 +94,7 @@ float *get_target(SpiderLeg *leg) {
 
 void inverse_kinematics(SpiderLeg *leg, float *target) {
     float x = target[0];
-    float y = 90 + target[1];
+    float y = 120 + target[1];
     float z = -50 + target[2];
 
     printf ("x = %.2f\n", x);
