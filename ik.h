@@ -8,7 +8,10 @@
 #define M_PI 3.141559265359
 #define NUM_JOINTS 4
 
-
+#define SERVO_CHANNEL_1 1
+#define SERVO_CHANNEL_2 2
+#define SERVO_CHANNEL_3 3
+#define PWM_FREQ 50
 typedef struct {
     char name[20];
     float COXA;
@@ -28,6 +31,7 @@ float *get_target(SpiderLeg *leg);
 void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg);
 void inverse_kinematics(SpiderLeg *leg, float *target);
+void move_forward(SpiderLeg *leg, float target[3]); 
 
 
 #endif /*IK_H*/
