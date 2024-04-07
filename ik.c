@@ -49,7 +49,7 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
 
     float theta1 = radians(sudut[0]);
-    float theta2 = radians(sudut[1] - 90);
+    float theta2 = radians(sudut[1]);
     float theta3 = (sudut[2]);
 
     float phi4 = radians(180 - theta3);
