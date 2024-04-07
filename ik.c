@@ -52,21 +52,15 @@ void forward_kinematics(SpiderLeg *leg, float target[3]) {
     float sin_alpha = sinf((leg->mounted_angle));
     float cos_alpha = cosf(leg->mounted_angle);
 
-    float x_coordinate;
-    if (target[0] == 0){
-        x_coordinate = leg_zero_offset[0]; //
-    } else{
-        x_coordinate = cos_alpha * target[0] + sin_alpha * target[1];
-        x_coordinate += leg_zero_offset[0];
-    }
-
+    float x_coordiante = cos_alpha * target[0] + sin_alpha * target[1];
+    x_coordiante += leg_zero_offset[0];
 
     float y_coordinate = sin_alpha * target[0] - cos_alpha * target[1];
     y_coordinate += leg_zero_offset[1];
 
     float z_coordinates = target[2] + leg_zero_offset[2];
 
-    leg->joints[3][0] = x_coordinate;
+    leg->joints[3][0] = x_coordiante;
     leg->joints[3][1] = y_coordinate;
     leg->joints[3][2] = z_coordinates;
 }
@@ -89,7 +83,12 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float no_coxa = sqrtf(powf(x, 2) + powf(y, 2) - COXA_LENGTH);
     float servo3_tip_distance = sqrtf(powf(no_coxa, 2) + powf(z, 2));
 
-    float theta1 = atan2f(y, x);
+    float theta1 = radians(leg->theta1);
+    printf("sudut 1= %.2f", theta1);
+    if( x!=0){
+        theta1 = atan2f(y, x);
+    }
+
 
     float angle_right_side_triangle = degrees(atan2f(z, no_coxa));
     float angle_unequal_triangle_rad = acosf((powf(TIBIA_LENGTH, 2) - powf(servo3_tip_distance, 2) - powf(FEMUR_LENGTH, 2)) / (-2 * servo3_tip_distance * FEMUR_LENGTH));
