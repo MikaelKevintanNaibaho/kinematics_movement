@@ -153,6 +153,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
 
     set_angles(leg, angles);
+    printf("AFTER INVERSE KINEMATICS\n");
     forward_kinematics(leg, angles);
 
 }
