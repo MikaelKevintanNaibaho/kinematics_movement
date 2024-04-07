@@ -39,7 +39,7 @@ float normalize_angle(float angle);
 float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
-void forward_kinematics(SpiderLeg *leg, float target[3]);
+void forward_kinematics(SpiderLeg *leg, float sudut[3]);
 void inverse_kinematics(SpiderLeg *leg, float *target);
 void move_forward(SpiderLeg *leg, float target[3]); 
 

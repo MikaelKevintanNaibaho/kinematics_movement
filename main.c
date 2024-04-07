@@ -23,6 +23,7 @@ int main() {
 
 
     set_angles(&leg, initial_angles);
+    forward_kinematics(&leg, initial_angles);
     sleep(2);
     // Move the leg forward by a specified distance
     float target[3] = {0.0, 100.0, 0.0}; // Example distance to move forward
