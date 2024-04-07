@@ -99,7 +99,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float theta2 = angle_right_side_triangle + angle_unequal_triangel;
 
-    float theta3 = angle_unequal_triangle2;
+    float theta3 = 180 - angle_unequal_triangle2;
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
 
     set_angles(leg, angles);
