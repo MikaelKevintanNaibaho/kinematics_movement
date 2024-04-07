@@ -9,7 +9,7 @@
 #define EPSILON 1e-3
 #include "ik.h"
 
-const float leg_zero_offset[3] = {100 , 0 , -120};
+const float leg_zero_offset[3] = {0 , COXA_LENGTH , -120};
 
 
 float degrees(float rad) {
