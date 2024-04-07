@@ -49,30 +49,42 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
 
     float theta1 = radians(sudut[0]);
-    float theta2 = radians(sudut[1]);
-    float theta3 = radians(sudut[2]);
+    float theta2 = radians(sudut[1] - 90);
+    float theta3 = (sudut[2]);
 
-    float phi4 = 180 - theta3;
+    float phi4 = radians(180 - theta3);
 
-    float R = sqrtf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2)) - (2 * FEMUR_LENGTH * TIBIA_LENGTH * cosf(theta3)));
+    float R = sqrtf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2)) - (2 * FEMUR_LENGTH * TIBIA_LENGTH * cosf(phi4)));
 
     float phi1 = acosf((powf(FEMUR_LENGTH,2) + powf(R, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * R));
 
-    float phi3 =  phi1 - theta2;
+    float phi3 =  (phi1 - theta2);
 
-    float z_coordinate = R * sinf(phi3);
-    float H = R * cosf(phi3);
+    float z_coordinate =  R * sinf(phi3);
+    float H = (R * cosf(phi3));
 
-    float G = COXA_LENGTH + H;
+    float ya = cosf(theta1) * COXA_LENGTH;
+    float xa = sinf(theta1) * COXA_LENGTH;
+    printf("xa = %.2f, ya = %.2f\n", xa, ya);
 
-    float x_coordinate = G * sinf(theta1);
-    float y_coordinate = G * cosf(theta1);
+    float yb = cosf(theta1) * H;
+    float xb = sinf(theta1) * H;
+    printf("xc = %.2f, yc = %.2f\n", xb, yb);
+
+
+
+
+
+    float x_coordinate = ya + yb;
+    float y_coordinate = xa + xb;
+
 
     leg->joints[3][0] = x_coordinate;
     leg->joints[3][1] = y_coordinate;
     leg->joints[3][2] = z_coordinate;
     printf("forward kinematics: ");
     printf("x = %.2f, y = %.2f, z = %.2f \n", leg->joints[3][0], leg->joints[3][1], leg->joints[3][2]);
+    printf("R= %.2f\n phi1= %.2f\n phi3= %.2f\n, H= %.2f\n ", R, phi1, phi3, H);
 }
 
 float *get_target(SpiderLeg *leg) {
@@ -87,21 +99,22 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float theta1;
     
+    float x_trans_coordinate = x + leg->joints[3][0];
+    float y_trans_coordinate = y + leg->joints[3][1];
+    float z_trans_coordinate = z + leg->joints[3][2];
+
     if (x != 0 ){
-        theta1 = atan2f(x, y);
+        theta1 = atan2f(x_trans_coordinate, y_trans_coordinate);
 
     } else{
         theta1 = radians(leg->theta1);
     }
 
-    if (z == 0) {
-        z = leg->joints[3][2];
-    }
 
     printf("koordinat target: \n");
-    printf ("x = %.2f\n", x);
-    printf ("y = %.2f\n", y);
-    printf ("z = %.2f\n", z);
+    printf ("x = %.2f\n", x_trans_coordinate);
+    printf ("y = %.2f\n", y_trans_coordinate);
+    printf ("z = %.2f\n", z_trans_coordinate);
 
  
 
@@ -112,8 +125,8 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     printf("xa = %.2f, ya = %2.f\n", xa, ya);
 
-    float yb  = y - ya;
-    float xb  = x - xa;
+    float yb  = y_trans_coordinate - ya;
+    float xb  = x_trans_coordinate - xa;
 
 
     printf("xb = %.2f, yb = %.2f\n" , xb, yb);
@@ -125,9 +138,9 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float phi1 = acosf((powf(FEMUR_LENGTH,2) + powf(R, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * R));
 
-    float phi3 = atan2f(z, H);
+    float phi3 = atan2f(z_trans_coordinate, H);
 
-    float theta2 = 90 + (phi1 - phi3);
+    float theta2 = 90 + (phi1 + phi3);
 
     float phi4 = acosf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(R, 2)) / (2 * FEMUR_LENGTH * TIBIA_LENGTH));
 
