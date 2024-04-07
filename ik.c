@@ -7,6 +7,10 @@
 
 // Define a small epsilon value for floating-point comparisons
 #define EPSILON 1e-3
+#include "ik.h"
+
+const float leg_zero_offset[3] = {100 , 0 , -120};
+
 
 float degrees(float rad) {
     return rad * (180.0 / M_PI);
@@ -42,50 +46,23 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     printf("Theta3: %.4f degrees\n", leg->theta3);
 }
 
-void forward_kinematics(SpiderLeg *leg) {
-    // Convert angles to radians
-    float theta1 = radians(leg->theta1);
-    float theta2 = radians(leg->theta2);
-    float theta3 = radians(leg->theta3);
+void forward_kinematics(SpiderLeg *leg, float target[3]) {
 
-    // Calculate the coordinates of joint 1
-    float x1 = leg->COXA * cosf(theta1);
-    float y1 = leg->COXA * sinf(theta1);
-    float z1 = 0.0;  // Assuming joint 1 is at the base level
 
-    // Calculate the coordinates of joint 2 relative to joint 1
-    float x2 = x1 + leg->FEMUR * cosf(theta2) * cosf(theta1);
-    float y2 = y1 + leg->FEMUR * cosf(theta2) * sinf(theta1);
-    float z2 = z1 + leg->FEMUR * sinf(theta2);
+    float sin_alpha = sinf((leg->mounted_angle));
+    float cos_alpha = cosf(leg->mounted_angle);
 
-    // Calculate the coordinates of joint 3 relative to joint 2
-    float x3 = x2 + leg->TIBIA * cosf(theta3 + theta2) * cosf(theta1);
-    float y3 = y2 + leg->TIBIA * cosf(theta3 + theta2) * sinf(theta1);
-    float z3 = z2 + leg->TIBIA * sinf(theta3 + theta2);
+    float x_coordiante = cos_alpha * target[0] + sin_alpha * target[1];
+    x_coordiante += leg_zero_offset[0];
 
-    // Update the leg's joint positions
-    leg->joints[0][0] = 0.0;  // Base joint
-    leg->joints[0][1] = 0.0;
-    leg->joints[0][2] = 0.0;
+    float y_coordinate = sin_alpha * target[0] - cos_alpha * target[1];
+    y_coordinate += leg_zero_offset[1];
 
-    leg->joints[1][0] = x1;
-    leg->joints[1][1] = y1;
-    leg->joints[1][2] = z1;
+    float z_coordinates = target[2] + leg_zero_offset[2];
 
-    leg->joints[2][0] = x2;
-    leg->joints[2][1] = y2;
-    leg->joints[2][2] = z2;
-
-    leg->joints[3][0] = x3;
-    leg->joints[3][1] = y3;
-    leg->joints[3][2] = z3;
-
-    // Print the calculated joint positions
-    printf("Forward kinematics of the leg with initial joint angles:\n");
-    printf("Joint 1: (%.2f, %.2f, %.2f)\n", leg->joints[0][0], leg->joints[0][1], leg->joints[0][2]);
-    printf("Joint 2: (%.2f, %.2f, %.2f)\n", leg->joints[1][0], leg->joints[1][1], leg->joints[1][2]);
-    printf("Joint 3: (%.2f, %.2f, %.2f)\n", leg->joints[2][0], leg->joints[2][1], leg->joints[2][2]);
-    printf("End Effector: (%.2f, %.2f, %.2f)\n", leg->joints[3][0], leg->joints[3][1], leg->joints[3][2]);
+    leg->joints[3][0] = x_coordiante;
+    leg->joints[3][1] = y_coordinate;
+    leg->joints[3][2] = z_coordinates;
 }
 
 float *get_target(SpiderLeg *leg) {
@@ -94,35 +71,30 @@ float *get_target(SpiderLeg *leg) {
 
 void inverse_kinematics(SpiderLeg *leg, float *target) {
 
-    float x = target[0];
-    float y = 50 + target[1];
-    float z = -50 + target[2];
+    forward_kinematics(leg, target);
 
+    float x = leg->joints[3][0];
+    float y = leg->joints[3][1];
+    float z = leg->joints[3][2];
     printf ("x = %.2f\n", x);
     printf ("y = %.2f\n", y);
     printf ("z = %.2f\n", z);
 
-    float theta1 = atan2f(y , x);
+    float no_coxa = sqrtf(powf(x, 2) + powf(y, 2) - COXA_LENGTH);
+    float servo3_tip_distance = sqrtf(powf(no_coxa, 2) + powf(z, 2));
 
-    float ya = leg->COXA * sinf(theta1);
-    float xa = leg->COXA * cosf(theta1);
+    float theta1 = atan2f(y, x);
 
-    float yb = y - ya;
-    float xb = x - xa;
+    float angle_right_side_triangle = degrees(atan2f(z, no_coxa));
+    float angle_unequal_triangle_rad = acosf((powf(TIBIA_LENGTH, 2) - powf(servo3_tip_distance, 2) - powf(FEMUR_LENGTH, 2)) / (-2 * servo3_tip_distance * FEMUR_LENGTH));
+    float angle_unequal_triangel = degrees(angle_unequal_triangle_rad);
 
-    float h = sqrtf(powf(xb, 2) + powf(yb, 2));
+    float angle_unequal_triangle2_rad = acosf((powf(servo3_tip_distance, 2) - powf(TIBIA_LENGTH, 2) - powf(FEMUR_LENGTH, 2)) / (-2 * TIBIA_LENGTH * FEMUR_LENGTH));
+    float angle_unequal_triangle2 = degrees(angle_unequal_triangle2_rad);
 
-    float l = sqrtf(powf(h, 2) + powf(z, 2));
+    float theta2 = angle_right_side_triangle + angle_unequal_triangel;
 
-    float theta3_raw = acosf((powf(leg->FEMUR, 2) + powf(leg->TIBIA, 2) - powf(l, 2)) / (2 * leg->FEMUR * leg->TIBIA));
-    float theta3  =  theta3_raw;
-
-    float phi1 = acosf((powf(leg->FEMUR, 2) + powf(l, 2) - powf(leg->TIBIA, 2)) / (2 * leg->FEMUR * l));
-
-    float phi2 = atan2f(z, h);
-
-    float theta2 = (phi1 + phi2) * (180/M_PI);
-
+    float theta3 = 180 - angle_unequal_triangle2;
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
 
     set_angles(leg, angles);
