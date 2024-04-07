@@ -52,15 +52,21 @@ void forward_kinematics(SpiderLeg *leg, float target[3]) {
     float sin_alpha = sinf((leg->mounted_angle));
     float cos_alpha = cosf(leg->mounted_angle);
 
-    float x_coordiante = cos_alpha * target[0] + sin_alpha * target[1];
-    x_coordiante += leg_zero_offset[0];
+    float x_coordinate;
+    if (target[0] == 0){
+        x_coordinate = leg_zero_offset[0]; //
+    } else{
+        x_coordinate = cos_alpha * target[0] + sin_alpha * target[1];
+        x_coordinate += leg_zero_offset[0];
+    }
+
 
     float y_coordinate = sin_alpha * target[0] - cos_alpha * target[1];
     y_coordinate += leg_zero_offset[1];
 
     float z_coordinates = target[2] + leg_zero_offset[2];
 
-    leg->joints[3][0] = x_coordiante;
+    leg->joints[3][0] = x_coordinate;
     leg->joints[3][1] = y_coordinate;
     leg->joints[3][2] = z_coordinates;
 }
