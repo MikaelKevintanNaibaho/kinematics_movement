@@ -11,7 +11,8 @@ int main(void){
 
     sleep(2);
     target[0] += 0.0;
-    target[1] += 50.0;
+    target[1] += 0.0;
+    target[2] += 50.0;
 
     inverse_kinematics(&leg, target);
 
