@@ -1,6 +1,8 @@
 #include "ik.h"
 
 int main(void){
+    PCA9685_init();
+
     SpiderLeg leg;
     float target[3] = {100.0, 100.0, 0.0};
 
