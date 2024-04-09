@@ -7,7 +7,7 @@ int main(void)
     hexapod hexapod(debug);
 
 
-    hexapod.step(1.0);
+    hexapod.step(0.1);
 
     return 0;
 
