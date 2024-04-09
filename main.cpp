@@ -1,16 +1,21 @@
 #include "hexapod.h"
 
-int main() {
-
+int main(void) {
     PCA9685_init();
-     // Create a hexapod object with debug mode enabled for informative messages
-    while(1){
-        set_pwm_angle(1, 90, 50);
-        sleep(1);
-        set_pwm_angle(1, 0, 50);
-        sleep(1);
-    }
 
+    hexapod walker(true);
 
-  return 0;
+    walker.angle[0] = 45 * DEGTORAD;
+    walker.angle[1] = 150 * DEGTORAD;
+    walker.angle[2] = 130 * DEGTORAD;
+
+    walker.stand();
+
+    sleep(3);
+
+    walker.step(0.1);
+
+    walker.sit();
+
+    return 0;
 }

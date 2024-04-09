@@ -3,6 +3,7 @@
 #include <iostream>
 #include <math.h>
 #include <mutex>
+#include <thread>
 #include "bezier2d.h"
 #include "pwm_servo.h"
 #ifndef PI
