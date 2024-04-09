@@ -142,6 +142,10 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     printf("phi2 + phi4 = %.2f + %.2f = %.2f\n", degrees(phi2), degrees(phi4), degrees(total_phi));
     float theta3 = M_PI - (phi3);
 
+    if (degrees(theta3 >= 149.00)){
+        theta3 = radians(150);
+    }
+
 
     // Convert angles to degrees
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
