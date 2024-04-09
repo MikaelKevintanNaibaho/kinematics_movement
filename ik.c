@@ -41,8 +41,8 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 
 void inverse_kinematics(SpiderLeg *leg, float target[3])
 {
-    float x = target[0] + 100.0;
-    float y = target[1] + 100.0;
+    float x = target[0];
+    float y = target[1];
     float z = target[2];
     float z_offset = 100.0 + z;
     float theta1 = atan2f(x, y);
