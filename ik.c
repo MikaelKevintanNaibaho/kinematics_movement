@@ -65,27 +65,22 @@ void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
 
     float ya = cosf(theta1) * COXA_LENGTH;
     float xa = sinf(theta1) * COXA_LENGTH;
-    printf("xa = %.2f, ya = %.2f\n", xa, ya);
 
     float yb = cosf(theta1) * H;
     float xb = sinf(theta1) * H;
-    printf("xc = %.2f, yc = %.2f\n", xb, yb);
 
-
-
-
-
-    float x_coordinate = ya + yb;
-    float y_coordinate = xa + xb;
-
+    float x_coordinate = xa + xb;
+    float y_coordinate = ya + yb;
 
     leg->joints[3][0] = x_coordinate;
     leg->joints[3][1] = y_coordinate;
     leg->joints[3][2] = z_coordinate;
+
     printf("forward kinematics: ");
     printf("x = %.2f, y = %.2f, z = %.2f \n", leg->joints[3][0], leg->joints[3][1], leg->joints[3][2]);
     printf("R= %.2f\n phi1= %.2f\n phi3= %.2f\n, H= %.2f\n ", R, phi1, phi3, H);
 }
+
 
 float *get_target(SpiderLeg *leg) {
     return leg->joints[3];
@@ -97,66 +92,60 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float y = target[1];
     float z = target[2];
 
-    float theta1;
-    
-    float x_trans_coordinate = x + leg->joints[3][0];
-    float y_trans_coordinate = y + leg->joints[3][1];
-    float z_trans_coordinate = z + leg->joints[3][2];
+    // Calculate theta1 based on the target coordinates
+    float theta1 = atan2f(x, y);
 
-    if (x != 0 ){
-        theta1 = atan2f(x_trans_coordinate, y_trans_coordinate);
-
-    } else{
-        theta1 = radians(leg->theta1);
-    }
-
-
+    // Print the target coordinates
     printf("koordinat target: \n");
-    printf ("x = %.2f\n", x_trans_coordinate);
-    printf ("y = %.2f\n", y_trans_coordinate);
-    printf ("z = %.2f\n", z_trans_coordinate);
+    printf ("x = %.2f\n", x);
+    printf ("y = %.2f\n", y);
+    printf ("z = %.2f\n", z);
 
- 
-
-
+    // Calculate ya and xa based on theta1
     float ya = cosf(theta1) * COXA_LENGTH;
     float xa = sinf(theta1) * COXA_LENGTH;
 
-    printf("xa = %.2f, ya = %2.f\n", xa, ya);
+    printf("xa = %.2f, ya = %.2f\n", xa, ya);
 
-    float yb  = y_trans_coordinate - ya;
-    float xb  = x_trans_coordinate - xa;
-
+    // Calculate yb and xb based on target coordinates and ya, xa
+    float yb  = y - ya;
+    float xb  = x - xa;
 
     printf("xb = %.2f, yb = %.2f\n" , xb, yb);
-    
 
-    float H = sqrtf(powf(yb, 2) + powf( xb, 2));
+    // Calculate H
+    float H = sqrtf(powf(yb, 2) + powf(xb, 2));
     printf("H = %.2f\n", H);
 
-    float R = sqrtf(powf(H, 2) + powf(z_trans_coordinate, 2));
-
+    // Calculate R
+    float R = sqrtf(powf(H, 2) + powf(z, 2));
     printf("R = %.3f\n", R);
 
+    // Calculate phi1
     float phi1 = acosf((powf(FEMUR_LENGTH,2) + powf(R, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * R));
     printf("phi1 = %.2f\n", phi1);
 
-    float phi3 = atan2f(z_trans_coordinate, H);
+    // Calculate phi3
+    float phi3 = atan2f(z, H);
 
+    // Calculate theta2
     float theta2 = 90 + (phi1 + phi3);
 
+    // Calculate theta3
     float phi4 = acosf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(R, 2)) / (2 * FEMUR_LENGTH * TIBIA_LENGTH));
-
     float theta3 = 180 - phi4;
 
-
+    // Convert angles to degrees
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
 
+    // Set the angles for the leg servos
     set_angles(leg, angles);
+
+    // Print the forward kinematics after inverse kinematics
     printf("AFTER INVERSE KINEMATICS\n");
     forward_kinematics(leg, angles);
-
 }
+
 
 
 
@@ -167,11 +156,11 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 // Function to move a single leg of the hexapod robot forward by distance units
 void move_forward(SpiderLeg *leg, float target[3]) {
 
-    // Calculate the new target position after moving forward
+    // Calculate the target position relative to the leg's current position
     float new_position[3];
-    new_position[0] =  target[0];  // Update x-coordinate
-    new_position[1] = target[1];
-    new_position[2] = target[2];
+    new_position[0] =  target[0] + leg->joints[3][0];  // Update x-coordinate relative to current position
+    new_position[1] = target[1] + leg->joints[3][1];   // Update y-coordinate relative to current position
+    new_position[2] = target[2] + leg->joints[3][2];   // Update z-coordinate relative to current position
     
     // Update the leg with inverse kinematics to reach the new position
     inverse_kinematics(leg, new_position);

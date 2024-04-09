@@ -16,7 +16,6 @@ int main() {
     leg.COXA = COXA_LENGTH;   // Example dimensions, replace with actual values
     leg.FEMUR = FEMUR_LENGTH;  // Example dimensions, replace with actual values
     leg.TIBIA = TIBIA_LENGTH;  // Example dimensions, replace with actual values // Example PWM channel, replace with actual channel number
-    leg.mounted_angle = 0.0;
 
     // Set initial joint angles for the leg
     float initial_angles[3] = {45, 150.0, 130.0};  // Example angles, replace with desired initial angles

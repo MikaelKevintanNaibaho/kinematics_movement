@@ -33,8 +33,8 @@ typedef struct {
 extern const float leg_zero_offset[3];
 
 
-float to_degrees(float radians);
-float to_radians(float degrees);
+float to_degrees(float rad);
+float to_radians(float deg);
 float normalize_angle(float angle);
 float *get_target(SpiderLeg *leg);
 
