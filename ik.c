@@ -44,7 +44,13 @@ void inverse_kinematics(SpiderLeg *leg, float target[3])
     float x = target[0];
     float y = target[1];
     float z = target[2];
-    float z_offset = 100.0 + z;
+    float z_offset;
+    if (z < 0){
+        z_offset = 100.0 + z;
+    } else {
+        z_offset = 100 - z;
+    }
+
     float theta1 = atan2f(x, y);
     float L1 = sqrtf(powf(x, 2) + powf(y, 2));
 
