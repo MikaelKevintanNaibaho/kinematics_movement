@@ -223,8 +223,8 @@ hexapod::hexapod(bool debugflag)
 	angleub[2] = 140.*DEGTORAD;
 	for (ii=0; ii<3; ii++)
 	{
-		anglelb[ii] -= 0.*DEGTORAD; // because servos are straight at 150 degrees
-		angleub[ii] -= 0.*DEGTORAD;
+		anglelb[ii] -= 90.*DEGTORAD; // because servos are straight at 150 degrees
+		angleub[ii] -= 90.*DEGTORAD;
 		//anglelb[ii] *= 0.75;
 		//angleub[ii] *= 0.75;
 	}
