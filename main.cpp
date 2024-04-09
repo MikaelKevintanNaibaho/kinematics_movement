@@ -22,11 +22,6 @@ int main(void) {
     walker.stand();
     set_angle_servo_pwm(walker);
 
-    sleep(3);
-
-    walker.step(0.1);
-
-    walker.sit();
 
     return 0;
 }
