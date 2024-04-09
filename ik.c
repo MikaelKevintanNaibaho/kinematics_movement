@@ -41,8 +41,8 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 
 void inverse_kinematics(SpiderLeg *leg, float target[3])
 {
-    float x = target[0];
-    float y = target[1];
+    float x = target[0] + 100.0;
+    float y = target[1] + 100.0;
     float z = target[2];
     float z_offset = 100.0 + z;
     float theta1 = atan2f(x, y);
@@ -61,7 +61,10 @@ void inverse_kinematics(SpiderLeg *leg, float target[3])
     float alpha3 = acosf(alpha3_cos);
 
     float theta3 = M_PI - alpha3;
-
+    if (theta3 >= radians(145)){
+         theta3 = radians(145);
+         printf("melewati batas fisik tibia kaki\n");
+    }
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
 
