@@ -5,12 +5,12 @@ int main(void){
     PCA9685_init();
 
     SpiderLeg leg;
-    float target[3] = {0.0, 0.0, 0.0};
+    float target[3] = {100.0, 100.0, 0.0};
 
     inverse_kinematics(&leg, target);
 
     sleep(2);
-    float lift_height = 20.0;
+    float lift_height = -20.0;
     float step_lenght = 50;
     float num_step = 3;
 
