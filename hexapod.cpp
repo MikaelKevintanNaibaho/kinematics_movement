@@ -309,13 +309,9 @@ void hexapod::setServoAngles ()
 	for (ii=0; ii<6; ii++)
 	{
 		servoangle[ii*3] = angle[ii*3]*RADTODEG;
-		servoangle[ii*3+1] = angle[ii*3+1]*RADTODEG + 90;
-		servoangle[ii*3+2] = angle[ii*3+2]*RADTODEG ;
+		servoangle[ii*3+1] = angle[ii*3+1]*RADTODEG;
+		servoangle[ii*3+2] = angle[ii*3+2]*RADTODEG;
         printf("1 = %2.f\n 2 = %.2f\n 3 = %.2f\n", servoangle[ii*3], servoangle[ii*3+1], servoangle[ii*3+2]);
-        //         //set_pwm_angle servo
-        set_pwm_angle(ii*3, servoangle[ii * 3], SERVO_FREQ);
-        set_pwm_angle(ii*3 + 1, servoangle[ii * 3 + 1], SERVO_FREQ);
-        set_pwm_angle(ii* 3 + 2, servoangle[ii * 3 + 1], SERVO_FREQ);
 	}
 }
 
