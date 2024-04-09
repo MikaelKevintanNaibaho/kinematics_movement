@@ -28,7 +28,7 @@ int main(void){
         inverse_kinematics(&leg, target_down);
         sleep(0.5);
         //move backward
-        float target_backward[3] = {-step_lenght, 0.0, 0.0};
+        float target_backward[3] = {0.0, 0.0, 0.0};
         inverse_kinematics(&leg, target_backward);
         sleep(0.5);
     }
