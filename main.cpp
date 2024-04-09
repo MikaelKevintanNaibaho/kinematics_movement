@@ -9,7 +9,7 @@ int main() {
   robot.turning = 0.2; // Positive for right turn, negative for left turn (-1.0 to 1.0)
 
   // Main loop for robot operation
-  float dt = 0.01; // Time difference between steps (in seconds)
+  float dt = 1.0; // Time difference between steps (in seconds)
   while (true) {
     // Call the step function to update robot movement
     robot.step(dt);
