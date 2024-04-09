@@ -58,11 +58,14 @@ void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
 
     float phi1 = acosf((powf(FEMUR_LENGTH,2) + powf(H, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * H));
 
-    float phi2 = theta2 - phi1;
+    float phi4 = theta2 - phi1;
 
 
-    float z_coordinate =  H * sinf(phi2);
-    float P = (H * cosf(phi2));
+
+
+
+    float z_coordinate =  H * sinf(phi4);
+    float P = (H * cosf(phi4));
 
     float ya = sinf(theta1) * COXA_LENGTH;
     float xa = cosf(theta1) * COXA_LENGTH;
@@ -79,7 +82,7 @@ void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
 
     printf("forward kinematics: ");
     printf("x = %.2f, y = %.2f, z = %.2f \n", leg->joints[3][0], leg->joints[3][1], leg->joints[3][2]);
-    printf("R= %.2f\n phi1= %.2f\n phi2= %.2f\n, P= %.2f\n ", H, phi1, phi3, P);
+    printf("H= %.2f\n phi1= %.2f\n phi2= %.2f\n, P= %.2f\n ", H, degrees(phi1), degrees(phi3), P);
 }
 
 
@@ -124,6 +127,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float phi1_cos = (powf(FEMUR_LENGTH, 2) + powf(H, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * H);
     float phi1 = acosf(phi1_cos);
+    printf("phi1 = %.2f\n", degrees(phi1));
 
     float phi2_cos = (powf(H, 2) + powf(TIBIA_LENGTH, 2) - powf(FEMUR_LENGTH, 2)) / (2 * H * TIBIA_LENGTH);
     float phi2 = acosf(phi2_cos);
