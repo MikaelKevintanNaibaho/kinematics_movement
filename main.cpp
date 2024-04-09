@@ -6,6 +6,7 @@ int main(void)
     bool debug = true;
     hexapod hexapod(debug);
 
+
     hexapod.step(1.0);
 
     return 0;

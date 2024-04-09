@@ -209,18 +209,18 @@ hexapod::hexapod(bool debugflag)
 	debug = debugflag;
 
 	// init constants for each leg
-	length[0] = 5.26; // in cm
-	length[1] = 6.53;
-	length[2] = 13.2;
+	length[0] = 7.7; // in cm
+	length[1] = 7.5;
+	length[2] = 16.5;
 	femurangle = 12.3*DEGTORAD; // old: 11.5, 9.53
 	tibiaangle = 40.0*DEGTORAD; // old_47.3, 45.0
 
-	anglelb[0] = 75.0*DEGTORAD;
-	angleub[0] = 245.*DEGTORAD;
-	anglelb[1] = 55.0*DEGTORAD;
-	angleub[1] = 250.*DEGTORAD;
-	anglelb[2] = 40.0*DEGTORAD;
-	angleub[2] = 215.*DEGTORAD;
+	anglelb[0] = 0.0*DEGTORAD;
+	angleub[0] = 90.*DEGTORAD;
+	anglelb[1] = 0.0*DEGTORAD;
+	angleub[1] = 180.*DEGTORAD;
+	anglelb[2] = 0.0*DEGTORAD;
+	angleub[2] = 140.*DEGTORAD;
 	for (ii=0; ii<3; ii++)
 	{
 		anglelb[ii] -= 150.*DEGTORAD; // because servos are straight at 150 degrees
