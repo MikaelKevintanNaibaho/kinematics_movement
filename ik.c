@@ -79,7 +79,7 @@ void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
 
     printf("forward kinematics: ");
     printf("x = %.2f, y = %.2f, z = %.2f \n", leg->joints[3][0], leg->joints[3][1], leg->joints[3][2]);
-    printf("R= %.2f\n phi1= %.2f\n phi3= %.2f\n, P= %.2f\n ", H, phi1, phi3, P);
+    printf("R= %.2f\n phi1= %.2f\n phi2= %.2f\n, P= %.2f\n ", H, phi1, phi3, P);
 }
 
 
@@ -130,9 +130,18 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float phi3_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(H, 2)) / (2 * FEMUR_LENGTH * TIBIA_LENGTH);
     float phi3 = acosf(phi3_cos);
+    printf("Phi3 = %.2f\n", degrees(phi3));
 
-    float theta2 = phi1 + phi2;
-    float theta3 = 180 - (phi3);
+    float phi4 = M_PI / 2 - phi2;
+
+    float theta2_relative_to_z = phi1 - phi4;
+
+    float theta2 = phi2 + phi4 + theta2_relative_to_z;
+
+    float total_phi = phi2 + phi4;
+    printf("phi2 + phi4 = %.2f + %.2f = %.2f\n", degrees(phi2), degrees(phi4), degrees(total_phi));
+    float theta3 = M_PI - (phi3);
+
 
     // Convert angles to degrees
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
