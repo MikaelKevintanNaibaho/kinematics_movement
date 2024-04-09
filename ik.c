@@ -52,16 +52,17 @@ void forward_kinematics(SpiderLeg *leg, float sudut[3]) {
     float theta2 = radians(sudut[1]);
     float theta3 = (sudut[2]);
 
-    float phi4 = radians(180 - theta3);
+    float phi3 = radians(180 - theta3);
 
-    float R = sqrtf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2)) - (2 * FEMUR_LENGTH * TIBIA_LENGTH * cosf(phi4)));
+    float R = sqrtf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2)) - (2 * FEMUR_LENGTH * TIBIA_LENGTH * cosf(phi3)));
 
     float phi1 = acosf((powf(FEMUR_LENGTH,2) + powf(R, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * R));
 
-    float phi3 =  (phi1 - theta2);
+    float phi2 = theta2 - phi1;
 
-    float z_coordinate =  R * sinf(phi3);
-    float H = (R * cosf(phi3));
+
+    float z_coordinate =  R * sinf(phi2);
+    float H = (R * cosf(phi2));
 
     float ya = cosf(theta1) * COXA_LENGTH;
     float xa = sinf(theta1) * COXA_LENGTH;
@@ -86,6 +87,8 @@ float *get_target(SpiderLeg *leg) {
     return leg->joints[3];
 }
 
+
+
 void inverse_kinematics(SpiderLeg *leg, float *target) {
 
     float x = target[0];
@@ -93,7 +96,7 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float z = target[2];
 
     // Calculate theta1 based on the target coordinates
-    float theta1 = atan2f(x, y);
+    float theta1 = atan2f(y, x);
 
     // Print the target coordinates
     printf("koordinat target: \n");
@@ -117,23 +120,19 @@ void inverse_kinematics(SpiderLeg *leg, float *target) {
     float H = sqrtf(powf(yb, 2) + powf(xb, 2));
     printf("H = %.2f\n", H);
 
-    // Calculate R
-    float R = sqrtf(powf(H, 2) + powf(z, 2));
-    printf("R = %.3f\n", R);
+    float R = sqrtf(powf(z, 2) + powf(H, 2));
 
-    // Calculate phi1
-    float phi1 = acosf((powf(FEMUR_LENGTH,2) + powf(R, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * R));
-    printf("phi1 = %.2f\n", phi1);
+    float phi1_cos = (powf(FEMUR_LENGTH, 2) + powf(R, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * R);
+    float phi1 = acosf(phi1_cos);
 
-    // Calculate phi3
-    float phi3 = atan2f(z, H);
+    float phi2_cos = (powf(R, 2) + powf(TIBIA_LENGTH, 2) - powf(FEMUR_LENGTH, 2)) / (2 * R * TIBIA_LENGTH);
+    float phi2 = acosf(phi2_cos);
 
-    // Calculate theta2
-    float theta2 = 90 + (phi1 + phi3);
+    float phi3_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(R, 2)) / (2 * FEMUR_LENGTH * TIBIA_LENGTH);
+    float phi3 = acosf(phi3_cos);
 
-    // Calculate theta3
-    float phi4 = acosf((powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(R, 2)) / (2 * FEMUR_LENGTH * TIBIA_LENGTH));
-    float theta3 = 180 - phi4;
+    float theta2 = phi1 + phi2;
+    float theta3 = 180 - (phi3);
 
     // Convert angles to degrees
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
