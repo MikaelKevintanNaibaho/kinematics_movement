@@ -13,8 +13,8 @@
 #define SERVO_CHANNEL_2 2
 #define SERVO_CHANNEL_3 3
 
-#define COXA_LENGTH 55.0
-#define FEMUR_LENGTH 80.0
+#define COXA_LENGTH 65.0
+#define FEMUR_LENGTH 75.0
 #define TIBIA_LENGTH 170.0 
 
 #define PWM_FREQ 50
