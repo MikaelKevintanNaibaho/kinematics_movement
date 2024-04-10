@@ -39,19 +39,21 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     printf("Theta3: %.4f degrees\n", leg->theta3);
 }
 
+
 void inverse_kinematics(SpiderLeg *leg, float target[3])
 {
     float x = target[0];
     float y = target[1];
     float z = target[2];
-    float z_offset;
-    if (z < 0){
-        z_offset = 100.0 + z;
-    } else {
-        z_offset = 100 - z;
-    }
 
-    float theta1 = atan2f(x, y);
+    float z_offset = 100.0 + z;
+    float theta1;
+    if (y == 0){
+        float distance = sqrtf(x*x + y*y);
+        theta1 = (x >= 0) ? acosf(x / distance) : -acosf(x / distance);
+    } else {
+        theta1 = atan2f(x, y);
+    }
     float L1 = sqrtf(powf(x, 2) + powf(y, 2));
 
     float L = sqrtf(powf(z_offset, 2) + powf(L1 - COXA_LENGTH, 2));
@@ -73,8 +75,6 @@ void inverse_kinematics(SpiderLeg *leg, float target[3])
     }
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
-
-
 }
 
 void move(SpiderLeg *leg, float target[3]) {
