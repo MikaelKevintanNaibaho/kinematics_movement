@@ -79,7 +79,7 @@ void inverse_kinematics(SpiderLeg *leg, float target[3])
     if (theta3 >= radians(145)){
          theta3 = radians(145);
          printf("melewati batas fisik tibia kaki\n");
-         return;
+         return ;
     }
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
