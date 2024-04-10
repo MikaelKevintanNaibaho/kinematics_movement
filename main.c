@@ -14,7 +14,7 @@ int main(void){
     // target[0] += 100;
 
     // inverse_kinematics(&leg, target);
-    float lift_height = 50.0;
+    float lift_height = -20.0;
     float step_lenght = 50.0;
     float num_step = 3;
 
