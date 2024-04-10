@@ -22,19 +22,19 @@ int main(void){
         //lift the leg
         float target_lift[3] = {100.0, 100.0, lift_height};
         inverse_kinematics(&leg, target_lift);
-        sleep(1);
+        sleep(0.5);
         //move forward
         float target_forward[3] = {step_lenght, 100.0, lift_height};
         inverse_kinematics(&leg, target_forward);
-        sleep(1);
+        sleep(0.5);
         //palce down
         float target_down[3] = {step_lenght, 100.0, 0.0};
         inverse_kinematics(&leg, target_down);
-        sleep(1);
+        sleep(0.5);
         //move backward
         float target_backward[3] = {100.0, 100.0, 0.0};
         inverse_kinematics(&leg, target_backward);
-        sleep(1);
+        sleep(0.5);
     }
 
     return 0;
