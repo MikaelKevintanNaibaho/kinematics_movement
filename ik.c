@@ -75,6 +75,8 @@ void inverse_kinematics(SpiderLeg *leg, float target[3])
     }
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
+
+    printf("x = %.2f, y = %.2f, z = %.2f\n", x, y, z_offset);
 }
 
 void move(SpiderLeg *leg, float target[3]) {
