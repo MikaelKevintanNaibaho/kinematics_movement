@@ -34,8 +34,6 @@
 #define MIN_PULSE_WIDTH 500
 #define MAX_PULSE_WIDTH 2500
 
-#define STEP_UC 1
-
 
 
 extern int i2c_fd;
@@ -43,10 +41,9 @@ extern int i2c_fd;
 void PCA9685_init();
 void write_byte(uint8_t reg, uint8_t val);
 void set_pwm_freq(int freq);
-void set_pwm_duty(uint8_t led, int pulse_width);
+void set_pwm_duty(uint8_t led, int value);
 void set_pwm(uint8_t led, int on_value, int off_value);
 void set_pwm_angle(uint8_t channel, int angle, int freq);
-int theta(int angle);
 
 int get_pwm(uint8_t led);
 
