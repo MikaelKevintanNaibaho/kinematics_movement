@@ -5,7 +5,7 @@ int main(void) {
     PCA9685_init();
 
     SpiderLeg leg;
-    float initial_angle[3] = {45, 150, 130};
+    float initial_angle[3] = {45, 120, 130};
     set_angles(&leg, initial_angle);
     forward_kinematics(&leg, initial_angle);
 
