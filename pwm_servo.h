@@ -45,12 +45,10 @@ void write_byte(uint8_t reg, uint8_t val);
 void set_pwm_freq(int freq);
 void set_pwm_duty(uint8_t led, int pulse_width);
 void set_pwm(uint8_t led, int on_value, int off_value);
-void set_pwm_angle(uint8_t channel, int angle, int freq, float velocity);
+void set_pwm_angle(uint8_t channel, int angle, int freq);
 int theta(int angle);
 
 int get_pwm(uint8_t led);
-int read_current_angle(uint8_t channel);
-int inverse_theta(int pulse_width);
 
 
 uint8_t read_byte(uint8_t reg);
