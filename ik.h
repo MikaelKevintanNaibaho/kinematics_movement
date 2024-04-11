@@ -7,7 +7,7 @@
 
 
 #define M_PI 3.141559265359
-#define NUM_JOINTS 4
+#define NUM_LINKS 4
 
 #define SERVO_CHANNEL_1 1
 #define SERVO_CHANNEL_2 2
@@ -30,6 +30,26 @@ typedef struct {
     float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur joint, [2] - femur-tibia joint, [3] - tip of the leg
 } SpiderLeg;
 
+typedef struct {
+    float alpha;
+    float a;
+    float d;
+    float theta;
+}DHParameters;
+
+typedef struct {
+    float matrix[4][4];
+}DHMatrix;
+
+// Define error codes
+typedef enum {
+    IK_SUCCESS = 0,
+    IK_ERROR_LIMIT_REACHED,
+    IK_ERROR_INVALID_INPUT,
+    // Add more error codes as needed
+} IK_ErrorCode;
+
+
 
 extern const float leg_zero_offset[3];
 
@@ -41,8 +61,16 @@ float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg, float sudut[3]);
-void inverse_kinematics(SpiderLeg *leg, float target[3]);
-void move_forward(SpiderLeg *leg, float target[3]); 
+IK_ErrorCode inverse_kinematics(SpiderLeg *leg, float target[3]);
+void move_forward(SpiderLeg *leg, float target[3]);
+void handle_error(IK_ErrorCode error_code) ;
+
+//DH
+void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta);
+void create_DH_matrix(const DHParameters *params, DHMatrix *matrix);
+void print_DH_matrix(const DHMatrix *matrix);
+void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
+void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result);
 
 
 #endif /*IK_H*/

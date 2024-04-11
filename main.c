@@ -1,41 +1,22 @@
 #include "ik.h"
 #include "pwm_servo.h"
 
-int main(void){
+int perform_ik(SpiderLeg *leg, float target[3]) {
+    IK_ErrorCode error_code = inverse_kinematics(leg, target);
+    if(error_code != IK_SUCCESS) {
+        handle_error(error_code);
+        return 0;
+    }
+    return 1; // Return 1 to indicate success
+}
+
+int main(void) {
     PCA9685_init();
 
     SpiderLeg leg;
-    float target[3] = {100.0, 100.0, 0.0};
+    float initial_angle[3] = {45, 150, 130};
+    forward_kinematics(&leg, initial_angle);
 
-    inverse_kinematics(&leg, target);
+    printf("x = %.2f, y = %.2f, z = %.2f\n", leg.joints[3][0], leg.joints[3][1], leg.joints[3][2]);
 
-    sleep(2);
-
-    // target[0] += 100;
-
-    // inverse_kinematics(&leg, target);
-    float lift_height = -20.0;
-    float step_lenght = 50.0;
-    float num_step = 3;
-
-    for (int i = 0; i < num_step; i++){
-        //lift the leg
-        float target_lift[3] = {100.0, 100.0, lift_height};
-        inverse_kinematics(&leg, target_lift);
-        sleep(1);
-        //move forward
-        float target_forward[3] = {step_lenght, 100.0, lift_height};
-        inverse_kinematics(&leg, target_forward);
-        sleep(1);
-        //palce down
-        float target_down[3] = {step_lenght, 100.0, 0.0};
-        inverse_kinematics(&leg, target_down);
-        sleep(1);
-        //move backward
-        float target_backward[3] = {100.0, 100.0, 0.0};
-        inverse_kinematics(&leg, target_backward);
-        sleep(1);
-    }
-
-    return 0;
 }

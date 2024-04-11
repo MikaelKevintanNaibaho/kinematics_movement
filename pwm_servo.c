@@ -54,9 +54,9 @@ void set_pwm_freq(int freq)
     write_byte(MODE1, 0x80); //restart
     write_byte(MODE2, 0x04); //totem pole (default)
 }
-void set_pwm_duty(uint8_t led, int value)
+void set_pwm_duty(uint8_t led, int pulse_width)
 {
-    set_pwm(led, 0, value);
+    set_pwm(led, 0, pulse_width);
 }
 
 
@@ -86,9 +86,19 @@ void set_pwm_angle(uint8_t channel, int angle, int freq)
         angle = 180;
     }
 
-    int pulse_width = MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * angle / 180);
+    int pulse_width = theta(angle);
 
     set_pwm_duty(channel, pulse_width);
 
     set_pwm_freq(freq);
+}
+
+int theta(int angle){
+    int compere;
+    int min_comp = MIN_PULSE_WIDTH;
+    int max_comp = MAX_PULSE_WIDTH;
+    int min_angle = 0; 
+    int max_angle = 180;
+    compere = (max_comp-min_angle) / (max_angle- min_angle) * (angle - min_angle) + min_comp;
+    return compere;
 }
