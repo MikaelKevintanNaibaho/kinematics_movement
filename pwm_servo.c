@@ -78,7 +78,7 @@ int get_pwm(uint8_t led)
     return led_value;
 }
 
-void set_pwm_angle(uint8_t channel, int angle, int freq)
+void set_pwm_angle(uint8_t channel, int angle, int freq, float velocity)
 {   
     if (angle < 0) {
         angle = 0;
@@ -86,12 +86,37 @@ void set_pwm_angle(uint8_t channel, int angle, int freq)
         angle = 180;
     }
 
-    int pulse_width = theta(angle);
+    int current_angle = read_current_angle(channel);
+    int increment = velocity * 100.0;
+    while(current_angle != angle){
+        if (current_angle < angle) current_angle += increment;
+        else if (current_angle > angle) current_angle -= increment;
+        else current_angle = angle;
 
-    set_pwm_duty(channel, pulse_width);
-
-    set_pwm_freq(freq);
+        set_pwm_duty(channel, theta(current_angle));
+        set_pwm_freq(freq);
+        usleep(10000);
+    }
 }
+
+int read_current_angle(uint8_t channel){
+    int pulse_width = get_pwm(channel);
+    int current_angle = inverse_theta(pulse_width);
+    return current_angle;
+}
+
+int inverse_theta(int pulse_width) {
+    int compere;
+    int min_comp = MIN_PULSE_WIDTH;
+    int max_comp = MAX_PULSE_WIDTH;
+    int min_angle = 0;
+    int max_angle = 180;
+    
+    // Invert the calculation of theta function to get the angle
+    compere = (pulse_width - min_comp) / ((max_comp - min_comp) / (max_angle - min_angle)) + min_angle;
+    return compere;
+}
+
 
 int theta(int angle){
     int compere;
@@ -102,3 +127,4 @@ int theta(int angle){
     compere = (max_comp-min_angle) / (max_angle- min_angle) * (angle - min_angle) + min_comp;
     return compere;
 }
+ 

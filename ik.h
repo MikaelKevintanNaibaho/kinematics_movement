@@ -17,6 +17,8 @@
 #define FEMUR_LENGTH 75.0
 #define TIBIA_LENGTH 170.0 
 
+#define SERVO_VELOCTY 100.0
+
 #define PWM_FREQ 50
 typedef struct {
     char name[20];
