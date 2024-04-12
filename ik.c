@@ -103,9 +103,6 @@ void create_DH_matrix(const DHParameters *params, DHMatrix *matrix)
 {
     float alpha = params->alpha;
     float theta = params->theta;
-    printf("alpha = %.2f\n", alpha);
-    printf("theta = %.2f\n", theta);
-    printf("cos_theta = %.2f\n", cos(theta));
 
     //fill the DH matrix
     matrix->matrix[0][0] = cos(theta);
@@ -165,18 +162,19 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
             }
         }
     }
-    print_DH_matrix(&identityMatrix);
 
     // Iterate through each link and calculate intermediate matrices
     for (int i = 0; i < num_links; i++) {
         DHMatrix linkMatrix;
         create_DH_matrix(&params_array[i], &linkMatrix);
         multiply_DH_matrices(&identityMatrix, &linkMatrix, &tempMatrix);
-
+        #ifdef DEBUG_MATRIX
         // Print the intermediate matrix
         printf("Intermediate Matrix for Link %d:\n", i + 1);
         print_DH_matrix(&tempMatrix);
         printf("\n");
+
+        #endif
 
         // Update the identity matrix with the multiplied matrix
         identityMatrix = tempMatrix;
@@ -224,34 +222,43 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
 
     printf("x , y, z = %.2f, %.2f, %.2f\n", x, y,z);
 
+    printf("theta1 awal:%.2f \n", leg->theta1);
     /*TOP VIEW*/
     float theta1;
     if (x <= 0.1){
-        theta1 = leg->theta1;
+        theta1 = radians(leg->theta1);
+        printf("theta1 radian = %.2f\n", theta1);
     } else{
         theta1 = atan2f(x, y);
     }
 
     float xa = COXA_LENGTH * sinf(theta1);
     float ya = COXA_LENGTH * cosf(theta1);
+    printf("xa = %.2f, ya = %.2f\n", xa, ya);
 
     float xb = x -xa;
     float yb = y - ya;
 
     float P = sqrtf(powf(xb, 2) + powf(yb, 2));
+    printf("P = %.2f\n", P);
 
     /*SIDE VIEW*/
     float G = sqrtf(powf(P, 2) + powf(z, 2));
+    printf("G = %.2f\n", G);
     float phi1_cos = (powf(FEMUR_LENGTH, 2) + powf(G, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * G);
     float phi1 = acosf(phi1_cos);
+    printf("phi1 = %.2f\n", phi1);
 
     float phi2_cos = (powf(TIBIA_LENGTH, 2) + powf(G, 2) - powf(FEMUR_LENGTH, 2)) / (2 * TIBIA_LENGTH * G);
     float phi2 = acosf(phi2_cos);
+    printf("phi2 = %.2f\n", phi2);
 
     float phi3 = atan2f(z, P);
+    printf("phi3 = %.2f\n", phi3);
 
     float phi4_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(G, 2)) / (2 * FEMUR_LENGTH * G);
     float phi4 = acosf(phi4_cos);
+    printf("phi4 = %.2f\n", phi4);
 
     float theta2 = (M_PI / 2) + (phi1 + phi3);
     float theta3 = M_PI - phi4;
