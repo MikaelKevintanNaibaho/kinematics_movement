@@ -148,7 +148,7 @@ void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMa
     }
 }
 
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result)
+void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result, LinkTransformation *link_transformations)
 {
     DHMatrix tempMatrix;
     // Identity matrix
@@ -175,6 +175,9 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
         printf("\n");
 
         #endif
+                // Store the intermediate matrix and its link number in the struct
+        link_transformations[i].matrix = tempMatrix;
+        link_transformations[i].link_number = i + 1;
 
         // Update the identity matrix with the multiplied matrix
         identityMatrix = tempMatrix;
@@ -185,7 +188,7 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
 }
 
 
-void forward_kinematics(SpiderLeg *leg, float angles[3])
+void forward_kinematics(SpiderLeg *leg, float angles[3], LinkTransformation *link_transformations)
 {
     //convert ke radian
     float theta1 = radians(angles[0]);
@@ -200,7 +203,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
     init_DH_params(&params_array[2], radians(-90.0), TIBIA_LENGTH, 0.0, (theta3 - radians(90.0)));
     init_DH_params(&params_array[3], radians(90.0), 0.0, 0.0, radians(-90.0));
 
-    calculate_DH_transformation(params_array, NUM_LINKS, &trans_matrix);
+    calculate_DH_transformation(params_array, NUM_LINKS, &trans_matrix, link_transformations);
 
     float x = trans_matrix.matrix[0][3];
     float y = trans_matrix.matrix[1][3];
@@ -214,7 +217,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
     }
 }
 
-void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
+void inverse_kinematics(SpiderLeg *leg, float target_position[3], LinkTransformation *link_transformations){
     float x = leg->joints[3][0] + target_position[0];
     float y = leg->joints[3][1] + target_position[1];
     float z = leg->joints[3][2] + target_position[2];
@@ -238,32 +241,14 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     float xb = x -xa;
     float yb = y - ya;
 
-    float P = sqrtf(powf(xb, 2) + powf(yb, 2));
-    printf("P = %.2f\n", P);
+    float theta2 = acosf((-(powf(TIBIA_LENGTH, 2)) + powf(FEMUR_LENGTH, 2) + powf(xb, 2) + powf(yb, 2) + powf(z, 2))
+                    / (2 * FEMUR_LENGTH * sqrtf(powf(xb, 2) + powf(yb, 2) + powf(z, 2))))
+                    + atan2f(z, sqrtf(powf(xb, 2) + powf(yb, 2)));
+    theta2 += M_PI / 2;
+    float theta3 = (acosf((powf(xb, 2) + powf(yb, 2) + powf(z, 2) - powf(FEMUR_LENGTH, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * TIBIA_LENGTH)));
 
-    /*SIDE VIEW*/
-    float G = sqrtf(powf(P, 2) + powf(z, 2));
-    printf("G = %.2f\n", G);
-    float phi1_cos = (powf(FEMUR_LENGTH, 2) + powf(G, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * G);
-    float phi1 = acosf(phi1_cos);
-    printf("phi1 = %.2f\n", phi1);
-
-    float phi2_cos = (powf(TIBIA_LENGTH, 2) + powf(G, 2) - powf(FEMUR_LENGTH, 2)) / (2 * TIBIA_LENGTH * G);
-    float phi2 = acosf(phi2_cos);
-    printf("phi2 = %.2f\n", phi2);
-
-    float phi3 = atan2f(z, P);
-    printf("phi3 = %.2f\n", phi3);
-
-    float phi4_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(G, 2)) / (2 * FEMUR_LENGTH * G);
-    printf("phi4_cos = %.2f\n", phi4_cos);
-    float phi4 = acosf(phi4_cos);
-    printf("phi4 = %.2f\n", phi4);
-
-    float theta2 = (M_PI / 2) + (phi1 + phi3);
-    float theta3 = M_PI - phi4;
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
-    forward_kinematics(leg, angles);
+    forward_kinematics(leg, angles, link_transformations);
 }

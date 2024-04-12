@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/usr/include",
                 "/usr/local/include",
-                "/usr/local/include/ik"
+                "/usr/local/include/ik",
+                "/usr/local/include/eigen3"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
