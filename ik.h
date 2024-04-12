@@ -62,7 +62,7 @@ float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg, float sudut[3]);
-IK_ErrorCode inverse_kinematics(SpiderLeg *leg, float target[3]);
+void inverse_kinematics(SpiderLeg *leg, float target_position[3]);
 void move_forward(SpiderLeg *leg, float target[3]);
 void handle_error(IK_ErrorCode error_code) ;
 

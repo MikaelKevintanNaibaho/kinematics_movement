@@ -190,7 +190,8 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
 void forward_kinematics(SpiderLeg *leg, float angles[3])
 {
     //convert ke radian
-    float theta1 = radians(angles[0]);
+    float theta1 = radians(angles[0]) - radians(45);
+    if(theta1 <= 0) theta1 = 0;
     float theta2 = radians(angles[1]) - radians(90); // -90 becasue angle offset of mounting servo
     float theta3 = -radians(angles[2]) + radians(90); // -90 because angle offset of mounting_servo
 
@@ -215,3 +216,38 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
     }
 }
 
+void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
+    float x = leg->joints[3][0] + target_position[0];
+    float y = leg->joints[3][1] + target_position[1];
+    float z = leg->joints[3][2] + target_position[2];
+
+    /*TOP VIEW*/
+    float theta1 = atan2f(x, y);
+    float xa = COXA_LENGTH * sinf(theta1);
+    float ya = COXA_LENGTH * cosf(theta1);
+
+    float xb = x -xa;
+    float yb = y - ya;
+
+    float P = sqrtf(powf(xb, 2) + powf(yb, 2));
+
+    /*SIDE VIEW*/
+    float G = sqrtf(powf(P, 2) + powf(z, 2));
+    float phi1_cos = (powf(FEMUR_LENGTH, 2) + powf(G, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * G);
+    float phi1 = acosf(phi1_cos);
+
+    float phi2_cos = (powf(TIBIA_LENGTH, 2) + powf(G, 2) - powf(FEMUR_LENGTH, 2)) / (2 * TIBIA_LENGTH * G);
+    float phi2 = acosf(phi2_cos);
+
+    float phi3 = atan2f(z, P);
+
+    float phi4_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(G, 2)) / (2 * FEMUR_LENGTH * G);
+    float phi4 = acosf(phi4_cos);
+
+    float theta2 = (M_PI / 2) + (phi1 - phi3);
+    float theta3 = M_PI - phi4;
+
+    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
+    set_angles(leg, angles);
+    forward_kinematics(leg, angles);
+}
