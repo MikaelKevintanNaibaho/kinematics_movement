@@ -12,7 +12,7 @@ int main(void) {
 
     sleep(2);
 
-    float target_position[3] = {0, 0, -50};
+    float target_position[3] = {50, 0, 0};
     inverse_kinematics(&leg, target_position);
     // move_to_angle(&leg, initial_angle, 1000);
     // forward_kinematics(&leg, initial_angle);
