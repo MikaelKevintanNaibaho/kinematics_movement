@@ -244,7 +244,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     float phi4_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(G, 2)) / (2 * FEMUR_LENGTH * G);
     float phi4 = acosf(phi4_cos);
 
-    float theta2 = (M_PI / 2) + (phi1 - phi3);
+    float theta2 = (M_PI / 2) + (phi1 + phi3);
     float theta3 = M_PI - phi4;
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
