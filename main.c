@@ -5,10 +5,9 @@ int main(void) {
     PCA9685_init();
 
     SpiderLeg leg;
-    LinkTransformation link_transformations[NUM_LINKS];
     float initial_angle[3] = {45, 130, 130};
     set_angles(&leg, initial_angle);
-    forward_kinematics(&leg, initial_angle, link_transformations);
+    forward_kinematics(&leg, initial_angle);
     printf("x = %.2f, y = %.2f, z = %.2f\n", leg.joints[3][0], leg.joints[3][1], leg.joints[3][2]); 
 
     sleep(2);
@@ -16,7 +15,7 @@ int main(void) {
     
 
     float target_position[3] = {0, 50, 0};
-    inverse_kinematics(&leg, target_position, link_transformations);
+    inverse_kinematics(&leg, target_position);
     // move_to_angle(&leg, initial_angle, 1000);
     // forward_kinematics(&leg, initial_angle);
 

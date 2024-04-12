@@ -5,9 +5,9 @@
 #include <stdio.h>
 #include "pwm_servo.h"
 
+
 #define M_PI 3.141559265359
 #define NUM_LINKS 4
-// #define DEBUG_MATRIX
 
 #define SERVO_CHANNEL_1 1
 #define SERVO_CHANNEL_2 2
@@ -42,11 +42,6 @@ typedef struct {
     float matrix[4][4];
 }DHMatrix;
 
-typedef struct {
-    float matrix[3][3];
-}JacobMatrix;
-
-
 // Define error codes
 typedef enum {
     IK_SUCCESS = 0,
@@ -55,24 +50,19 @@ typedef enum {
     // Add more error codes as needed
 } IK_ErrorCode;
 
-typedef struct {
-    DHMatrix matrix;
-    int link_number;
-} LinkTransformation;
-
 
 
 extern const float leg_zero_offset[3];
 
 
-float degrees(float rad);
-float radians(float deg);
+float to_degrees(float rad);
+float to_radians(float deg);
 float normalize_angle(float angle);
 float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
-void forward_kinematics(SpiderLeg *leg, float angles[3], LinkTransformation *link_transformations);
-void inverse_kinematics(SpiderLeg *leg, float target_position[3],LinkTransformation *link_transformations);
+void forward_kinematics(SpiderLeg *leg, float sudut[3]);
+void inverse_kinematics(SpiderLeg *leg, float target_position[3]);
 void move_forward(SpiderLeg *leg, float target[3]);
 void handle_error(IK_ErrorCode error_code) ;
 
@@ -81,7 +71,7 @@ void init_DH_params(DHParameters *params, float alpha, float a, float d, float t
 void create_DH_matrix(const DHParameters *params, DHMatrix *matrix);
 void print_DH_matrix(const DHMatrix *matrix);
 void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result, LinkTransformation *link_transformations);
+void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result);
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity);
 
 
