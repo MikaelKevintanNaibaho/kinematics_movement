@@ -10,7 +10,7 @@ int main(void) {
     leg.theta3 = 0;
     float initial_angle[3] = {0, 120, 130};
     // set_angles(&leg, initial_angle);
-    move_to_angle(&leg, initial_angle, 100);
+    move_to_angle(&leg, initial_angle, 1000);
     // forward_kinematics(&leg, initial_angle);
 
     printf("x = %.2f, y = %.2f, z = %.2f\n", leg.joints[3][0], leg.joints[3][1], leg.joints[3][2]);
