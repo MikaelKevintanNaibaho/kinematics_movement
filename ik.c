@@ -257,6 +257,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     printf("phi3 = %.2f\n", phi3);
 
     float phi4_cos = (powf(FEMUR_LENGTH, 2) + powf(TIBIA_LENGTH, 2) - powf(G, 2)) / (2 * FEMUR_LENGTH * G);
+    printf("phi4_cos = %.2f\n", phi4_cos);
     float phi4 = acosf(phi4_cos);
     printf("phi4 = %.2f\n", phi4);
 
