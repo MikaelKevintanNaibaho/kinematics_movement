@@ -191,7 +191,8 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
 {
     //convert ke radian
     float theta1 = radians(angles[0]) - radians(45);
-    if(theta1 <= 0) theta1 = 0;
+    if(theta1 <= -45) theta1 = 0;
+    else if(theta1 <=0 && theta1 > -45) theta1 = -theta1;
     float theta2 = radians(angles[1]) - radians(90); // -90 becasue angle offset of mounting servo
     float theta3 = -radians(angles[2]) + radians(90); // -90 because angle offset of mounting_servo
 
