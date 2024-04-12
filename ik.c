@@ -218,7 +218,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
 
 void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     float x = leg->joints[3][0] + target_position[0];
-    float y = leg->joints[3][1] + target_position[1];
+    float y = leg->joints[3][1] + target_position[1] - COXA_LENGTH;
     float z = leg->joints[3][2] + target_position[2];
 
     printf("x , y, z = %.2f, %.2f, %.2f\n", x, y,z);
@@ -229,20 +229,19 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     if (x <= 0.1){
         theta1 = radians(leg->theta1);
         printf("theta1 radian = %.2f\n", theta1);
-        P = sqrtf(fabsf(powf(x, 2) + powf(y, 2))) - COXA_LENGTH;
     } else{
         theta1 = atan2f(y, x);
-        P = sqrt(fabsf(powf(x, 2) + powf(y, 2)));
         printf("test\n");
     }
 
-    
+    P = sqrtf(fabsf(powf(x, 2) + powf(y, 2)));
     printf("P = %.2f\n", P);
 
     /*SIDE VIEW*/
     float G = sqrtf(powf(P, 2) + powf(z, 2));
     printf("G = %.2f\n", G);
     float phi1_cos = (powf(FEMUR_LENGTH, 2) + powf(G, 2) - powf(TIBIA_LENGTH, 2)) / (2 * FEMUR_LENGTH * G);
+    printf("phicos = %.2f\n", phi1_cos);
     float phi1 = acosf(phi1_cos);
     printf("phi1 = %.2f\n", phi1);
 
