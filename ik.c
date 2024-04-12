@@ -42,12 +42,20 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity){
     float increment = velocity / 100.0;
     while (leg->theta1 < normalize_angle(target_angles[0]) && leg->theta2 < target_angles[1] && leg->theta3 < target_angles[3]){
-        int angle1 = (int)(leg->theta1 += increment);
-        int angle2 = (int)(leg->theta2 += increment);
+        int angle1 = (int)(leg->theta1 + increment);
+        int angle2 = (int)(leg->theta2 + increment);
+        int angle3 = (int)(leg->theta3 + increment);
         set_pwm_angle(SERVO_CHANNEL_1, angle1, PWM_FREQ);
         set_pwm_angle(SERVO_CHANNEL_2, angle2, PWM_FREQ);
         set_pwm_angle(SERVO_CHANNEL_3, angle2, PWM_FREQ);
+        leg->theta1 = angle1;
+        leg->theta2 = angle2;
+        leg->theta3 = angle3;
+        printf("Theta1: %.4f degrees\n", leg->theta1);
+        printf("Theta2: %.4f degrees\n", leg->theta2);
+        printf("Theta3: %.4f degrees\n", leg->theta3);
         usleep(10000);
+
     }
 }
 
