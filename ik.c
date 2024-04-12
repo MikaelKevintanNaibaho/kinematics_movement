@@ -39,77 +39,16 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     printf("Theta3: %.4f degrees\n", leg->theta3);
 }
 
-
-IK_ErrorCode inverse_kinematics(SpiderLeg *leg, float target[3])
-{
-    float x = target[0];
-    float y = target[1];
-    float z = target[2];
-
-    float initial_x = 100.0;
-    float initial_y = 100.0;
-    float z_offset;
-    if(z > 0 || z == 0){
-        z_offset = 100 + (z);
-    } else {
-        z_offset = 100 - z;
+void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity){
+    float increment = velocity / 100.0;
+    while (leg->theta1 < normalize_angle(target_angles[0]) && leg->theta2 < target_angles[1] && leg->theta3 < target_angles[3]){
+        int angle1 = (int)(leg->theta1 += increment);
+        int angle2 = (int)(leg->theta2 += increment);
+        set_pwm_angle(SERVO_CHANNEL_1, angle1, PWM_FREQ);
+        set_pwm_angle(SERVO_CHANNEL_2, angle2, PWM_FREQ);
+        set_pwm_angle(SERVO_CHANNEL_3, angle2, PWM_FREQ);
+        usleep(10000);
     }
-
-    float theta1;
-    if (y == initial_y){
-        float distance = sqrtf(x*x + y*y);
-        theta1 = (x >= initial_x) ? acosf(x / distance) : -acosf(x / distance);
-    } else {
-        theta1 = atan2f(x, y);
-    }
-
-    if (x == initial_x){
-        float distance = sqrtf(x*x + y*y);
-        theta1 = (y >= initial_y) ? acosf(y / distance) : -acosf(y / distance);
-    }
-    float L1 = sqrtf(powf(x, 2) + powf(y, 2));
-
-    float L = sqrtf(powf(z_offset, 2) + powf(L1 - COXA_LENGTH, 2));
-
-    float alpha1;
-    if (z_offset >= 0) {
-        alpha1 = acosf(z_offset / L);
-    } else {
-        alpha1 = -acosf(-z_offset / L);
-    }
-    
-    float alpha2_cos = (powf(TIBIA_LENGTH, 2) - powf(FEMUR_LENGTH, 2) - powf(L, 2)) / (-2 * FEMUR_LENGTH * L);
-    float alpha2 = acosf(alpha2_cos);
-
-    float theta2 = alpha1 + alpha2;
-
-    float alpha3_cos = ((powf(L, 2) - powf(TIBIA_LENGTH, 2) - powf(FEMUR_LENGTH, 2))) / (-2 * TIBIA_LENGTH * FEMUR_LENGTH);
-    float alpha3 = acosf(alpha3_cos);
-
-    float theta3 = M_PI - alpha3;
-    if (theta3 >= radians(145)){
-         theta3 = radians(145);
-         printf("melewati batas fisik tibia kaki. Exiting...\n");
-         return IK_ERROR_LIMIT_REACHED;
-    }
-    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
-    set_angles(leg, angles);
-
-    printf("x = %.2f, y = %.2f, z = %.2f\n", x, y, z_offset);
-
-    return IK_SUCCESS;
-}
-
-void move(SpiderLeg *leg, float target[3]) {
-
-    // Calculate the target position relative to the leg's current position
-    float new_position[3];
-    new_position[0] =  target[0] + leg->joints[3][0];  // Update x-coordinate relative to current position
-    new_position[1] = target[1] + leg->joints[3][1];   // Update y-coordinate relative to current position
-    new_position[2] = target[2] + leg->joints[3][2];   // Update z-coordinate relative to current position
-    
-    // Update the leg with inverse kinematics to reach the new position
-    inverse_kinematics(leg, new_position);
 }
 
 void handle_error(IK_ErrorCode error_code)
@@ -141,8 +80,11 @@ void init_DH_params(DHParameters *params, float alpha, float a, float d, float t
 }
 void create_DH_matrix(const DHParameters *params, DHMatrix *matrix)
 {
-    float alpha = radians(params->alpha);
+    float alpha = params->alpha;
     float theta = params->theta;
+    printf("alpha = %.2f\n", alpha);
+    printf("theta = %.2f\n", theta);
+    printf("cos_theta = %.2f\n", cos(theta));
 
     //fill the DH matrix
     matrix->matrix[0][0] = cos(theta);
@@ -190,32 +132,46 @@ void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMa
 
 void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result)
 {
+    DHMatrix tempMatrix;
+    // Identity matrix
+    DHMatrix identityMatrix;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (i == j) {
-                result->matrix[i][j] = 1.0;
+                identityMatrix.matrix[i][j] = 1.0;
             } else {
-                result->matrix[i][j] = 0.0;
+                identityMatrix.matrix[i][j] = 0.0;
             }
         }
     }
+    print_DH_matrix(&identityMatrix);
 
-    // Create DH matrices for each link and multiply them together
-    DHMatrix tempMatrix;
+    // Iterate through each link and calculate intermediate matrices
     for (int i = 0; i < num_links; i++) {
         DHMatrix linkMatrix;
         create_DH_matrix(&params_array[i], &linkMatrix);
-        multiply_DH_matrices(result, &linkMatrix, &tempMatrix);
-        *result = tempMatrix; // Update result with the multiplied matrix
+        multiply_DH_matrices(&identityMatrix, &linkMatrix, &tempMatrix);
+
+        // Print the intermediate matrix
+        printf("Intermediate Matrix for Link %d:\n", i + 1);
+        print_DH_matrix(&tempMatrix);
+        printf("\n");
+
+        // Update the identity matrix with the multiplied matrix
+        identityMatrix = tempMatrix;
     }
+
+    // Copy the final result to the output matrix
+    *result = identityMatrix;
 }
+
 
 void forward_kinematics(SpiderLeg *leg, float angles[3])
 {
     //convert ke radian
     float theta1 = radians(angles[0]);
-    float theta2 = radians(angles[1]);
-    float theta3 = radians(angles[2]);
+    float theta2 = radians(angles[1]) - radians(90); // -90 becasue angle offset of mounting servo
+    float theta3 = -radians(angles[2]) + radians(90); // -90 because angle offset of mounting_servo
 
     DHMatrix trans_matrix;
     DHParameters params_array[NUM_LINKS];

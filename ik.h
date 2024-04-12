@@ -13,7 +13,7 @@
 #define SERVO_CHANNEL_2 2
 #define SERVO_CHANNEL_3 3
 
-#define COXA_LENGTH 65.0
+#define COXA_LENGTH  65.0
 #define FEMUR_LENGTH 75.0
 #define TIBIA_LENGTH 170.0 
 
@@ -72,6 +72,7 @@ void create_DH_matrix(const DHParameters *params, DHMatrix *matrix);
 void print_DH_matrix(const DHMatrix *matrix);
 void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
 void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result);
+void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity);
 
 
 #endif /*IK_H*/
