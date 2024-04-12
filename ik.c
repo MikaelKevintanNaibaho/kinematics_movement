@@ -218,7 +218,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
 
 void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     float x = leg->joints[3][0] + target_position[0];
-    float y = leg->joints[3][1] + target_position[1] - COXA_LENGTH;
+    float y = leg->joints[3][1] + target_position[1];
     float z = leg->joints[3][2] + target_position[2];
 
     printf("x , y, z = %.2f, %.2f, %.2f\n", x, y,z);
