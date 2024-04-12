@@ -12,11 +12,11 @@ int main(void) {
 
     sleep(2);
 
-    // float target_position[3] = {0, 100, 0};
-    // inverse_kinematics(&leg, target_position);
-    // // move_to_angle(&leg, initial_angle, 1000);
-    // // forward_kinematics(&leg, initial_angle);
+    float target_position[3] = {0, 100, 0};
+    inverse_kinematics(&leg, target_position);
+    // move_to_angle(&leg, initial_angle, 1000);
+    // forward_kinematics(&leg, initial_angle);
 
-    // printf("x = %.2f, y = %.2f, z = %.2f\n", leg.joints[3][0], leg.joints[3][1], leg.joints[3][2]);
+    printf("x = %.2f, y = %.2f, z = %.2f\n", leg.joints[3][0], leg.joints[3][1], leg.joints[3][2]);
 
 }
