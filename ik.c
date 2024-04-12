@@ -225,15 +225,18 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
 
     printf("theta1 awal:%.2f \n", leg->theta1);
     /*TOP VIEW*/
-    float theta1;
+    float theta1, P;
     if (x <= 0.1){
         theta1 = radians(leg->theta1);
         printf("theta1 radian = %.2f\n", theta1);
+        P = sqrtf(fabsf(powf(x, 2) + powf(y, 2))) - COXA_LENGTH;
     } else{
         theta1 = atan2f(y, x);
+        P = sqrt(fabsf(powf(x, 2) + powf(y, 2)));
+        printf("test\n");
     }
 
-    float P = sqrtf(fabsf(powf(x, 2) + powf(y, 2))) - COXA_LENGTH;
+    
     printf("P = %.2f\n", P);
 
     /*SIDE VIEW*/
