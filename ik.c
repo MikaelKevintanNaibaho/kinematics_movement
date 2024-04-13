@@ -204,7 +204,10 @@ void forward_kinematics(SpiderLeg *leg, float angles[3])
 
     calculate_DH_transformation(params_array, NUM_LINKS, &trans_matrix);
 
-    float x = trans_matrix.matrix[0][3];
+    float x = fabs(trans_matrix.matrix[0][3]);
+    if (x < 0) {
+        x =0;
+    }
     float y = trans_matrix.matrix[1][3];
     float z = trans_matrix.matrix[2][3];
 
@@ -221,18 +224,18 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
     float y = leg->joints[3][1] + target_position[1];
     float z = leg->joints[3][2] + target_position[2];
 
-    printf("x , y, z = %.2f, %.2f, %.2f\n", x, y,z);
-
     printf("theta1 awal:%.2f \n", leg->theta1);
     /*TOP VIEW*/
     float theta1, P;
     if (x <= 0.1){
+        x = 0;
         theta1 = radians(leg->theta1);
         printf("theta1 radian = %.2f\n", theta1);
     } else{
         theta1 = atan2f(y, x) - M_PI /4;
         printf("test\n");
     }
+    printf("x , y, z = %.2f, %.2f, %.2f\n", x, y,z);
     float xa = COXA_LENGTH * cosf(theta1);
     float ya = COXA_LENGTH * sinf(theta1);
     float xb = x-xa;
