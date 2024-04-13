@@ -234,7 +234,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_position[3]){
         printf("test\n");
     }
 
-    P = sqrtf(fabsf(powf(x, 2) + powf(y, 2)));
+    P = sqrtf(fabsf(powf(x, 2) + powf(y, 2))) - COXA_LENGTH;
     printf("P = %.2f\n", P);
 
     /*SIDE VIEW*/
