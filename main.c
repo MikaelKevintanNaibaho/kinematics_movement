@@ -14,10 +14,19 @@ int main(void) {
 
     
 
-    float target_position[3] = {50.0, 0, 0};
-    inverse_kinematics(&leg, target_position);
-    // move_to_angle(&leg, initial_angle, 1000);
-    // forward_kinematics(&leg, initial_angle);
+    float keyframes[4][3] = {
+        {0, 0, -50},
+        {50.0, 0, 0},
+        {0, 0, 50},
+        {50, 0, 0}
+    };
+
+    // Move leg through keyframes
+    for (int i = 0; i < 4; i++) {
+        inverse_kinematics(&leg, keyframes[i]);
+        // Wait for a short duration before moving to the next keyframe
+        sleep(1);
+    }
 
     printf("x = %.2f, y = %.2f, z = %.2f\n", leg.joints[3][0], leg.joints[3][1], leg.joints[3][2]);
 
