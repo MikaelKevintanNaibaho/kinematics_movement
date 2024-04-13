@@ -15,10 +15,10 @@ int main(void) {
     
 
     float keyframes[4][3] = {
-        {0, 0, -50},
-        {50.0, 0, 0},
         {0, 0, 50},
-        {50, 0, 0}
+        {50.0, 0, 0},
+        {0, 0, -50},
+        {-50, 0, 0}
     };
 
     // Move leg through keyframes
