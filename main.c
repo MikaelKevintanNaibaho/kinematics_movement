@@ -14,30 +14,9 @@ int main(void) {
 
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
-    for (int i = 0; i < 3; i++){
-        float target_positions[3] = {0.0, 0.0, 50.0};
-        inverse_kinematics(&leg, target_positions, intermediate_link);
-        sleep(1);
-        target_positions[2] += -50;
-        sleep(1);
-    }
 
-    for (int i = 0; i < 3; i++){
-        float target_positions[3] = {0.0, 50.0, 00.0};
-        inverse_kinematics(&leg, target_positions, intermediate_link);
-        sleep(1);
-        target_positions[1] += -50;
-        sleep(1);
-    }
+    float target_positions[3] = {0.0, 50.0, 0.0};
 
-    for (int i = 0; i < 3; i++){
-        float target_positions[3] = {50.0, 0.0, 0.0};
-        inverse_kinematics(&leg, target_positions, intermediate_link);
-        sleep(1);
-        target_positions[0] += -50;
-        sleep(1);
-    }
-    
-
+    inverse_kinematics(&leg, target_positions, intermediate_link);
     return 0;
 }
