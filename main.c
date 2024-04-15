@@ -9,7 +9,7 @@ int main(void) {
     for (int i = 0; i < NUM_LINKS; i++) {
         intermediate_link[i] = gsl_matrix_alloc(4, 4);
     }
-    float initial_angle[3] = {0, 100, 100};
+    float initial_angle[3] = {0, 120, 120};
     set_angles(&leg, initial_angle);
 
     sleep(2);
