@@ -1,6 +1,5 @@
 #include "pwm_servo.h"
 #include "ik.h"
-#include "matrix.h"
 
 int main(void) {
     PCA9685_init();
