@@ -3,7 +3,7 @@ CC = gcc
 
 # Compiler flags
 CFLAGS = -Wall -Wextra -std=c99 -g
-LDFLAGS = -lMatrix -lgsl -lgslcblas -lm
+LDFLAGS = -lgsl -lgslcblas -lm
 
 # Source files
 SRC = main.c pwm_servo.c ik.c
