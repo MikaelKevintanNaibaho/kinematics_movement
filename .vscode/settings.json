@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "dense": "c"
+        "dense": "c",
+        "random": "c"
     }
 }

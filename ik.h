@@ -4,9 +4,12 @@
 #include <math.h>
 #include <stdio.h>
 #include "pwm_servo.h"
+#include "matrix.h"
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_vector.h>
 
-
-#define M_PI 3.141559265359
 #define NUM_LINKS 4
 
 #define SERVO_CHANNEL_1 1
@@ -61,18 +64,17 @@ float normalize_angle(float angle);
 float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
-void forward_kinematics(SpiderLeg *leg, float sudut[3]);
-void inverse_kinematics(SpiderLeg *leg, float target_position[3]);
+void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediate_matrices[]);
+void inverse_kinematics(SpiderLeg *leg, float target_position[3], gsl_matrix *intermediate_metrices[]);
 void move_forward(SpiderLeg *leg, float target[3]);
 void handle_error(IK_ErrorCode error_code) ;
 
 //DH
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta);
-void create_DH_matrix(const DHParameters *params, DHMatrix *matrix);
+void create_DH_matrix(const DHParameters *params, gsl_matrix *matrix);
 void print_DH_matrix(const DHMatrix *matrix);
 void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, DHMatrix *result);
+void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result, gsl_matrix *intermediate_matrices[]);
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity);
 
-
-#endif /*IK_H*/
+#endif /*IK_H*/ 

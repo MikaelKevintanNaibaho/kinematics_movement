@@ -2,8 +2,8 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -std=c99 -I/usr/local/include
-LDFLAGS = -lm
+CFLAGS = -Wall -Wextra -std=c99 -g
+LDFLAGS = -lMatrix -lgsl -lgslcblas -lm
 
 # Source files
 SRC = main.c pwm_servo.c ik.c
@@ -58,3 +58,6 @@ cppcheck:
 
 clean:
 	rm -rf build
+
+debug: $(TARGET)
+	gdb $(TARGET)
