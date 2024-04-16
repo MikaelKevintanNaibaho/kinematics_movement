@@ -20,7 +20,7 @@
 #define TIBIA_LENGTH 167.23 
 
 
-#define PWM_FREQ 50
+#define PWM_FREQ 20
 typedef struct {
     char name[20];
     float COXA;
