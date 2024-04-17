@@ -18,6 +18,8 @@ int main(void) {
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
     float target[3] = {0, 50, 0};
 
+    inverse_kinematics(&leg, target, &intermediate_link);
+
     // struct bezier2d curve;
     // bezier2d_init(&curve);
 
