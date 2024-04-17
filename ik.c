@@ -251,18 +251,14 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
 
     float z;
     if (target_positions[2] < 0){
-        z = target_positions[2] - leg->joints[3][2];
-    } else if(target_positions[2] > 0 ){
         z = target_positions[2] + leg->joints[3][2];
+    } else if(target_positions[2] > 0 ){
+        z = target_positions[2] - leg->joints[3][2];
     } else {
         z = leg->joints[3][2];
     }
     printf("z = %.2f\n", z);
-
-    // float x = target_positions[0];
-    // float y = target_positions[1];
-    // float z = target_positions[2];
-    z = fabs(z);
+    // z = fabs(z);
     //angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 
