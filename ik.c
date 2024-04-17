@@ -216,53 +216,53 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediat
 
 void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *intermediate_metrices[])
 {
-//     float x;
-//     if((target_positions[0]) < 0){
-//        if (target_positions[0] + leg->joints[3][0] < 0){
-//             x = leg->joints[3][0];
-//             printf("not posible\n");
-//         }else{
-//             x = target_positions[0] + leg->joints[3][0];
-//         }
+    float x;
+    if((target_positions[0]) < 0){
+       if (target_positions[0] + leg->joints[3][0] < 0){
+            x = leg->joints[3][0];
+            printf("not posible\n");
+        }else{
+            x = target_positions[0] + leg->joints[3][0];
+        }
 
-//     } else if(target_positions[0] > 0){
-//         x = target_positions[0] + leg->joints[3][0];
-//     } else {
-//         x = leg->joints[3][0];
-//     }
+    } else if(target_positions[0] > 0){
+        x = target_positions[0] + leg->joints[3][0];
+    } else {
+        x = leg->joints[3][0];
+    }
 
-//     printf("x = %.2f\n", x);
+    printf("x = %.2f\n", x);
 
-//     float y;
-//     if (target_positions[1] < 0){
-//         if (target_positions[1] + leg->joints[3][1] < 0){
-//             y = target_positions[1] + leg->joints[3][1];
-//             y = fabs(y);
-//         } else {
-//             y = target_positions[1] + leg->joints[3][1];
-//         }
-//     } else if (target_positions[1] > 0){
-//         y = target_positions[1] + leg->joints[3][1];
-//     } else {
-//         y = leg->joints[3][1];
-//     }
+    float y;
+    if (target_positions[1] < 0){
+        if (target_positions[1] + leg->joints[3][1] < 0){
+            y = target_positions[1] + leg->joints[3][1];
+            y = fabs(y);
+        } else {
+            y = target_positions[1] + leg->joints[3][1];
+        }
+    } else if (target_positions[1] > 0){
+        y = target_positions[1] + leg->joints[3][1];
+    } else {
+        y = leg->joints[3][1];
+    }
 
-//     printf("y = %.2f\n", y);
+    printf("y = %.2f\n", y);
 
-//     float z;
-//     if (target_positions[2] < 0){
-//         z = target_positions[2] - leg->joints[3][2];
-//     } else if(target_positions[2] > 0 ){
-//         z = target_positions[2] + leg->joints[3][2];
-//     } else {
-//         z = leg->joints[3][2];
-//     }
-//     printf("z = %.2f\n", z);
+    float z;
+    if (target_positions[2] < 0){
+        z = target_positions[2] - leg->joints[3][2];
+    } else if(target_positions[2] > 0 ){
+        z = target_positions[2] + leg->joints[3][2];
+    } else {
+        z = leg->joints[3][2];
+    }
+    printf("z = %.2f\n", z);
 
-    float x = target_positions[0];
-    float y = target_positions[1];
-    float z = target_positions[2];
-    // z = fabs(z);
+    // float x = target_positions[0];
+    // float y = target_positions[1];
+    // float z = target_positions[2];
+    z = fabs(z);
     //angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 

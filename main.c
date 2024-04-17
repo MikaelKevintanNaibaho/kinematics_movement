@@ -16,19 +16,20 @@ int main(void) {
 
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
+    float target[3] = {0, 50, 0};
 
-    struct bezier2d curve;
-    bezier2d_init(&curve);
+    // struct bezier2d curve;
+    // bezier2d_init(&curve);
 
-    float stride_length = 50.0;
-    float swing_height = 50.0;
-    generate_walk_trajectory(&curve, &leg, stride_length, swing_height);
+    // float stride_length = 50.0;
+    // float swing_height = 50.0;
+    // generate_walk_trajectory(&curve, &leg, stride_length, swing_height);
 
-    update_leg_position_with_velocity(&curve, NUM_POINTS, &leg, intermediate_link);
+    // update_leg_position_with_velocity(&curve, NUM_POINTS, &leg, intermediate_link);
 
-    for (int i = 0; i < 3; i++) {
-        gsl_matrix_free(intermediate_link[i]);
-    }
+    // for (int i = 0; i < 3; i++) {
+    //     gsl_matrix_free(intermediate_link[i]);
+    // }
     
-    return 0;
+    // return 0;
 }
