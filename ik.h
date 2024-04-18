@@ -8,6 +8,7 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_vector.h>
+#include <stdbool.h>
 
 #define NUM_LINKS 4
 
@@ -28,7 +29,6 @@
 #define FEMUR_LENGTH 78.0
 #define TIBIA_LENGTH 167.23 
 
-#define ANGLE_ACHIEVED 0
 
 
 #define PWM_FREQ 50
@@ -62,6 +62,7 @@ typedef enum {
     KIRI_DEPAN
 }LegPosition;
 
+bool achieved_target = false;
 
 
 extern const float leg_zero_offset[3];
