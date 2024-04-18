@@ -41,29 +41,12 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
     float increment = velocity / 100.0;
-    float max_diff = 0.0;
-    float threshold = 0.1;
-    while (1) { // Adjust the threshold as needed
-        float diff1 = fabs(leg->theta1 - target_angles[0]);
-        float diff2 = fabs(leg->theta2 - target_angles[1]);
-        float diff3 = fabs(leg->theta3 - target_angles[2]);
-        float max_diff = fmax(diff1, fmax(diff2, diff3));
-
-        // Calculate individual increments based on max_diff and direction
-        float increment1 = (max_diff * 0.1) * ((target_angles[0] - leg->theta1) > 0 ? 1 : -1);
-        float increment2 = (max_diff * 0.1) * ((target_angles[1] - leg->theta2) > 0 ? 1 : -1);
-        float increment3 = (max_diff * 0.1) * ((target_angles[2] - leg->theta3) > 0 ? 1 : -1);
-
-        if (diff1 < threshold && diff2 < threshold && diff3 < threshold) {
-            printf("target achieved\n");
-            break;
-        }
-
-
-        // Update angles using the calculated increments
-        float angle1 = leg->theta1 + increment1;
-        float angle2 = leg->theta2 + increment2;
-        float angle3 = leg->theta3 + increment3;
+    while (fabs(leg->theta1 - target_angles[0]) > 0.01 || 
+           fabs(leg->theta2 - target_angles[1]) > 0.01 || 
+           fabs(leg->theta3 - target_angles[2]) > 0.01) { // Adjust the threshold as needed
+        float angle1 = (leg->theta1 + increment);
+        float angle2 = (leg->theta2 + increment);
+        float angle3 = (leg->theta3 + increment);
         if(angle1 >= target_angles[0]){
             angle1 = target_angles[0];
         }
@@ -285,7 +268,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
-    move_to_angle(leg, angles, 100);
+    move_to_angle(leg, angles, 10);
     forward_kinematics(leg, angles, intermediate_metrices);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
 }
