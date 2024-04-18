@@ -16,6 +16,15 @@ int main(void)
     set_pwm_angle(SERVO_CHANNEL_1, 0, PWM_FREQ);
     set_pwm_angle(SERVO_CHANNEL_2, 0, PWM_FREQ);
     set_pwm_angle(SERVO_CHANNEL_3, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_4, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_5, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_6, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_7, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_8, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_9, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_10, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_11, 0, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_12, 0, PWM_FREQ);
 
     return 0;
 }
