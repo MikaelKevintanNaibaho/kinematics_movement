@@ -8,7 +8,6 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_vector.h>
-#include <stdbool.h>
 
 #define NUM_LINKS 4
 
@@ -62,7 +61,6 @@ typedef enum {
     KIRI_DEPAN
 }LegPosition;
 
-bool achieved_target = false;
 
 
 extern const float leg_zero_offset[3];
