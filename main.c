@@ -29,7 +29,7 @@ int main(void) {
     float swing_high = 50.0;
     generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
 
-    int num_points = 5.0;
+    int num_points = 50.0;
     update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
 
      for (int i = 0; i < NUM_LINKS; i++) {
