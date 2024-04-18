@@ -19,7 +19,7 @@ int main(void) {
     float target_angles[3] = {90, 90, 90};
     
     // Move the leg to the target angles
-    move_to_angle(&leg, target_angles, 10);
+    move_to_angle(&leg, target_angles, 100);
     // struct bezier2d curve;
     // bezier2d_init(&curve);
 
