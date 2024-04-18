@@ -42,19 +42,28 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
     float increment = velocity / 100.0;
     float max_diff = 0.0;
+    float threshold = 0.1;
+    while (1) { // Adjust the threshold as needed
+        float diff1 = fabs(leg->theta1 - target_angles[0]);
+        float diff2 = fabs(leg->theta2 - target_angles[1]);
+        float diff3 = fabs(leg->theta3 - target_angles[2]);
+        float max_diff = fmax(diff1, fmax(diff2, diff3));
 
-    for (int i = 0; i < 3; i++) {
-        float diff = fabs(leg->theta1 - target_angles[i]);
-        if (diff > max_diff){
-            max_diff = diff;
+        // Calculate individual increments based on max_diff and direction
+        float increment1 = (max_diff * 0.1) * ((target_angles[0] - leg->theta1) > 0 ? 1 : -1);
+        float increment2 = (max_diff * 0.1) * ((target_angles[1] - leg->theta2) > 0 ? 1 : -1);
+        float increment3 = (max_diff * 0.1) * ((target_angles[2] - leg->theta3) > 0 ? 1 : -1);
+
+        if (diff1 < threshold && diff2 < threshold && diff3 < threshold) {
+            printf("target achieved\n");
+            break;
         }
-    }
-    int max_time = (int)(max_diff / increment);
 
-    for (int t = 0; t <= max_time; t++) { // Adjust the threshold as needed
-        float angle1 = (leg->theta1 + increment * t);
-        float angle2 = (leg->theta2 + increment * t);
-        float angle3 = (leg->theta3 + increment * t);
+
+        // Update angles using the calculated increments
+        float angle1 = leg->theta1 + increment1;
+        float angle2 = leg->theta2 + increment2;
+        float angle3 = leg->theta3 + increment3;
         if(angle1 >= target_angles[0]){
             angle1 = target_angles[0];
         }
