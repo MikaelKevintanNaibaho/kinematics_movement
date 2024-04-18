@@ -57,9 +57,9 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
             angle3 = target_angles[2];
         }
         
-        set_pwm_angle(SERVO_CHANNEL_1, angle1, PWM_FREQ);
-        set_pwm_angle(SERVO_CHANNEL_2, angle2, PWM_FREQ);
-        set_pwm_angle(SERVO_CHANNEL_3, angle3, PWM_FREQ); // Fixed typo here
+        set_pwm_angle(SERVO_CHANNEL_10, angle1, PWM_FREQ);
+        set_pwm_angle(SERVO_CHANNEL_11, angle2, PWM_FREQ);
+        set_pwm_angle(SERVO_CHANNEL_12, angle3, PWM_FREQ); // Fixed typo here
 
         leg->theta1 = angle1;
         leg->theta2 = angle2;
