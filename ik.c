@@ -30,9 +30,9 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     leg->theta2 = normalize_angle(angles[1]);
     leg->theta3 = normalize_angle(angles[2]);
 
-    set_pwm_angle(SERVO_CHANNEL_1, (int)leg->theta1, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_2, (int)leg->theta2,PWM_FREQ );
-    set_pwm_angle(SERVO_CHANNEL_3, (int)leg->theta3, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_10, (int)leg->theta1, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_11, (int)leg->theta2,PWM_FREQ );
+    set_pwm_angle(SERVO_CHANNEL_12, (int)leg->theta3, PWM_FREQ);
 
     printf("Theta1: %.4f degrees\n", leg->theta1);
     printf("Theta2: %.4f degrees\n", leg->theta2);
