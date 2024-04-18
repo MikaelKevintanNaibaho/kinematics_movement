@@ -16,8 +16,6 @@ int main(void) {
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-    float target_angles[3] = {90, 90, 90};
-    
     // Move the leg to the target angles
     // move_to_angle(&leg, target_angles, 100);
     struct bezier2d curve;
