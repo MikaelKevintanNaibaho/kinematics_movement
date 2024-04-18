@@ -48,15 +48,12 @@ uint8_t read_byte(uint8_t reg) {
 
 void set_pwm_freq(int freq)
 {
-    uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / (4096 * freq)) - 1);
-    write_byte(MODE1, 0x10); // Set sleep mode
-    write_byte(PRE_SCALE, prescale_val); // Set prescale value
-    write_byte(MODE1, 0x80); // Restart
-    write_byte(MODE2, 0x04); // Set totem pole (default)
+    uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 * freq) - 1);
+    write_byte(MODE1, 0x10); //sleep
+    write_byte(PRE_SCALE, prescale_val);
+    write_byte(MODE1, 0x80); //restart
+    write_byte(MODE2, 0x04); //totem pole (default)
 }
-
-
-
 void set_pwm_duty(uint8_t led, int value)
 {
     set_pwm(led, 0, value);
