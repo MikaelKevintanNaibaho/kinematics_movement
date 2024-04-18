@@ -71,27 +71,6 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
     }
 }
 
-
-void handle_error(IK_ErrorCode error_code)
-{
-    switch (error_code) {
-    case IK_ERROR_LIMIT_REACHED:
-        printf("Inverse kinematics failed: Physical limit reached.\n");
-        // Additional error handling logic...
-        break;
-    case IK_ERROR_INVALID_INPUT:
-        printf("Inverse kinematics failed: Invalid input.\n");
-        // Additional error handling logic...
-        break;
-    // Handle other error codes as needed
-    default:
-        printf("Inverse kinematics failed: Unknown error.\n");
-        // Additional error handling logic...
-        break;
-    }
-}
-
-
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta)
 {
     params->alpha = alpha;
@@ -216,49 +195,52 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediat
 
 void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *intermediate_metrices[])
 {
-    float x;
-    if((target_positions[0]) < 0){
-       if (target_positions[0] + leg->joints[3][0] < 0){
-            x = leg->joints[3][0];
-            printf("not posible\n");
-        }else{
-            x = target_positions[0] + leg->joints[3][0];
-        }
+    // float x;
+    // if((target_positions[0]) < 0){
+    //    if (target_positions[0] + leg->joints[3][0] < 0){
+    //         x = leg->joints[3][0];
+    //         printf("not posible\n");
+    //     }else{
+    //         x = target_positions[0] + leg->joints[3][0];
+    //     }
 
-    } else if(target_positions[0] > 0){
-        x = target_positions[0] + leg->joints[3][0];
-    } else {
-        x = leg->joints[3][0];
-    }
+    // } else if(target_positions[0] > 0){
+    //     x = target_positions[0] + leg->joints[3][0];
+    // } else {
+    //     x = leg->joints[3][0];
+    // }
 
-    printf("x = %.2f\n", x);
+    // printf("x = %.2f\n", x);
 
-    float y;
-    if (target_positions[1] < 0){
-        if (target_positions[1] + leg->joints[3][1] < 0){
-            y = target_positions[1] + leg->joints[3][1];
-            y = fabs(y);
-        } else {
-            y = target_positions[1] + leg->joints[3][1];
-        }
-    } else if (target_positions[1] > 0){
-        y = target_positions[1] + leg->joints[3][1];
-    } else {
-        y = leg->joints[3][1];
-    }
+    // float y;
+    // if (target_positions[1] < 0){
+    //     if (target_positions[1] + leg->joints[3][1] < 0){
+    //         y = target_positions[1] + leg->joints[3][1];
+    //         y = fabs(y);
+    //     } else {
+    //         y = target_positions[1] + leg->joints[3][1];
+    //     }
+    // } else if (target_positions[1] > 0){
+    //     y = target_positions[1] + leg->joints[3][1];
+    // } else {
+    //     y = leg->joints[3][1];
+    // }
 
-    printf("y = %.2f\n", y);
+    // printf("y = %.2f\n", y);
 
-    float z;
-    if (target_positions[2] < 0){
-        z = target_positions[2] + leg->joints[3][2];
-    } else if(target_positions[2] > 0 ){
-        z = target_positions[2] - leg->joints[3][2];
-    } else {
-        z = leg->joints[3][2];
-    }
-    printf("z = %.2f\n", z);
+    // float z;
+    // if (target_positions[2] < 0){
+    //     z = target_positions[2] + leg->joints[3][2];
+    // } else if(target_positions[2] > 0 ){
+    //     z = target_positions[2] - leg->joints[3][2];
+    // } else {
+    //     z = leg->joints[3][2];
+    // }
+    // printf("z = %.2f\n", z);
     // z = fabs(z);
+    float x = target_positions[0];
+    float y = target_positions[1];
+    float z = target_positions[2];
     //angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 
@@ -282,4 +264,30 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
     set_angles(leg, angles);
     forward_kinematics(leg, angles, intermediate_metrices);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
+}
+
+void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z)
+{
+    switch (position){
+        case KANAN_DEPAN:
+            *adj_x = x;
+            *adj_y = y;
+            *adj_z = z;
+            break;
+        case KANAN_BELAKANG:
+            *adj_x = -y;
+            *adj_y = x;
+            *adj_z = z;
+            break;
+        case KIRI_BELAKANG:
+            *adj_x = -x;
+            *adj_y = -y;
+            *adj_z = z;
+            break;
+        case KIRI_DEPAN:
+            *adj_x = y;
+            *adj_y = -x;
+            *adj_z = z;
+            break;
+    }
 }

@@ -14,6 +14,15 @@
 #define SERVO_CHANNEL_1 1
 #define SERVO_CHANNEL_2 2
 #define SERVO_CHANNEL_3 3
+#define SERVO_CHANNEL_4 4
+#define SERVO_CHANNEL_5 5
+#define SERVO_CHANNEL_6 6
+#define SERVO_CHANNEL_7 7
+#define SERVO_CHANNEL_8 8
+#define SERVO_CHANNEL_9 9
+#define SERVO_CHANNEL_10 10
+#define SERVO_CHANNEL_11 11
+#define SERVO_CHANNEL_12 12
 
 #define COXA_LENGTH  60.4
 #define FEMUR_LENGTH 78.0
@@ -44,13 +53,12 @@ typedef struct {
     float matrix[4][4];
 }DHMatrix;
 
-// Define error codes
 typedef enum {
-    IK_SUCCESS = 0,
-    IK_ERROR_LIMIT_REACHED,
-    IK_ERROR_INVALID_INPUT,
-    // Add more error codes as needed
-} IK_ErrorCode;
+    KANAN_DEPAN,
+    KANAN_BELAKANG,
+    KIRI_BELAKANG,
+    KIRI_DEPAN
+}LegPosition;
 
 
 
@@ -66,7 +74,6 @@ void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediate_matrices[]);
 void inverse_kinematics(SpiderLeg *leg, float target_position[3], gsl_matrix *intermediate_metrices[]);
 void move_forward(SpiderLeg *leg, float target[3]);
-void handle_error(IK_ErrorCode error_code) ;
 
 //DH
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta);
@@ -76,4 +83,6 @@ void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMa
 void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result, gsl_matrix *intermediate_matrices[]);
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity);
 
+//coordinates
+void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);
 #endif /*IK_H*/ 

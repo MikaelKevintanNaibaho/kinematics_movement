@@ -129,6 +129,6 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         inverse_kinematics(leg, target_positions, intermediate_matrices);
 
         // Introduce a fixed delay of 10 milliseconds
-        usleep(1000000); // 10 milliseconds = 10000 microseconds
+        usleep(10000); // 10 milliseconds = 10000 microseconds
     }
 }

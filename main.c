@@ -1,5 +1,6 @@
 #include "pwm_servo.h"
 #include "ik.h"
+#include "move.h"
 
 int main(void) {
     PCA9685_init();
@@ -15,8 +16,18 @@ int main(void) {
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-    float target_positions[3] = {-50.0, 0.0, 0.0};
+    struct bezier2d curve;
+    bezier2d_init(&curve);
 
-    inverse_kinematics(&leg, target_positions, intermediate_link);
+    float stride_length = 50.0;
+    float swing_high = 50.0;
+    generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
+
+    int num_points = 50.0;
+    update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
+
+     for (int i = 0; i < NUM_LINKS; i++) {
+        gsl_matrix_free(intermediate_link[i]);
+    }
     return 0;
 }
