@@ -41,12 +41,20 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
     float increment = velocity / 100.0;
-    while (fabs(leg->theta1 - target_angles[0]) > 0.01 || 
-           fabs(leg->theta2 - target_angles[1]) > 0.01 || 
-           fabs(leg->theta3 - target_angles[2]) > 0.01) { // Adjust the threshold as needed
-        float angle1 = (int)(leg->theta1 + increment);
-        float angle2 = (int)(leg->theta2 + increment);
-        float angle3 = (int)(leg->theta3 + increment);
+    float max_diff = 0.0;
+
+    for (int i = 0; i < 3; i++) {
+        float diff = fabs(leg->theta1 - target_angles[i]);
+        if (diff > max_diff){
+            max_diff = diff;
+        }
+    }
+    int max_time = (int)(max_diff / increment);
+
+    for (int t = 0; t <= max_time; t++) { // Adjust the threshold as needed
+        float angle1 = (leg->theta1 + increment * t);
+        float angle2 = (leg->theta2 + increment * t);
+        float angle3 = (leg->theta3 + increment * t);
         if(angle1 >= target_angles[0]){
             angle1 = target_angles[0];
         }
