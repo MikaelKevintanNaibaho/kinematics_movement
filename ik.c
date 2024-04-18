@@ -56,6 +56,11 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
         if(angle3 >= target_angles[2]){
             angle3 = target_angles[2];
         }
+
+        if(angle1 == target_angles[0] && angle2 == target_angles[1] && angle3 == target_angles[2]){
+            printf("target achieved\n");
+            break;
+        }
         
         set_pwm_angle(SERVO_CHANNEL_10, angle1, PWM_FREQ);
         set_pwm_angle(SERVO_CHANNEL_11, angle2, PWM_FREQ);
