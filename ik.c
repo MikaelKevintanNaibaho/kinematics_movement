@@ -268,7 +268,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
-    move_to_angle(leg, angles, 50);
+    move_to_angle(leg, angles, 0.1);
     forward_kinematics(leg, angles, intermediate_metrices);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
 }
