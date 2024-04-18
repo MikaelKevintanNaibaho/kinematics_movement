@@ -19,16 +19,16 @@ int main(void) {
     float target_angles[3] = {90, 90, 90};
     
     // Move the leg to the target angles
-    move_to_angle(&leg, target_angles, 100);
-    // struct bezier2d curve;
-    // bezier2d_init(&curve);
+    // move_to_angle(&leg, target_angles, 100);
+    struct bezier2d curve;
+    bezier2d_init(&curve);
 
-    // float stride_length = 50.0;
-    // float swing_high = 50.0;
-    // generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
+    float stride_length = 50.0;
+    float swing_high = 50.0;
+    generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
 
-    // int num_points = 50.0;
-    // update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
+    int num_points = 50.0;
+    update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
 
      for (int i = 0; i < NUM_LINKS; i++) {
         gsl_matrix_free(intermediate_link[i]);
