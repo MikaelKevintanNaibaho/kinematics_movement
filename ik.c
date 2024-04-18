@@ -41,23 +41,20 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
 
 void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
     float increment = velocity / 100.0;
-    while (leg->theta1 < normalize_angle(target_angles[0]) || 
-           leg->theta2 < normalize_angle(target_angles[1]) || 
-           leg->theta3 < normalize_angle(target_angles[2])) {
+    while (fabs(leg->theta1 - target_angles[0]) > 0.1 || 
+           fabs(leg->theta2 - target_angles[1]) > 0.1 || 
+           fabs(leg->theta3 - target_angles[2]) > 0.1) { // Adjust the threshold as needed
         int angle1 = (int)(leg->theta1 + increment);
         int angle2 = (int)(leg->theta2 + increment);
         int angle3 = (int)(leg->theta3 + increment);
         if(angle1 >= target_angles[0]){
             angle1 = target_angles[0];
-            break;
         }
         if(angle2 >= target_angles[1]){
             angle2 = target_angles[1];
-            break;  
         }
         if(angle3 >= target_angles[2]){
             angle3 = target_angles[2];
-            break;
         }
         
         set_pwm_angle(SERVO_CHANNEL_10, angle1, PWM_FREQ);
@@ -73,6 +70,7 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
         usleep(10000);
     }
 }
+
 
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta)
 {
@@ -264,7 +262,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
     float theta3 = M_PI - beta;
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
-    move_to_angle(leg, angles, 10);
+    move_to_angle(leg, angles, 100);
     forward_kinematics(leg, angles, intermediate_metrices);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
 }
