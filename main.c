@@ -20,7 +20,7 @@ int main(void) {
     // inverse_kinematics(&leg, target, intermediate_link);
 
     float angle[3] = {0, 90, 90};
-    move_to_angle(&leg, angle, 100);
+    move_to_angle(&leg, angle, 200);
 
     // struct bezier2d curve;
     // bezier2d_init(&curve);
