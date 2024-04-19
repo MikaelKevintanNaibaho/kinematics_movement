@@ -67,8 +67,10 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed) {
             float next_angle = current_angles[i] + delta_theta * delta_directions[i];
 
             //make sure the next angle nggk overshoot dari target angles
-           next_angle = fmaxf(fminf(next_angle, target_angles[i]), current_angles[i]);
-
+            if ((delta_directions[i] > 0 && next_angle > target_angles[i]) ||
+                (delta_directions[i] < 0 && next_angle < target_angles[i])) {
+                    next_angle = target_angles[i];
+            }
 
             current_angles[i] = next_angle;
         }
