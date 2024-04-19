@@ -28,6 +28,8 @@
 #define FEMUR_LENGTH 78.0
 #define TIBIA_LENGTH 167.23 
 
+#define DELTA_THETA_MAX 5.0
+#define DELAY_US 10000
 
 
 #define PWM_FREQ 50
@@ -82,7 +84,8 @@ void create_DH_matrix(const DHParameters *params, gsl_matrix *matrix);
 void print_DH_matrix(const DHMatrix *matrix);
 void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
 void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result, gsl_matrix *intermediate_matrices[]);
-void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity);
+void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed);
+int angles_equal(float angles1[3], float angles2[3]);
 
 //coordinates
 void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);

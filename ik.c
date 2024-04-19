@@ -39,40 +39,47 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     printf("Theta3: %.4f degrees\n", leg->theta3);
 }
 
-void move_to_angle(SpiderLeg *leg, float target_angles[3], float velocity) {
-    float increment = velocity / 100.0;
-    while (fabs(leg->theta1 - target_angles[0]) > 0.01 || 
-           fabs(leg->theta2 - target_angles[1]) > 0.01 || 
-           fabs(leg->theta3 - target_angles[2]) > 0.01) { // Adjust the threshold as needed
-        float angle1 = (leg->theta1 + increment);
-        float angle2 = (leg->theta2 + increment);
-        float angle3 = (leg->theta3 + increment);
-        if(angle1 >= target_angles[0]){
-            angle1 = target_angles[0];
+// Helper function to check if two sets of angles are approximately equal
+int angles_equal(float angles1[3], float angles2[3]) {
+    for (int i = 0; i < 3; ++i) {
+        if (fabs(angles1[i] - angles2[i]) > 0.01) {
+            return 0;
         }
-        if(angle2 >= target_angles[1]){
-            angle2 = target_angles[1];
-        }
-        if(angle3 >= target_angles[2]){
-            angle3 = target_angles[2];
-        }
-
-        if(angle1 == target_angles[0] && angle2 == target_angles[1] && angle3 == target_angles[2]){
-            printf("target achieved\n");
-        }
-        
-        set_pwm_angle(SERVO_CHANNEL_10, angle1, PWM_FREQ);
-        set_pwm_angle(SERVO_CHANNEL_11, angle2, PWM_FREQ);
-        set_pwm_angle(SERVO_CHANNEL_12, angle3, PWM_FREQ); // Fixed typo here
-
-        leg->theta1 = angle1;
-        leg->theta2 = angle2;
-        leg->theta3 = angle3;
-        printf("Theta1: %.4f degrees\n", leg->theta1);
-        printf("Theta2: %.4f degrees\n", leg->theta2);
-        printf("Theta3: %.4f degrees\n", leg->theta3);
-        usleep(10000);
     }
+    return 1;
+}
+
+void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed) {
+    float current_angles[3] = {leg->theta1, leg->theta2, leg->theta3};
+
+    //hitung max change dalam angle per step berdasarkan speed
+    float delta_theta = DELTA_THETA_MAX * (float)speed / 100.0;
+
+    float delta_directions[3];
+    for (int i = 0; i < 3; i++) {
+        delta_directions[i] = (target_angles[i] > current_angles[i]) ? 1.0 : -1.0;
+    }
+
+    //adjust angle gradually toward the target
+    while (!angles_equal(current_angles, target_angles)) {
+        for (int i = 0; i < 3; i++) {
+            //hitung next angle berdasarkan current_angles dan delta_theta
+            float next_angle = current_angles[i] + delta_theta * delta_directions[i];
+
+            //make sure the next angle nggk overshoot dari target angles
+            if ((delta_directions[i] > 0 && next_angle > target_angles[i]) ||
+                (delta_directions[i] < 0 && next_angle < target_angles[i])) {
+                    next_angle = target_angles[i];
+            }
+
+            current_angles[i] = next_angle;
+        }
+
+        //set servo angle dan kasih delay
+        set_angles(leg, current_angles);
+        usleep(DELAY_US);
+    }
+
 }
 
 

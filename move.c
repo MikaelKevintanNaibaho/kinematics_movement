@@ -94,14 +94,13 @@ void save_trajectory_points(struct bezier2d *curve, const char *filename, int nu
 
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
-        float x, y;
-        bezier2d_getPos(curve, t, &x, &y);
-        fprintf(file, "%.2f,%.2f\n", x, y);
+        float x, z;
+        bezier2d_getPos(curve, t, &x, &z);
+        fprintf(file, "%.2f %.2f\n", x, z);
     }
 
     fclose(file);
 }
-
 void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, gsl_matrix *intermediate_matrices[])
 {
     printf("updating leg position with fixed delay\n");
