@@ -26,7 +26,7 @@ int main(void) {
     bezier2d_init(&curve);
 
     float stride_length = 100.0;
-    float swing_high = 60.0;
+    float swing_high = 50.0;
     generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
 
     save_trajectory_points(&curve, "trajectory.dat", 50);
