@@ -3,7 +3,7 @@
 #include "move.h"
 
 int main(void) {
-    // PCA9685_init();
+    PCA9685_init();
 
     SpiderLeg leg;
     gsl_matrix *intermediate_link[NUM_LINKS];
