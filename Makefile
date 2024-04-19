@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -std=c11 -g -02
+CFLAGS = -Wall -Wextra -std=c11 -g -O2
 LDFLAGS = -lgsl -lgslcblas -lm
 
 # Source files
