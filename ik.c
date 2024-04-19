@@ -53,7 +53,7 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed) {
     float current_angles[3] = {leg->theta1, leg->theta2, leg->theta3};
 
     //hitung max change dalam angle per step berdasarkan speed
-    float delta_theta = DELTA_THETA_MAX * (float)speed / 10.0;
+    float delta_theta = DELTA_THETA_MAX * (float)speed / 100.0;
 
     float delta_directions[3];
     for (int i = 0; i < 3; i++) {
