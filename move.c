@@ -116,7 +116,7 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
     inverse_kinematics(leg, target_positions, intermediate_matrices);
 
     // Iterate over remaining points
-    for (int i = 1; i < number_points; i++){
+    for (int i = 1; i < number_points + 1; i++){
         float t = (float)i / number_points;
         bezier2d_getPos(curve, t, &x, &z);
         
