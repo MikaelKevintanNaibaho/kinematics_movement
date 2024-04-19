@@ -28,8 +28,8 @@
 #define FEMUR_LENGTH 78.0
 #define TIBIA_LENGTH 167.23 
 
-#define DELTA_THETA_MAX 3.0
-#define DELAY_US 100
+#define DELTA_THETA_MAX 1.0
+#define DELAY_US 1000
 
 
 #define PWM_FREQ 50
