@@ -25,7 +25,7 @@ int main(void) {
     struct bezier2d curve;
     bezier2d_init(&curve);
 
-    float stride_length = 100.0;
+    float stride_length = 200.0;
     float swing_high = 100.0;
     generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
 
