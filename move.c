@@ -76,7 +76,6 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
     // Append straight line for moving backward
-    usleep(100000);
     bezier2d_addPoint(curve, endx_forward, endz_forward);
     bezier2d_addPoint(curve, startx, startz);
 
