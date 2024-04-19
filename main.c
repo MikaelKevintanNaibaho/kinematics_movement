@@ -16,7 +16,7 @@ int main(void) {
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-    float target[3] = {50.0, 0.0, 0.0};
+    float target[3] = {-50.0, 0.0, 0.0};
     inverse_kinematics(&leg, target, intermediate_link);
 
     // float angle[3] = {0, 90, 90};
