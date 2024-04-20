@@ -42,7 +42,7 @@ int main(void) {
 
         float target[3] = {x - 100, y, z};
         inverse_kinematics(&leg, target, intermediate_link);
-        usleep(100000);
+        usleep(500000);
     }
     // struct bezier2d stright_back;
     // bezier2d_init(&stright_back);
