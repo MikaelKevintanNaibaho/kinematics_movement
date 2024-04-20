@@ -40,7 +40,7 @@ int main(void) {
     bezier2d_init(&stright_back);
 
     generate_stright_back_trajectory(&stright_back, &leg, stride_length);
-    update_leg_position_with_velocity(&stright_back, num_points, &leg, intermediate_link);
+    update_leg_position_with_velocity(&stright_back, 2, &leg, intermediate_link);
 
     for (int i = 0; i < NUM_LINKS; i++) {
         gsl_matrix_free(intermediate_link[i]);
