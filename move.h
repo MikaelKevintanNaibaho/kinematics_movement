@@ -21,6 +21,7 @@ struct bezier2d {
 };
 
 #define NUM_POINTS 50
+#define DESIRED_TIME 0.1
 
 void bezier2d_init(struct bezier2d *curve);
 void bezier2d_addPoint(struct bezier2d *curve, float x, float y);
