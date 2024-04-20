@@ -33,5 +33,5 @@ void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *
 void print_trajectory(struct bezier2d *curve, int num_points) ;
 void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points) ;
 void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, gsl_matrix *intermediate_matrices[]);
-
+void walk_forward(SpiderLeg *leg, gsl_matrix *intermediate_matrices[], float stride_length, float swing_height, int num_points);
 #endif //MOVE_H

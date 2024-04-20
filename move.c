@@ -175,3 +175,23 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         usleep(delay);
     }
 }
+
+
+void walk_forward(SpiderLeg *leg, gsl_matrix *intermediate_matrices[], float stride_length, float swing_height, int num_points)
+{
+    struct bezier2d curve;
+    bezier2d_init(&curve);
+
+    generate_walk_trajectory(&curve, leg, stride_length, swing_height);
+
+    update_leg_position_with_velocity(&curve, num_points, leg, intermediate_matrices);
+    usleep(100000);
+
+    float x = leg->joints[3][0];
+    float y = leg->joints[3][1];
+    float z = leg->joints[3][2];
+
+    float target[3] = {x - 100, y, z};
+    inverse_kinematics(leg, target, intermediate_matrices);
+    usleep(500000);
+}
