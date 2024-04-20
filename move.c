@@ -186,12 +186,12 @@ void walk_forward(SpiderLeg *leg, gsl_matrix *intermediate_matrices[], float str
 
     update_leg_position_with_velocity(&curve, num_points, leg, intermediate_matrices);
     usleep(100000);
+    
+    struct bezier2d back;
+    bezier2d_init(&back);
+    generate_stright_back_trajectory(&back, leg, 100);
 
-    float x = leg->joints[3][0];
-    float y = leg->joints[3][1];
-    float z = leg->joints[3][2];
+    update_leg_position_with_velocity(&back, 10, leg, intermediate_matrices);
 
-    float target[3] = {x - 100, y, z};
-    inverse_kinematics(leg, target, intermediate_matrices);
     usleep(500000);
 }
