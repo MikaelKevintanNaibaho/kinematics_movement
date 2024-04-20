@@ -42,6 +42,8 @@ int main(void) {
         generate_stright_back_trajectory(&stright_back, &leg, stride_length);
         update_leg_position_with_velocity(&stright_back, 2, &leg, intermediate_link);
 
+        usleep(100000);
+
     }
     
     for (int i = 0; i < NUM_LINKS; i++) {
