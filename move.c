@@ -147,7 +147,7 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
     }
 
     //hitung velocity base on total distance dan disired duration
-    float desired_duration = 1.0;
+    float desired_duration = 0.1;
     float average_velocitu = total_distance / desired_duration;
 
     //hitung interval antara dua titik
