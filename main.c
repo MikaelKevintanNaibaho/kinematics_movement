@@ -33,7 +33,7 @@ int main(void) {
 
     int num_points = 10.0;
     update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
-    usleep(100000);
+    usleep(1000000);
 
     float x = leg.joints[3][0];
     float y = leg.joints[3][1];
