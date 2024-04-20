@@ -64,10 +64,6 @@ typedef enum {
 }LegPosition;
 
 
-
-extern const float leg_zero_offset[3];
-
-
 float to_degrees(float rad);
 float to_radians(float deg);
 float normalize_angle(float angle);
