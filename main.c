@@ -21,27 +21,29 @@ int main(void) {
 
     // float angle[3] = {0, 90, 90};
     // move_to_angle(&leg, angle, 100);
+    while(1){
+        struct bezier2d curve;
+        bezier2d_init(&curve);
 
-    struct bezier2d curve;
-    bezier2d_init(&curve);
+        float stride_length = 100.0;
+        float swing_high = 50.0;
+        generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
 
-    float stride_length = 100.0;
-    float swing_high = 50.0;
-    generate_walk_trajectory(&curve, &leg, stride_length, swing_high);
-
-    save_trajectory_points(&curve, "trajectory.dat", 50);
+        save_trajectory_points(&curve, "trajectory.dat", 50);
 
 
-    int num_points = 10.0;
-    update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
-    usleep(100000);
+        int num_points = 10.0;
+        update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
+        usleep(100000);
 
-    struct bezier2d stright_back;
-    bezier2d_init(&stright_back);
+        struct bezier2d stright_back;
+        bezier2d_init(&stright_back);
 
-    generate_stright_back_trajectory(&stright_back, &leg, stride_length);
-    update_leg_position_with_velocity(&stright_back, 2, &leg, intermediate_link);
+        generate_stright_back_trajectory(&stright_back, &leg, stride_length);
+        update_leg_position_with_velocity(&stright_back, 2, &leg, intermediate_link);
 
+    }
+    
     for (int i = 0; i < NUM_LINKS; i++) {
         gsl_matrix_free(intermediate_link[i]);
     }
