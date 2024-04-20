@@ -29,7 +29,7 @@
 #define FEMUR_LENGTH 78.0
 #define TIBIA_LENGTH 167.23 
 
-#define DELTA_THETA_MAX 0.1
+#define DELTA_THETA_MAX 1
 #define DELAY_US 1000
 
 
