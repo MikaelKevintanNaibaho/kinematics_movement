@@ -10,6 +10,7 @@
 #include <gsl/gsl_vector.h>
 
 #define NUM_LINKS 4
+#define SPEED 10000
 
 #define SERVO_CHANNEL_1 1
 #define SERVO_CHANNEL_2 2
