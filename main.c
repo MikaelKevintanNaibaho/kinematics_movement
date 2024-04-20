@@ -35,6 +35,13 @@ int main(void) {
     update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
     usleep(100000);
 
+    float x = leg.joints[3][0];
+    float y = leg.joints[3][1];
+    float z = leg.joints[3][2];
+
+    float target[3] = {x - 100, y, z};
+    inverse_kinematics(&leg, target, intermediate_link);
+
     // struct bezier2d stright_back;
     // bezier2d_init(&stright_back);
 
