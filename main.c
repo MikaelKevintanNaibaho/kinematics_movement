@@ -32,7 +32,7 @@ int main(void) {
     save_trajectory_points(&curve, "trajectory.dat", 50);
 
 
-    int num_points = 60.0;
+    int num_points = 30.0;
     update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
     usleep(100000);
 
@@ -40,7 +40,7 @@ int main(void) {
     bezier2d_init(&stright_back);
 
     generate_stright_back_trajectory(&stright_back, &leg, stride_length);
-    update_leg_position_with_velocity(&stright_back, num_points, &leg, intermediate_link);
+    update_leg_position_with_velocity(&stright_back, 3, &leg, intermediate_link);
 
     for (int i = 0; i < NUM_LINKS; i++) {
         gsl_matrix_free(intermediate_link[i]);
