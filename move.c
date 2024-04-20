@@ -1,5 +1,6 @@
 #include "move.h"
 #include <stdio.h>
+#include <time.h>
 
 void bezier2d_init(struct bezier2d *curve) {
     curve->xpos = NULL;
@@ -127,18 +128,38 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
 {
     printf("updating leg position with fixed delay\n");
 
-    // Handle the first point separately
-    float x, z;
-    bezier2d_getPos(curve, 0, &x, &z); // Get position of the first point
-    float y = leg->joints[3][1];
-    float target_positions[3] = {x, y, z};
-    inverse_kinematics(leg, target_positions, intermediate_matrices);
+    float total_distance = 0.0;
+    float prev_x, prev_z;
+    bezier2d_getPos(curve, 0, &prev_x, &prev_z); //get poin pertama
 
-    // Iterate over remaining points
-    for (int i = 1; i < number_points + 1; i++){
+    for (int i = 0; i <= number_points; i++) {
         float t = (float)i / number_points;
+        float x,z;
+        bezier2d_getPos(curve, t, &x, &z); 
+
+        //hitung jarak antara dua titik
+        float dx = x - prev_x;
+        float dz = z - prev_z;
+        total_distance += sqrt(dx * dx + dz * dz);
+
+        prev_x = x;
+        prev_z = z;
+    }
+
+    //hitung velocity base on total distance dan disired duration
+    float desired_duration = 1.0;
+    float average_velocitu = total_distance / desired_duration;
+
+    //hitung interval antara dua titik
+    float dt = desired_duration / number_points;
+
+    //lakukan untuk setiap titik dan control velocity
+    // Iterate over points and control velocity
+    for (int i = 0; i <= number_points; i++) {
+        float t = (float)i / number_points;
+        float x, z;
         bezier2d_getPos(curve, t, &x, &z);
-        
+
         // Print position of current point
         printf("Point %d: (%.2f, %.2f)\n", i, x, z);
 
@@ -149,5 +170,8 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         // Update leg position using inverse kinematics
         inverse_kinematics(leg, target_positions, intermediate_matrices);
 
+        // Introduce delay based on desired velocity
+        long delay = (long)(dt * 1e6);
+        usleep(delay);
     }
 }
