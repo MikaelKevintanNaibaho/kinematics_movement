@@ -53,6 +53,7 @@ void bezier2d_getPos(struct bezier2d *curve, float t, float *xret, float *yret) 
 void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz, float controlx, float controlz, float endx, float endz){
     bezier2d_addPoint(curve, startx, startz);
     bezier2d_addPoint(curve, controlx, controlz);
+    bezier2d_addPoint(curve, controlx, controlz);
     bezier2d_addPoint(curve, endx, endz);
 }
 
