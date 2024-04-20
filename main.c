@@ -10,17 +10,12 @@ int main(void) {
     for (int i = 0; i < NUM_LINKS; i++) {
         intermediate_link[i] = gsl_matrix_alloc(4, 4);
     }
-    float initial_angle[3] = {0, 130, 130};
+    float initial_angle[3] = {0, 110, 130};
     set_angles(&leg, initial_angle);
 
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-    // float target[3] = {-50.0, 0.0, 0.0};
-    // inverse_kinematics(&leg, target, intermediate_link);
-
-    // float angle[3] = {0, 90, 90};
-    // move_to_angle(&leg, angle, 100);
     while(1){
         walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
     }
