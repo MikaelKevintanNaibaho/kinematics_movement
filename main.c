@@ -32,7 +32,7 @@ int main(void) {
     save_trajectory_points(&curve, "trajectory.dat", 50);
 
 
-    int num_points = 50.0;
+    int num_points = 10.0;
     update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
     usleep(100000);
 
