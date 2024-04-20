@@ -34,6 +34,7 @@ int main(void) {
 
     int num_points = 60.0;
     update_leg_position_with_velocity(&curve, num_points, &leg, intermediate_link);
+    usleep(100000);
 
     struct bezier2d stright_back;
     bezier2d_init(&stright_back);
