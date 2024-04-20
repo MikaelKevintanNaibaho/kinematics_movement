@@ -191,7 +191,7 @@ void walk_forward(SpiderLeg *leg, gsl_matrix *intermediate_matrices[], float str
     bezier2d_init(&back);
     generate_stright_back_trajectory(&back, leg, 100);
 
-    update_leg_position_with_velocity(&back, 10, leg, intermediate_matrices);
+    update_leg_position_with_velocity(&back, num_points, leg, intermediate_matrices);
 
     usleep(500000);
 }
