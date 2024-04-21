@@ -16,11 +16,8 @@ int main(void) {
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-    float target[3] = {100.0, leg.joints[3][1], leg.joints[3][2]};
 
-    inverse_kinematics(&leg, target, intermediate_link);
-
-    // walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
+    walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
     // struct bezier2d stright_back;
     // bezier2d_init(&stright_back);
 
