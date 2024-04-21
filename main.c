@@ -1,32 +1,40 @@
-#include "pwm_servo.h"
+#include <stdio.h>
 #include "ik.h"
-#include "move.h"
 
-int main(void) {
+int main() {
     PCA9685_init();
-
-    SpiderLeg leg;
-    gsl_matrix *intermediate_link[NUM_LINKS];
+    // Initialize intermediate matrices for DH transformation
+    gsl_matrix *intermediate_matrices[NUM_LINKS];
     for (int i = 0; i < NUM_LINKS; i++) {
-        intermediate_link[i] = gsl_matrix_alloc(4, 4);
+        intermediate_matrices[i] = gsl_matrix_alloc(4, 4);
     }
-    float initial_angle[3] = {0, 130, 130};
-    set_angles(&leg, initial_angle);
 
-    sleep(2);
-    forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
+    // Define arrays to store leg instances and joint angles for each leg
+    SpiderLeg legs[NUM_LEGS];
+    float leg_angles[NUM_LEGS][3] = {
+        {0.0, 130.0, 130.0},   // Angles for KANAN_DEPAN
+        {0.0, 130.0, 130.0},   // Angles for KANAN_BELAKANG
+        {0.0, 130.0, 130.0},   // Angles for KIRI_BELAKANG
+        {0.0, 130.0, 130.0}    // Angles for KIRI_DEPAN
+    };
 
-    while(1){
-        walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
+    // Iterate over each leg
+    for (int i = 0; i < NUM_LEGS; i++) {
+        // Create leg instance
+        legs[i] = create_leg((LegPosition)i);
+
+        // Set the joint angles for the leg
+        float *angles = leg_angles[i];
+        set_angles(&legs[i], angles, (LegPosition)i); // Pass the leg position
+
+        // Perform forward kinematics for the leg
+        forward_kinematics(&legs[i], angles, intermediate_matrices);
     }
-    // struct bezier2d stright_back;
-    // bezier2d_init(&stright_back);
 
-    // generate_stright_back_trajectory(&stright_back, &leg, stride_length);
-    // update_leg_position_with_velocity(&stright_back, 3, &leg, intermediate_link);
-    
+    // Free intermediate matrices
     for (int i = 0; i < NUM_LINKS; i++) {
-        gsl_matrix_free(intermediate_link[i]);
+        gsl_matrix_free(intermediate_matrices[i]);
     }
+
     return 0;
 }
