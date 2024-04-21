@@ -29,6 +29,15 @@ int main() {
 
         // Perform forward kinematics for the leg
         forward_kinematics(&legs[i], angles, intermediate_matrices);
+
+        // Get the current position of the leg's tip
+        float *current_position = get_target(&legs[i]);
+
+        // Set the target position to move 100mm along the x-axis
+        float target_position[3] = {current_position[0] + 100.0, current_position[1], current_position[2]};
+
+        // Perform inverse kinematics to move the leg to the target position
+        inverse_kinematics(&legs[i], target_position, intermediate_matrices, (LegPosition)i);
     }
 
     // Free intermediate matrices
