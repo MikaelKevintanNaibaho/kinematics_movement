@@ -16,8 +16,9 @@ int main(void) {
     sleep(2);
     forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-
-    walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
+    while(1){
+        walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
+    }
     // struct bezier2d stright_back;
     // bezier2d_init(&stright_back);
 
