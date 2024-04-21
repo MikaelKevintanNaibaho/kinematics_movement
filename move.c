@@ -53,7 +53,6 @@ void bezier2d_getPos(struct bezier2d *curve, float t, float *xret, float *yret) 
 void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz, float controlx, float controlz, float endx, float endz){
     bezier2d_addPoint(curve, startx, startz);
     bezier2d_addPoint(curve, controlx, controlz);
-    bezier2d_addPoint(curve, controlx, controlz);
     bezier2d_addPoint(curve, endx, endz);
 }
 
@@ -63,9 +62,6 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     //get current position
     float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
-    printf("startx = %.2f\n", startx);
-    printf("startz = %.2f\n", startz);
-
 
     //control points
     float controlx = (startx + stride_length) / 2;
@@ -74,8 +70,6 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     printf("controlz = %f\n", controlz);
     float endx_forward = startx + stride_length;
     float endz_forward = startz;
-    printf("endx = %.2f\n", endx_forward);
-    printf("endz = %.2f\n", endz_forward);
     //buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
