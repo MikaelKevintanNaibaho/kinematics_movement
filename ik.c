@@ -25,33 +25,14 @@ float *get_target(SpiderLeg *leg) {
 }
 
 
-void set_angles(SpiderLeg *leg, float angles[3], LegPosition position) {
+void set_angles(SpiderLeg *leg, float angles[3]) {
     leg->theta1 = normalize_angle(angles[0]);
     leg->theta2 = normalize_angle(angles[1]);
     leg->theta3 = normalize_angle(angles[2]);
 
-    int channel_offset;
-    switch (position) {
-        case KIRI_DEPAN:
-            channel_offset = 0;
-            break;
-        case KIRI_BELAKANG:
-            channel_offset = 3;
-            break;
-        case KANAN_BELAKANG:
-            channel_offset = 6;
-            break;
-        case KANAN_DEPAN:
-            channel_offset = 9;
-            break;
-        default:
-            printf("Invalid leg position\n");
-            return;
-    }
-
-    set_pwm_angle(SERVO_CHANNEL_1 + channel_offset, (int)leg->theta1, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_2 + channel_offset, (int)leg->theta2, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_3 + channel_offset, (int)leg->theta3, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_10, (int)leg->theta1, PWM_FREQ);
+    set_pwm_angle(SERVO_CHANNEL_11, (int)leg->theta2,PWM_FREQ );
+    set_pwm_angle(SERVO_CHANNEL_12, (int)leg->theta3, PWM_FREQ);
 
     printf("Theta1: %.4f degrees\n", leg->theta1);
     printf("Theta2: %.4f degrees\n", leg->theta2);
@@ -68,7 +49,7 @@ int angles_equal(float angles1[3], float angles2[3]) {
     return 1;
 }
 
-void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed, LegPosition position) {
+void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed) {
     float current_angles[3] = {leg->theta1, leg->theta2, leg->theta3};
 
     //hitung max change dalam angle per step berdasarkan speed
@@ -95,7 +76,7 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed, LegPositio
         }
 
         //set servo angle dan kasih delay
-        set_angles(leg, current_angles, position);
+        set_angles(leg, current_angles);
         usleep(DELAY_US);
     }
 
@@ -224,7 +205,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediat
     gsl_matrix_free(trans_matrix);
 }
 
-void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *intermediate_metrices[], LegPosition position)
+void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *intermediate_metrices[])
 {
     // float x;
     // if((target_positions[0]) < 0){
@@ -292,7 +273,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
     float theta3 = M_PI - beta;
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
-    set_angles(leg, angles, position);
+    set_angles(leg, angles);
     forward_kinematics(leg, angles, intermediate_metrices);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
 }
@@ -321,38 +302,4 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
             *adj_z = z;
             break;
     }
-}
-
-SpiderLeg create_leg(LegPosition position)
-{
-    SpiderLeg leg;
-    switch (position) {
-        case KANAN_DEPAN:
-            strcpy(leg.name, "KANAN_DEPAN");
-            leg.COXA = COXA_LENGTH;
-            leg.FEMUR = FEMUR_LENGTH;
-            leg.TIBIA = TIBIA_LENGTH;
-        
-        case KANAN_BELAKANG:
-            strcpy(leg.name, "KANAN_BELAKANG");
-            leg.COXA = COXA_LENGTH;
-            leg.FEMUR = FEMUR_LENGTH;
-            leg.TIBIA = TIBIA_LENGTH;
-
-
-        case KIRI_BELAKANG:
-            strcpy(leg.name, "KIRI_BELAKANG");
-            leg.COXA = COXA_LENGTH;
-            leg.FEMUR = FEMUR_LENGTH;
-            leg.TIBIA = TIBIA_LENGTH;
-
-
-        case KIRI_DEPAN:
-            strcpy(leg.name, "KIRI_DEPAN");
-            leg.COXA = COXA_LENGTH;
-            leg.FEMUR = FEMUR_LENGTH;
-            leg.TIBIA = TIBIA_LENGTH;
-    }
-
-    return leg;
 }

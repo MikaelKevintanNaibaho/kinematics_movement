@@ -1,49 +1,32 @@
-#include <stdio.h>
+#include "pwm_servo.h"
 #include "ik.h"
+#include "move.h"
 
-int main() {
+int main(void) {
     PCA9685_init();
-    // Initialize intermediate matrices for DH transformation
-    gsl_matrix *intermediate_matrices[NUM_LINKS];
+
+    SpiderLeg leg;
+    gsl_matrix *intermediate_link[NUM_LINKS];
     for (int i = 0; i < NUM_LINKS; i++) {
-        intermediate_matrices[i] = gsl_matrix_alloc(4, 4);
+        intermediate_link[i] = gsl_matrix_alloc(4, 4);
     }
+    float initial_angle[3] = {0, 130, 130};
+    set_angles(&leg, initial_angle);
 
-    // Define arrays to store leg instances and joint angles for each leg
-    SpiderLeg legs[NUM_LEGS];
-    float leg_angles[NUM_LEGS][3] = {
-        {0.0, 130.0, 130.0},   // Angles for KANAN_DEPAN
-        {0.0, 130.0, 130.0},   // Angles for KANAN_BELAKANG
-        {0.0, 130.0, 130.0},   // Angles for KIRI_BELAKANG
-        {0.0, 130.0, 130.0}    // Angles for KIRI_DEPAN
-    };
+    sleep(2);
+    forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
 
-    // Iterate over each leg
-    for (int i = 0; i < NUM_LEGS; i++) {
-        // Create leg instance
-        legs[i] = create_leg((LegPosition)i);
-
-        // Set the joint angles for the leg
-        float *angles = leg_angles[i];
-        set_angles(&legs[i], angles, (LegPosition)i); // Pass the leg position
-
-        // Perform forward kinematics for the leg
-        forward_kinematics(&legs[i], angles, intermediate_matrices);
-
-        // Get the current position of the leg's tip
-        float *current_position = get_target(&legs[i]);
-
-        // Set the target position to move 100mm along the x-axis
-        float target_position[3] = {current_position[0] + 100.0, current_position[1], current_position[2]};
-
-        // Perform inverse kinematics to move the leg to the target position
-        inverse_kinematics(&legs[i], target_position, intermediate_matrices, (LegPosition)i);
+    while(1){
+        walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
     }
+    // struct bezier2d stright_back;
+    // bezier2d_init(&stright_back);
 
-    // Free intermediate matrices
+    // generate_stright_back_trajectory(&stright_back, &leg, stride_length);
+    // update_leg_position_with_velocity(&stright_back, 3, &leg, intermediate_link);
+    
     for (int i = 0; i < NUM_LINKS; i++) {
-        gsl_matrix_free(intermediate_matrices[i]);
+        gsl_matrix_free(intermediate_link[i]);
     }
-
     return 0;
 }
