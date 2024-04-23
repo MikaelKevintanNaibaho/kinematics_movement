@@ -51,6 +51,8 @@ int main(void) {
         printf("----------------------------\n");
     }
 
+    sleep(2);
+
     // Call inverse kinematics for each leg with the corresponding target position and leg position
     for (int i = 0; i < NUM_LEGS; i++) {
         printf("INVERSE KINEMATICS\n\n\n");
