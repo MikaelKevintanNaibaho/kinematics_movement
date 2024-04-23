@@ -3,7 +3,7 @@
 #include "move.h"
 
 int main(void) {
-    // PCA9685_init();
+    PCA9685_init();
 
     SpiderLeg leg_kiri_depan;
     SpiderLeg leg_kiri_belakang;
