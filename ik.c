@@ -30,13 +30,11 @@ void set_angles(SpiderLeg *leg, float angles[3]) {
     leg->theta2 = normalize_angle(angles[1]);
     leg->theta3 = normalize_angle(angles[2]);
 
-    set_pwm_angle(SERVO_CHANNEL_10, (int)leg->theta1, PWM_FREQ);
-    set_pwm_angle(SERVO_CHANNEL_11, (int)leg->theta2,PWM_FREQ );
-    set_pwm_angle(SERVO_CHANNEL_12, (int)leg->theta3, PWM_FREQ);
-
-    printf("Theta1: %.4f degrees\n", leg->theta1);
-    printf("Theta2: %.4f degrees\n", leg->theta2);
-    printf("Theta3: %.4f degrees\n", leg->theta3);
+    for (int i = 0; i < 3; i++)
+    {
+        set_pwm_angle(leg->servo_channles[i], (int)angles[i], PWM_FREQ);
+        printf("theta%d: %.2f degrees\n", i+1, angles[i]);
+    }
 }
 
 // Helper function to check if two sets of angles are approximately equal
@@ -302,4 +300,21 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
             *adj_z = z;
             break;
     }
+}
+
+
+void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3)
+{
+    strcpy(leg->name, name);
+    leg->servo_channles[0] = servo_ch1;
+    leg->servo_channles[1] = servo_ch2;
+    leg->servo_channles[2] = servo_ch3;
+}
+
+void initialize_all_legs(SpiderLeg *legs[NUM_LEGS])
+{
+    initialize_leg(legs[0], "KIRI_DEPAN", SERVO_CHANNEL_1, SERVO_CHANNEL_2, SERVO_CHANNEL_3);
+    initialize_leg(legs[1], "KIRI_BELAKANG", SERVO_CHANNEL_4, SERVO_CHANNEL_5, SERVO_CHANNEL_6);
+    initialize_leg(legs[2], "KANAN_BELAKANG", SERVO_CHANNEL_7, SERVO_CHANNEL_8, SERVO_CHANNEL_9);
+    initialize_leg(legs[3], "KANAN_DEPAN", SERVO_CHANNEL_10, SERVO_CHANNEL_11, SERVO_CHANNEL_12);
 }

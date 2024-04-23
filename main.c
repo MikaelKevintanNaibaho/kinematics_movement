@@ -5,28 +5,27 @@
 int main(void) {
     PCA9685_init();
 
-    SpiderLeg leg;
-    gsl_matrix *intermediate_link[NUM_LINKS];
-    for (int i = 0; i < NUM_LINKS; i++) {
-        intermediate_link[i] = gsl_matrix_alloc(4, 4);
-    }
-    float initial_angle[3] = {0, 130, 130};
-    set_angles(&leg, initial_angle);
+    SpiderLeg leg_kiri_depan;
+    SpiderLeg leg_kiri_belakang;
+    SpiderLeg leg_kanan_belakang;
+    SpiderLeg leg_kanan_depan;
 
-    sleep(2);
-    forward_kinematics(&leg, initial_angle, intermediate_link); // Removed the '&' before intermediate_link
+    // Declare an array of pointers to SpiderLeg instances
+    SpiderLeg *legs[NUM_LEGS] = {&leg_kiri_depan, &leg_kiri_belakang, &leg_kanan_belakang, &leg_kanan_depan};
 
-    while(1){
-        walk_forward(&leg, intermediate_link, 100, 50, NUM_POINTS);
-    }
-    // struct bezier2d stright_back;
-    // bezier2d_init(&stright_back);
+    // Pass the array of pointers to SpiderLeg instances to the initialize_all_legs function
+    initialize_all_legs(legs);
 
-    // generate_stright_back_trajectory(&stright_back, &leg, stride_length);
-    // update_leg_position_with_velocity(&stright_back, 3, &leg, intermediate_link);
+    float angles_kiri_depan[3] = {0.0 , 130.0, 130.0};
+    float angles_kiri_belakang[3] = {0.0 , 130.0, 130.0};
+    float angles_kanan_belakang[3] = {0.0 , 130.0, 130.0};
+    float angles_kanan_depan[3] = {0.0 , 130.0, 130.0};
+
+    // Pass the address of each leg and its respective angles to the set_angles function
+    set_angles(&leg_kiri_depan, angles_kiri_depan);
+    set_angles(&leg_kiri_belakang, angles_kiri_belakang);
+    set_angles(&leg_kanan_belakang, angles_kanan_belakang);
+    set_angles(&leg_kanan_depan, angles_kanan_depan);
     
-    for (int i = 0; i < NUM_LINKS; i++) {
-        gsl_matrix_free(intermediate_link[i]);
-    }
     return 0;
 }

@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 #include "pwm_servo.h"
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
@@ -10,6 +11,7 @@
 #include <gsl/gsl_vector.h>
 
 #define NUM_LINKS 4
+#define NUM_LEGS 4
 #define SPEED 100
 
 #define SERVO_CHANNEL_1 1
@@ -44,6 +46,7 @@ typedef struct {
     float theta3;
     float mounted_angle;
     float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur joint, [2] - femur-tibia joint, [3] - tip of the leg
+    int servo_channles[3];
 } SpiderLeg;
 
 typedef struct {
@@ -86,4 +89,9 @@ int angles_equal(float angles1[3], float angles2[3]);
 
 //coordinates
 void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);
+
+//4kaki
+void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3);
+void initialize_all_legs(SpiderLeg *legs[NUM_LEGS]);
+
 #endif /*IK_H*/ 
