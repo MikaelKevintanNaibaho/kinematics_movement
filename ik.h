@@ -74,8 +74,8 @@ float normalize_angle(float angle);
 float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
-void forward_kinematics(SpiderLeg *leg, float angles[3], float offset_angle);
-void inverse_kinematics(SpiderLeg *leg, float target_position[3], float offset_angle);
+void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_leg);
+void inverse_kinematics(SpiderLeg *leg, float target_positions[3],  LegPosition position_leg);
 void move_forward(SpiderLeg *leg, float target[3]);
 
 //DH
@@ -89,7 +89,7 @@ int angles_equal(float angles1[3], float angles2[3]);
 
 //coordinates
 void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);
-
+void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1, float *adj_theta2, float *adj_theta3);
 //4kaki
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3);
 void initialize_all_legs(SpiderLeg *legs[NUM_LEGS]);

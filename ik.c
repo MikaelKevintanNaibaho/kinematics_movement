@@ -165,15 +165,12 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
 }
 
 
-void forward_kinematics(SpiderLeg *leg, float angles[3], float offset_angle)
+void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_leg)
 {
     // Convert to radians
     float theta1 = radians(angles[0]);
     float theta2 = radians(angles[1]) - radians(90); // -90 because of angle offset of mounting servo
     float theta3 = -radians(angles[2]) + radians(90); // -90 because of angle offset of mounting_servo
-
-    //aplly offset angle to adjust x-axis orientation
-    theta1 += offset_angle;
 
     DHParameters params_array[NUM_LINKS];
     init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
@@ -191,6 +188,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], float offset_angle)
     float y = gsl_matrix_get(trans_matrix, 1, 3);
     float z = gsl_matrix_get(trans_matrix, 2, 3);
 
+    adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
     float position[3] = {x, y, z};
 
     // Update leg joints end-effector
@@ -203,7 +201,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], float offset_angle)
     gsl_matrix_free(trans_matrix);
 }
 
-void inverse_kinematics(SpiderLeg *leg, float target_positions[3], float offset_angle)
+void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition position_leg)
 {
     // float x;
     // if((target_positions[0]) < 0){
@@ -270,9 +268,12 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], float offset_
 
     float theta3 = M_PI - beta;
 
+
+    adjust_angle(theta1, theta2, theta3, position_leg, &theta1, &theta2, &theta3);
+
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
-    forward_kinematics(leg, angles, offset_angle);
+    forward_kinematics(leg, angles, position_leg);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
 }
 
@@ -291,13 +292,19 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
             break;
         case KIRI_BELAKANG:
             *adj_x = -x;
-            *adj_y = -y;
+            *adj_y = y;
             *adj_z = z;
             break;
         case KIRI_DEPAN:
             *adj_x = y;
-            *adj_y = -x;
+            *adj_y = x;
             *adj_z = z;
+            break;
+        default:
+            // Default case to handle any other unexpected leg positions
+            *adj_x = 0.0;
+            *adj_y = 0.0;
+            *adj_z = 0.0;
             break;
     }
 }
@@ -317,4 +324,37 @@ void initialize_all_legs(SpiderLeg *legs[NUM_LEGS])
     initialize_leg(legs[1], "KIRI_BELAKANG", SERVO_CHANNEL_4, SERVO_CHANNEL_5, SERVO_CHANNEL_6);
     initialize_leg(legs[2], "KANAN_BELAKANG", SERVO_CHANNEL_7, SERVO_CHANNEL_8, SERVO_CHANNEL_9);
     initialize_leg(legs[3], "KANAN_DEPAN", SERVO_CHANNEL_10, SERVO_CHANNEL_11, SERVO_CHANNEL_12);
+}
+
+void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1, float *adj_theta2, float *adj_theta3)
+{
+    switch (position){
+        case KANAN_DEPAN:
+            *adj_theta1 = theta1;
+            *adj_theta2 = theta2;
+            *adj_theta3 = theta3;
+            break;
+        case KANAN_BELAKANG:
+            *adj_theta1 = -theta1;
+            *adj_theta2 = theta2;
+            *adj_theta3 = theta3;
+            break;
+        case KIRI_BELAKANG:
+            *adj_theta1 = M_PI / 2 + theta1;
+            *adj_theta2 = theta2;
+            *adj_theta3 = theta3;
+            break;
+        case KIRI_DEPAN:
+            *adj_theta1 = M_PI / 2 + theta1;
+            *adj_theta2 = theta2;
+            *adj_theta3 = theta3;
+            break;
+        default:
+            *adj_theta1 = theta1;
+            *adj_theta2 = theta2;
+            *adj_theta3 = theta3;
+            break;
+
+
+    }
 }
