@@ -139,7 +139,7 @@ void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMa
     }
 }
 
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result, gsl_matrix *intermediate_matrices[])
+void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result)
 {
     // Identity matrix
     gsl_matrix *identityMatrix = gsl_matrix_alloc(4, 4);
@@ -152,9 +152,6 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
         
         // Multiply identityMatrix and linkMatrix
         gsl_blas_dgemm(CblasNoTrans, CblasNoTrans, 1.0, identityMatrix, linkMatrix, 0.0, result);
-        
-        // Store the result in the intermediate matrices array
-        gsl_matrix_memcpy(intermediate_matrices[i], result);
 
         // Update the identityMatrix with the multiplied matrix
         gsl_matrix_memcpy(identityMatrix, result);
@@ -168,12 +165,15 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
 }
 
 
-void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediate_matrices[])
+void forward_kinematics(SpiderLeg *leg, float angles[3], float offset_angle)
 {
     // Convert to radians
     float theta1 = radians(angles[0]);
     float theta2 = radians(angles[1]) - radians(90); // -90 because of angle offset of mounting servo
     float theta3 = -radians(angles[2]) + radians(90); // -90 because of angle offset of mounting_servo
+
+    //aplly offset angle to adjust x-axis orientation
+    theta1 += offset_angle;
 
     DHParameters params_array[NUM_LINKS];
     init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
@@ -182,7 +182,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediat
     init_DH_params(&params_array[3], radians(90.0), 0.0, 0.0, radians(-90.0));
 
     gsl_matrix *trans_matrix = gsl_matrix_alloc(4, 4);
-    calculate_DH_transformation(params_array, NUM_LINKS, trans_matrix, intermediate_matrices);
+    calculate_DH_transformation(params_array, NUM_LINKS, trans_matrix);
 
     float x = fabs(gsl_matrix_get(trans_matrix, 0, 3));
     if (x < 0) {
@@ -203,7 +203,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediat
     gsl_matrix_free(trans_matrix);
 }
 
-void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *intermediate_metrices[])
+void inverse_kinematics(SpiderLeg *leg, float target_positions[3], float offset_angle)
 {
     // float x;
     // if((target_positions[0]) < 0){
@@ -272,7 +272,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], gsl_matrix *i
 
     float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
     set_angles(leg, angles);
-    forward_kinematics(leg, angles, intermediate_metrices);
+    forward_kinematics(leg, angles, offset_angle);
     printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
 }
 

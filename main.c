@@ -15,17 +15,31 @@ int main(void) {
 
     // Pass the array of pointers to SpiderLeg instances to the initialize_all_legs function
     initialize_all_legs(legs);
+    
 
-    float angles_kiri_depan[3] = {45.0 , 130.0, 130.0};
-    float angles_kiri_belakang[3] = {45.0 , 130.0, 130.0};
-    float angles_kanan_belakang[3] = {45.0 , 130.0, 130.0};
-    float angles_kanan_depan[3] = {45.0 , 130.0, 130.0};
+    float angles[NUM_LEGS][3] = {
+        {45.0, 130.0, 130.0},
+        {45.0, 130.0, 130.0},
+        {45.0, 130.0, 130.0},
+        {45.0, 130.0, 130.0}
+    };
+
+    float offset_angle[NUM_LEGS] = {0.0, -90.0, -180.0, -270.0};
+
+    
+
 
     // Pass the address of each leg and its respective angles to the set_angles function
-    set_angles(&leg_kiri_depan, angles_kiri_depan);
-    set_angles(&leg_kiri_belakang, angles_kiri_belakang);
-    set_angles(&leg_kanan_belakang, angles_kanan_belakang);
-    set_angles(&leg_kanan_depan, angles_kanan_depan);
-    
+    for (int i = 0; i < NUM_LEGS; i++) {
+        set_angles(legs[i], angles[i]);
+    }
+
+    // Call forward kinematics for each leg
+    for (int i = 0; i < NUM_LEGS; i++) {
+        forward_kinematics(legs[i], angles[i], offset_angle[i]);
+    }
+
+  
+
     return 0;
 }

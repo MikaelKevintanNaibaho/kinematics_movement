@@ -74,8 +74,8 @@ float normalize_angle(float angle);
 float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
-void forward_kinematics(SpiderLeg *leg, float angles[3], gsl_matrix *intermediate_matrices[]);
-void inverse_kinematics(SpiderLeg *leg, float target_position[3], gsl_matrix *intermediate_metrices[]);
+void forward_kinematics(SpiderLeg *leg, float angles[3], float offset_angle);
+void inverse_kinematics(SpiderLeg *leg, float target_position[3], float offset_angle);
 void move_forward(SpiderLeg *leg, float target[3]);
 
 //DH
@@ -83,7 +83,7 @@ void init_DH_params(DHParameters *params, float alpha, float a, float d, float t
 void create_DH_matrix(const DHParameters *params, gsl_matrix *matrix);
 void print_DH_matrix(const DHMatrix *matrix);
 void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result, gsl_matrix *intermediate_matrices[]);
+void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result);
 void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed);
 int angles_equal(float angles1[3], float angles2[3]);
 
