@@ -28,8 +28,8 @@ int main(void) {
     // Define target positions
     float target_positions[NUM_LEGS][3] = {
         {-130.96, 84.96, -117.0},  // Example target position for leg_kiri_depan
-        {84.96, 130.96, -117.0}, // Example target position for leg_kiri_belakang
-        {130.96, -84.96, -117.0},// Example target position for leg_kanan_belakang
+        {-84.96, 130.96, -117.0}, // Example target position for leg_kiri_belakang
+        {-130.96, -84.96, -117.0},// Example target position for leg_kanan_belakang
         {130.96, 84.96, -117.0}  // Example target position for leg_kanan_depan
     };
 
