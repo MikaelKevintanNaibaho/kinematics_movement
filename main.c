@@ -16,10 +16,10 @@ int main(void) {
     // Pass the array of pointers to SpiderLeg instances to the initialize_all_legs function
     initialize_all_legs(legs);
 
-    float angles_kiri_depan[3] = {0.0 , 130.0, 130.0};
-    float angles_kiri_belakang[3] = {0.0 , 130.0, 130.0};
-    float angles_kanan_belakang[3] = {0.0 , 130.0, 130.0};
-    float angles_kanan_depan[3] = {0.0 , 130.0, 130.0};
+    float angles_kiri_depan[3] = {45.0 , 130.0, 130.0};
+    float angles_kiri_belakang[3] = {45.0 , 130.0, 130.0};
+    float angles_kanan_belakang[3] = {45.0 , 130.0, 130.0};
+    float angles_kanan_depan[3] = {45.0 , 130.0, 130.0};
 
     // Pass the address of each leg and its respective angles to the set_angles function
     set_angles(&leg_kiri_depan, angles_kiri_depan);
