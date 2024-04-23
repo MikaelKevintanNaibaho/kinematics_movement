@@ -335,12 +335,12 @@ void adjust_angle(float theta1, float theta2, float theta3, LegPosition position
             *adj_theta3 = theta3;
             break;
         case KANAN_BELAKANG:
-            *adj_theta1 = M_PI - theta1;
+            *adj_theta1 = theta2 - M_PI /2;
             *adj_theta2 = theta2;
             *adj_theta3 = theta3;
             break;
         case KIRI_BELAKANG:
-            *adj_theta1 = M_PI / 2 - theta1;
+            *adj_theta1 = theta1;
             *adj_theta2 = theta2;
             *adj_theta3 = theta3;
             break;
