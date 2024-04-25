@@ -256,31 +256,31 @@ void group_legs(LegPosition leg_positions[], int num_legs, int groups[][2]) {
 }
 
 
-void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS])
-{
-    struct bezier2d curve[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curve[i]);
-    }
+// void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS])
+// {
+//     struct bezier2d curve[NUM_LEGS];
+//     for (int i = 0; i < NUM_LEGS; i++) {
+//         bezier2d_init(&curve[i]);
+//     }
 
-    for (int i = 0; i < NUM_LEGS; i++) {
-        generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, position_leg[i]);
-    }
+//     for (int i = 0; i < NUM_LEGS; i++) {
+//         generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, position_leg[i]);
+//     }
 
-    //update leg positions for each leg
-    for (int i = 0; i < NUM_LEGS; i++) {
-        update_leg_position_with_velocity(&curve[i], num_points, legs[i], position_leg[i]);
-        float x = legs[i]->joints[3][0];
-        float y = legs[i]->joints[3][1];
-        float z = legs[i]->joints[3][2];
-        float target[3] = {x - 50.0, y, z}; 
-        inverse_kinematics(legs[i], target, position_leg[i]);
-    }
+//     //update leg positions for each leg
+//     for (int i = 0; i < NUM_LEGS; i++) {
+//         update_leg_position_with_velocity(&curve[i], num_points, legs[i], position_leg[i]);
+//         float x = legs[i]->joints[3][0];
+//         float y = legs[i]->joints[3][1];
+//         float z = legs[i]->joints[3][2];
+//         float target[3] = {x - 50.0, y, z}; 
+//         inverse_kinematics(legs[i], target, position_leg[i]);
+//     }
     
-    usleep(100000);
+//     usleep(100000);
 
-    // usleep(500000);
-}
+//     // usleep(500000);
+// }
 
 void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
 {
