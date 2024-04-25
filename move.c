@@ -202,3 +202,37 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
 
     // usleep(500000);
 }
+
+void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg)
+{
+    struct bezier2d curves[NUM_LEGS];
+    struct bezier2d stright_back[NUM_LEGS];
+
+    for (int i = 0; i < NUM_LEGS; i++){
+        bezier2d_init(&curves[i]);
+        bezier2d_init(&stright_back[i]);
+    }
+
+    for (int i = 0; i < NUM_LEGS; i++) {
+        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg);
+        generate_stright_back_trajectory(&stright_back[i], legs[i], STRIDE_LENGTH);
+    }
+
+    while (1) {
+        for(int i = 0; i < NUM_LEGS; i++){
+            update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg);
+        }
+
+        for (int i = 0; i < NUM_LEGS; i++) {
+            update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg);
+        }
+    }
+
+    // Free memory allocated for curves and straight backs
+    for (int i = 0; i < NUM_LEGS; i++) {
+        free(curves[i].xpos);
+        free(curves[i].ypos);
+        free(stright_back[i].xpos);
+        free(stright_back[i].ypos);
+    }
+}
