@@ -237,7 +237,5 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     for (int i = 0; i < NUM_LEGS; i++) {
         free(curves[i].xpos);
         free(curves[i].ypos);
-        free(stright_back[i].xpos);
-        free(stright_back[i].ypos);
     }
 }
