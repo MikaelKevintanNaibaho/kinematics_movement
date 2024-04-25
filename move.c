@@ -177,32 +177,60 @@ void update_leg_position_single(struct bezier2d *curve, int number_points, Spide
     }
 }
 
-void update_leg_position_with_lag(struct bezier2d curve[], int number_points, SpiderLeg *legs[], int num_legs, int group_size, float lag_time) {
-  printf("Updating leg position with lag\n");
+// void update_leg_position_with_lag(struct bezier2d curve[], int number_points, SpiderLeg *legs[], int num_legs, int group_size, float lag_time) {
+//   printf("Updating leg position with lag\n");
 
-  // Define leg groups (replace with your grouping logic)
-  int num_groups = num_legs / group_size;
+//   // Define leg groups (replace with your grouping logic)
+//   int num_groups = num_legs / group_size;
   
-  // Calculate delay per group based on lag time
-  float delay_per_group = lag_time / (num_groups - 1);
+//   // Calculate delay per group based on lag time
+//   float delay_per_group = lag_time / (num_groups - 1);
 
-  for (int group_index = 0; group_index < num_groups; group_index++) {
-    // Loop through legs in current group
-    for (int leg_index = group_index * group_size; leg_index < (group_index + 1) * group_size; leg_index++) {
-      if (leg_index >= num_legs) {
-        continue; // Skip if exceeding total leg count
-      }
+//   for (int group_index = 0; group_index < num_groups; group_index++) {
+//     // Loop through legs in current group
+//     for (int leg_index = group_index * group_size; leg_index < (group_index + 1) * group_size; leg_index++) {
+//       if (leg_index >= num_legs) {
+//         continue; // Skip if exceeding total leg count
+//       }
       
-      // Update leg position with delay
-      update_leg_position_single(&curve[leg_index], number_points, legs[leg_index], DESIRED_TIME);
-    }
+//       // Update leg position with delay
+//       update_leg_position_single(&curve[leg_index], number_points, legs[leg_index], DESIRED_TIME);
+//     }
     
-    // Introduce delay between groups
-    if (group_index < num_groups - 1) {
-      usleep((long)(delay_per_group * 1e6));
+//     // Introduce delay between groups
+//     if (group_index < num_groups - 1) {
+//       usleep((long)(delay_per_group * 1e6));
+//     }
+//   }
+// }
+
+//newly added
+void update_leg_position_with_lag(struct bezier2d curves[], int number_points, SpiderLeg *legs[], LegPosition leg_positions[], int num_legs, int group_size, float lag_time) {
+    printf("Updating leg position with lag\n");
+
+    // Define leg groups (replace with your grouping logic)
+    int num_groups = num_legs / group_size;
+    // Calculate delay per group based on lag time
+    float delay_per_group = lag_time / (num_groups - 1);
+
+    for (int group_index = 0; group_index < num_groups; group_index++) {
+        // Loop through legs in current group
+        for (int leg_index = group_index * group_size; leg_index < (group_index + 1) * group_size; leg_index++) {
+            if (leg_index >= num_legs) {
+                continue; // Skip if exceeding total leg count
+            }
+
+            // Update leg position with delay using the corresponding bezier curve
+            update_leg_position_single(&curves[leg_index], number_points, legs[leg_index], leg_positions[leg_index]);
+        }
+
+        // Introduce delay between groups
+        if (group_index < num_groups - 1) {
+            usleep((long)(delay_per_group * 1e6));
+        }
     }
-  }
 }
+
 
 void group_legs(LegPosition leg_positions[], int num_legs, int groups[][2]) {
   // Check if the number of legs is even
@@ -299,7 +327,11 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
 
     group_legs(position_leg, NUM_LEGS, groups);
     while (1) {
-        update_leg_position_with_lag(&curves, 50.0, legs, NUM_LEGS, GROUP_SIZE, LAG_TIME);
+        // update_leg_position_with_lag(&curves, 50.0, legs, NUM_LEGS, GROUP_SIZE, LAG_TIME);
+
+        //newly update
+        update_leg_position_with_lag(curves, 100, legs, legs, NUM_LEGS, GROUP_SIZE, LAG_TIME);
+
     }
 
     // Free memory allocated for curves and straight backs

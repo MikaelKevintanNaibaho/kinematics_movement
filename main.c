@@ -19,9 +19,7 @@ int main(void) {
     initialize_all_legs(legs);
 
     // Define parameters for walking gait
-    float stride_length = 50.0; // Adjust as needed
-    float swing_height = 20.0;   // Adjust as needed
-    int num_points = 50;         // Number of points for trajectory interpolation
+       // Number of points for trajectory interpolation
 
     // Define leg positions
     LegPosition leg_positions[NUM_LEGS] = {KIRI_DEPAN, KIRI_BELAKANG, KANAN_BELAKANG, KANAN_DEPAN};
