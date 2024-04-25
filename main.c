@@ -40,6 +40,8 @@ int main(void) {
         forward_kinematics(legs[i], stance_angles[i], leg_positions[i]);
         printf("----------------------------\n");
     }
+
+    sleep(2);
     // while (1){
         // Call walk forward function
         walk_forward(legs, stride_length, swing_height, num_points, leg_positions);
