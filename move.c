@@ -228,7 +228,7 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
             float z = legs[i]->joints[3][2];
             float target[3] = {x - 50.0, y, z}; 
             inverse_kinematics(legs[i], target, position_leg[i]);
-            usleep(10000);
+            usleep(100000);
         }
 
         usleep(10000);
