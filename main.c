@@ -26,10 +26,10 @@ int main(void) {
 
     // Define initial angles for the stance position
     float stance_angles[NUM_LEGS][3] = {
-        {45.0, 110.0, 100.0},
-        {45.0, 110.0, 100.0},
-        {45.0, 110.0, 100.0},
-        {45.0, 110.0, 100.0}
+        {45.0, 130.0, 130.0},
+        {45.0, 130.0, 130.0},
+        {45.0, 130.0, 130.0},
+        {45.0, 130.0, 130.0}
     };
 
     // Set initial angles using forward kinematics
