@@ -20,9 +20,9 @@ struct bezier2d {
     int npoints;
 };
 
-#define STRIDE_LENGTH 50.0
+#define STRIDE_LENGTH 30.0
 #define SWING_HEIGTH 50.0
-#define NUM_POINTS 60
+#define NUM_POINTS 50
 #define DESIRED_TIME 0.1
 
 void bezier2d_init(struct bezier2d *curve);
