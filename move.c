@@ -91,7 +91,7 @@ void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *
     float startz = leg->joints[3][2];
     printf("startx : %f", startx);
 
-    float endx = startx - stride_length;
+    float endx = startx - stride_length / 2;
     float endz = startz;
 
     bezier2d_generate_straight_back(stright_back, startx, startz, endx, endz);
