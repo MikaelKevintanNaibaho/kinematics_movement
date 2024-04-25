@@ -89,7 +89,7 @@ void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *
 {
     float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
-    printf("startx : %d", startx);
+    printf("startx : %f", startx);
 
     float endx = startx - stride_length;
     float endz = startz;
