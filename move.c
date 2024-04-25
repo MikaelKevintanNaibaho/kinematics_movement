@@ -268,7 +268,24 @@ while (1) {
     // Update leg positions for leg4
     update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
     usleep(DESIRED_TIME * 1e6);
+
+    // Rotate leg sequence: leg1-leg3-leg2-leg4
+    SpiderLeg *temp_leg = legs[0];
+    LegPosition temp_pos = position_leg[0];
+
+    legs[0] = legs[1];
+    position_leg[0] = position_leg[1];
+
+    legs[1] = legs[2];
+    position_leg[1] = position_leg[2];
+
+    legs[2] = legs[3];
+    position_leg[2] = position_leg[3];
+
+    legs[3] = temp_leg;
+    position_leg[3] = temp_pos;
 }
+
 
 
     // Free memory allocated for curves and straight backs
