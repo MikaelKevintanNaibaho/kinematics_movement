@@ -239,8 +239,7 @@ void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]) 
             if ((i + phase) % phase_offset == 0 || (i + phase) % phase_offset == phase_offset / 2) {
                 // Move legs with alternating phases to create ripple motion
                 update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
-                usleep(100000);
-                update_leg_position_with_velocity(&straigth[i], NUM_POINTS, legs[i], position_leg[i]);
+                
                 usleep(100000);
             }
         }
