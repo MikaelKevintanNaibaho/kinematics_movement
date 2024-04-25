@@ -202,5 +202,5 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
         float target[3] = {x - 50.0, y, z}; 
         inverse_kinematics(legs[i], target, position_leg[i]);
     }
-    usleep(500000);
+    // usleep(500000);
 }
