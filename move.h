@@ -24,7 +24,7 @@ struct bezier2d {
 #define STRIDE_LENGTH 50.0
 #define SWING_HEIGTH 30.0
 #define NUM_POINTS 50
-#define DESIRED_TIME 0.1
+#define DESIRED_TIME 0.01
 #define GROUP_SIZE 2
 #define LAG_TIME 0.5
 
