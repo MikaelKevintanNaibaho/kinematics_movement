@@ -89,6 +89,7 @@ void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *
 {
     float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
+    printf("startx : %d", startx);
 
     float endx = startx - stride_length;
     float endz = startz;
@@ -206,13 +207,16 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
 void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
 {
     struct bezier2d curves[NUM_LEGS];
+    struct bezier2d stright_back[NUM_LEGS];
 
     for (int i = 0; i < NUM_LEGS; i++){
         bezier2d_init(&curves[i]);
+        bezier2d_init(&stright_back[i]);
     }
 
     for (int i = 0; i < NUM_LEGS; i++) {
         generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
+        generate_stright_back_trajectory(&stright_back[i], legs[i], STRIDE_LENGTH);
     }
 
     while (1) {
@@ -223,12 +227,7 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
         usleep(10000);
 
         for (int i = 0; i < NUM_LEGS; i++) {
-            float x = legs[i]->joints[3][0];
-            float y = legs[i]->joints[3][1];
-            float z = legs[i]->joints[3][2];
-            float target[3] = {x - 50.0, y, z}; 
-            inverse_kinematics(legs[i], target, position_leg[i]);
-            usleep(500000);
+            update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg[i]);
         }
 
         usleep(10000);
@@ -238,5 +237,7 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     for (int i = 0; i < NUM_LEGS; i++) {
         free(curves[i].xpos);
         free(curves[i].ypos);
+        free(stright_back[i].xpos);
+        free(stright_back[i].ypos);
     }
 }
