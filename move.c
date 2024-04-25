@@ -219,19 +219,38 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
         generate_stright_back_trajectory(&stright_back[i], legs[i], STRIDE_LENGTH);
     }
 
+    // while (1) {
+    //     for(int i = 0; i < NUM_LEGS; i++){
+    //         update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
+    //     }
+
+    //     usleep(10000);
+
+    //     for (int i = 0; i < NUM_LEGS; i++) {
+    //         update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg[i]);
+    //     }
+
+    //     usleep(10000);
+    // }
+
     while (1) {
-        for(int i = 0; i < NUM_LEGS; i++){
-            update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
-        }
+    // Update leg positions for leg1
+    update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
+    usleep(10000); // Introduce delay between leg movements
 
-        usleep(10000);
+    // Update leg positions for leg3
+    update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
+    usleep(10000); // Introduce delay between leg movements
 
-        for (int i = 0; i < NUM_LEGS; i++) {
-            update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg[i]);
-        }
+    // Update leg positions for leg2
+    update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
+    usleep(10000); // Introduce delay between leg movements
 
-        usleep(10000);
-    }
+    // Update leg positions for leg4
+    update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
+    usleep(10000); // Introduce delay between leg movements
+}
+
 
     // Free memory allocated for curves and straight backs
     for (int i = 0; i < NUM_LEGS; i++) {
@@ -241,3 +260,4 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
         free(stright_back[i].ypos);
     }
 }
+
