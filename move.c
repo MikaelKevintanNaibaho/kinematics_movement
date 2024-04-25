@@ -223,9 +223,12 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]) {
 void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]) {
     // Generate trajectories for leg movement
     struct bezier2d curves[NUM_LEGS];
+    struct bezier2d straigth[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curves[i]);
+        bezier2d_init(&straigth[i]);
         generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
+        generate_stright_back_trajectory(&straigth[i], legs[i], STRIDE_LENGTH);
     }
 
     // Update leg positions for ripple gait
@@ -236,6 +239,9 @@ void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]) 
             if ((i + phase) % phase_offset == 0 || (i + phase) % phase_offset == phase_offset / 2) {
                 // Move legs with alternating phases to create ripple motion
                 update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
+                usleep(100000);
+                update_leg_position_with_velocity(&straigth[i], NUM_POINTS, legs[i], position_leg[i]);
+                usleep(100000);
             }
         }
         phase = (phase + 1) % phase_offset; // Update phase
