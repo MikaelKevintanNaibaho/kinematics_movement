@@ -38,9 +38,8 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
 void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *leg, float stride_length);
 void print_trajectory(struct bezier2d *curve, int num_points) ;
 void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points) ;
-void update_leg_position_single(struct bezier2d *curve, int number_points, SpiderLeg *leg, LegPosition position_leg);
-void update_leg_position_with_lag(struct bezier2d curve[], int number_points, SpiderLeg *legs[], int num_legs, int group_size, float lag_time);
-// void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS]);
+void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, LegPosition position_leg);
+void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS]);
 
 void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]);
 #endif //MOVE_H
