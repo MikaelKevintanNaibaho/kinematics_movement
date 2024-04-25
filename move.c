@@ -177,7 +177,7 @@ void update_leg_position_single(struct bezier2d *curve, int number_points, Spide
     }
 }
 
-void update_leg_position_with_lag(struct bezier2d *curve, int number_points, SpiderLeg *legs[], int num_legs, int group_size, float lag_time) {
+void update_leg_position_with_lag(struct bezier2d curve[], int number_points, SpiderLeg *legs[], int num_legs, int group_size, float lag_time) {
   printf("Updating leg position with lag\n");
 
   // Define leg groups (replace with your grouping logic)
@@ -194,7 +194,7 @@ void update_leg_position_with_lag(struct bezier2d *curve, int number_points, Spi
       }
       
       // Update leg position with delay
-      update_leg_position_single(curve, number_points, legs[leg_index], DESIRED_TIME);
+      update_leg_position_single(&curve[leg_index], number_points, legs[leg_index], DESIRED_TIME);
     }
     
     // Introduce delay between groups
