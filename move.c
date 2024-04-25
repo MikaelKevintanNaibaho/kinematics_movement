@@ -223,9 +223,13 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
             update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
         }
 
+        usleep(10000);
+
         for (int i = 0; i < NUM_LEGS; i++) {
             update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg[i]);
         }
+
+        usleep(10000);
     }
 
     // Free memory allocated for curves and straight backs
