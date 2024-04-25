@@ -43,10 +43,11 @@ int main(void) {
     }
 
     sleep(2);
-    // while (1){
+    while (1){
         // Call walk forward function
         walk_forward(legs, stride_length, swing_height, num_points, leg_positions);
-    // }
+        sleep(1);
+    }
     
 
     return 0;
