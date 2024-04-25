@@ -237,21 +237,21 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     // Update leg positions for leg1
     update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
     usleep(500000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[0], NUM_POINTS, legs[0], position_leg[0] );
+    update_leg_position_with_velocity(&stright_back[2], NUM_POINTS, legs[2], position_leg[2] );
     // Update leg positions for leg3
     update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
     usleep(500000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[2], NUM_POINTS, legs[2], position_leg[2] );
+    update_leg_position_with_velocity(&stright_back[0], NUM_POINTS, legs[0], position_leg[0] );
 
     // Update leg positions for leg2
     update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
     usleep(500000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[1], NUM_POINTS, legs[1], position_leg[1] );
+    update_leg_position_with_velocity(&stright_back[3], NUM_POINTS, legs[3], position_leg[3] );
 
     // Update leg positions for leg4
     update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
     usleep(500000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[3], NUM_POINTS, legs[3], position_leg[3] );
+    update_leg_position_with_velocity(&stright_back[1], NUM_POINTS, legs[1], position_leg[1] );
 }
 
 // // Main loop for moving forward
