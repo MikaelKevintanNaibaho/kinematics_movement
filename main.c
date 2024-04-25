@@ -37,6 +37,7 @@ int main(void) {
     // Set initial angles using forward kinematics
     for (int i = 0; i < NUM_LEGS; i++) {
         printf("Setting initial angles for Leg %s (Position %d):\n", legs[i]->name, leg_positions[i]);
+        set_angles(legs[i], stance_angles[i]);
         forward_kinematics(legs[i], stance_angles[i], leg_positions[i]);
         printf("----------------------------\n");
     }
