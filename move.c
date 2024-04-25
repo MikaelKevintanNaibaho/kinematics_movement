@@ -203,7 +203,7 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
     // usleep(500000);
 }
 
-void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg)
+void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
 {
     struct bezier2d curves[NUM_LEGS];
     struct bezier2d stright_back[NUM_LEGS];
@@ -214,17 +214,17 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg)
     }
 
     for (int i = 0; i < NUM_LEGS; i++) {
-        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg);
+        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
         generate_stright_back_trajectory(&stright_back[i], legs[i], STRIDE_LENGTH);
     }
 
     while (1) {
         for(int i = 0; i < NUM_LEGS; i++){
-            update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg);
+            update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
         }
 
         for (int i = 0; i < NUM_LEGS; i++) {
-            update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg);
+            update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg[i]);
         }
     }
 
