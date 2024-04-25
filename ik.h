@@ -87,11 +87,13 @@ void calculate_DH_transformation(const DHParameters *params_array, int num_links
 void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed);
 int angles_equal(float angles1[3], float angles2[3]);
 
-//coordinates
-void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);
-void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1, float *adj_theta2, float *adj_theta3);
+
 //4kaki
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3);
 void initialize_all_legs(SpiderLeg *legs[NUM_LEGS]);
+
+//coordinates
+void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);
+void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1, float *adj_theta2, float *adj_theta3);
 
 #endif /*IK_H*/ 

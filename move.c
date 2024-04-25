@@ -57,7 +57,7 @@ void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz,
 }
 
 
-void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length, float swing_height) 
+void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length, float swing_height, LegPosition position_leg) 
 {
     //get current position
     float startx = leg->joints[3][0];
@@ -124,7 +124,7 @@ void save_trajectory_points(struct bezier2d *curve, const char *filename, int nu
 
     fclose(file);
 }
-void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, gsl_matrix *intermediate_matrices[])
+void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, LegPosition position_leg)
 {
     printf("updating leg position with fixed delay\n");
 
@@ -168,7 +168,7 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         float target_positions[3] = {x, y, z};
 
         // Update leg position using inverse kinematics
-        inverse_kinematics(leg, target_positions, intermediate_matrices);
+        inverse_kinematics(leg, target_positions, position_leg);
 
         // Introduce delay based on desired velocity
         long delay = (long)(dt * 1e6);
@@ -177,21 +177,30 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
 }
 
 
-void walk_forward(SpiderLeg *leg, gsl_matrix *intermediate_matrices[], float stride_length, float swing_height, int num_points)
+void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS])
 {
-    struct bezier2d curve;
-    bezier2d_init(&curve);
+    struct bezier2d curve[NUM_LEGS];
+    for (int i = 0; i < NUM_LEGS; i++) {
+        bezier2d_init(&curve[i]);
+    }
 
-    generate_walk_trajectory(&curve, leg, stride_length, swing_height);
+    for (int i = 0; i < NUM_LEGS; i++) {
+        generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, position_leg[i]);
+    }
 
-    update_leg_position_with_velocity(&curve, num_points, leg, intermediate_matrices);
+    //update leg positions for each leg
+    for (int i = 0; i < NUM_LEGS; i++) {
+        update_leg_position_with_velocity(&curve[i], num_points, legs[i], position_leg[i]);
+    }
+    
     usleep(100000);
 
-    float x = leg->joints[3][0];
-    float y = leg->joints[3][1];
-    float z = leg->joints[3][2];
-
-    float target[3] = {x - 100, y, z};
-    inverse_kinematics(leg, target, intermediate_matrices);
+    for (int i = 0; i < NUM_LEGS; i++) {
+        float x = legs[i]->joints[3][0];
+        float y = legs[i]->joints[3][1];
+        float z = legs[i]->joints[3][2];
+        float target[3] = {x - 100, y, z}; 
+        inverse_kinematics(legs[i], target, position_leg[i]);
+    }
     usleep(500000);
 }

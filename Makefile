@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -std=c11 -g -O2
 LDFLAGS = -lgsl -lgslcblas -lm
 
 # Source files
-SRC = main.c pwm_servo.c ik.c 
+SRC = main.c pwm_servo.c ik.c move.c
 
 # Object files directory
 OBJ_DIR = build/obj

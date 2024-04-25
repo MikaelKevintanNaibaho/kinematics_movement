@@ -172,6 +172,25 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     float theta2 = radians(angles[1]) - radians(90); // -90 because of angle offset of mounting servo
     float theta3 = -radians(angles[2]) + radians(90); // -90 because of angle offset of mounting_servo
 
+    float zero_offset = 0.0;
+    switch (position_leg)
+    {
+    case KANAN_DEPAN:
+        zero_offset = 0.0;
+        break;
+    case KIRI_DEPAN:
+        zero_offset = 90.0;
+        break;
+    case KIRI_BELAKANG:
+        zero_offset = 180.0;
+        break;
+    case KANAN_BELAKANG:
+        zero_offset = 270.0;
+    default:
+        break;
+    }
+    theta1 += radians(zero_offset);
+
     DHParameters params_array[NUM_LINKS];
     init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
     init_DH_params(&params_array[1], radians(0.0), FEMUR_LENGTH, 0.0, theta2);
@@ -185,10 +204,14 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     if (x < 0) {
         x = 0;
     }
+
+    if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
+        x = -x;
+    }
     float y = gsl_matrix_get(trans_matrix, 1, 3);
     float z = gsl_matrix_get(trans_matrix, 2, 3);
 
-    adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
+
     float position[3] = {x, y, z};
 
     // Update leg joints end-effector
@@ -249,6 +272,8 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     float x = target_positions[0];
     float y = target_positions[1];
     float z = target_positions[2];
+
+    adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
     //angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 
@@ -268,46 +293,31 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
 
     float theta3 = M_PI - beta;
 
+    // Convert angles to degrees
+    theta1 = degrees(theta1);
+    theta2 = degrees(theta2);
+    theta3 = degrees(theta3);
 
-    adjust_angle(theta1, theta2, theta3, position_leg, &theta1, &theta2, &theta3);
+    if (theta1 > 90){
+        theta1 = 180.0 - theta1;
+    }
 
-    float angles[3] = {degrees(theta1), degrees(theta2), degrees(theta3)};
+    // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
+    //     theta1 += 90.0;
+    // }
+
+    // Ensure angles are within the valid range
+    // theta1 = normalize_angle(theta1);
+    // theta2 = normalize_angle(theta2);
+    // theta3 = normalize_angle(theta3);
+
+
+    float angles[3] = {theta1, theta2, theta3};
     set_angles(leg, angles);
     forward_kinematics(leg, angles, position_leg);
-    printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", degrees(theta1), degrees(theta2), degrees(theta3));
+    printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
 }
 
-void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z)
-{
-    switch (position){
-        case KANAN_DEPAN:
-            *adj_x = x;
-            *adj_y = y;
-            *adj_z = z;
-            break;
-        case KANAN_BELAKANG:
-            *adj_x = -y;
-            *adj_y = x;
-            *adj_z = z;
-            break;
-        case KIRI_BELAKANG:
-            *adj_x = -x;
-            *adj_y = y;
-            *adj_z = z;
-            break;
-        case KIRI_DEPAN:
-            *adj_x = y;
-            *adj_y = x;
-            *adj_z = z;
-            break;
-        default:
-            // Default case to handle any other unexpected leg positions
-            *adj_x = 0.0;
-            *adj_y = 0.0;
-            *adj_z = 0.0;
-            break;
-    }
-}
 
 
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3)
@@ -335,17 +345,17 @@ void adjust_angle(float theta1, float theta2, float theta3, LegPosition position
             *adj_theta3 = theta3;
             break;
         case KANAN_BELAKANG:
-            *adj_theta1 = theta1 - M_PI / 2;
+            *adj_theta1 = -theta1;
             *adj_theta2 = theta2;
             *adj_theta3 = theta3;
             break;
         case KIRI_BELAKANG:
-            *adj_theta1 = M_PI / 2 + theta1;
+            *adj_theta1 = theta1 + M_PI;
             *adj_theta2 = theta2;
             *adj_theta3 = theta3;
             break;
         case KIRI_DEPAN:
-            *adj_theta1 = M_PI / 2 + theta1;
+            *adj_theta1 = M_PI / 2 - (theta1 - M_PI/2);
             *adj_theta2 = theta2;
             *adj_theta3 = theta3;
             break;
@@ -356,5 +366,37 @@ void adjust_angle(float theta1, float theta2, float theta3, LegPosition position
             break;
 
 
+    }
+}
+
+void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z)
+{
+    switch (position){
+        case KANAN_DEPAN:
+            *adj_x = x;
+            *adj_y = y;
+            *adj_z = z;
+            break;
+        case KANAN_BELAKANG:
+            *adj_x = -y;
+            *adj_y = x;
+            *adj_z = z;
+            break;
+        case KIRI_BELAKANG:
+            *adj_x = -x;
+            *adj_y = -y;
+            *adj_z = z;
+            break;
+        case KIRI_DEPAN:
+            *adj_x = -y;
+            *adj_y = x;
+            *adj_z = z;
+            break;
+        default:
+            // Default case to handle any other unexpected leg positions
+            *adj_x = 0.0;
+            *adj_y = 0.0;
+            *adj_z = 0.0;
+            break;
     }
 }

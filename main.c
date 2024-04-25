@@ -3,8 +3,10 @@
 #include "move.h"
 
 int main(void) {
+    // Initialize PCA9685 if necessary
     PCA9685_init();
 
+    // Declare instances for each leg
     SpiderLeg leg_kiri_depan;
     SpiderLeg leg_kiri_belakang;
     SpiderLeg leg_kanan_belakang;
@@ -16,50 +18,33 @@ int main(void) {
     // Pass the array of pointers to SpiderLeg instances to the initialize_all_legs function
     initialize_all_legs(legs);
 
-    float angles[NUM_LEGS][3] = {
+    // Define parameters for walking gait
+    float stride_length = 50.0; // Adjust as needed
+    float swing_height = 20.0;   // Adjust as needed
+    int num_points = 50;         // Number of points for trajectory interpolation
+
+    // Define leg positions
+    LegPosition leg_positions[NUM_LEGS] = {KIRI_DEPAN, KIRI_BELAKANG, KANAN_BELAKANG, KANAN_DEPAN};
+
+    // Define initial angles for the stance position
+    float stance_angles[NUM_LEGS][3] = {
         {45.0, 130.0, 130.0},
         {45.0, 130.0, 130.0},
         {45.0, 130.0, 130.0},
         {45.0, 130.0, 130.0}
     };
 
-    printf("----------------------------\n");
-
-    // Define target positions
-    float target_positions[NUM_LEGS][3] = {
-        {-130.96, 84.96, -117.0},  // Example target position for leg_kiri_depan
-        {-130.96, 84.96, -117.0}, // Example target position for leg_kiri_belakang
-        {84.96, -130.96, -117.0},// Example target position for leg_kanan_belakang
-        {130.96, 84.96, -117.0}  // Example target position for leg_kanan_depan
-    };
-
-    // Define leg positions
-    LegPosition leg_positions[NUM_LEGS] = {KIRI_DEPAN, KIRI_BELAKANG, KANAN_BELAKANG, KANAN_DEPAN};
-
+    // Set initial angles using forward kinematics
+    for (int i = 0; i < NUM_LEGS; i++) {
+        printf("Setting initial angles for Leg %s (Position %d):\n", legs[i]->name, leg_positions[i]);
+        forward_kinematics(legs[i], stance_angles[i], leg_positions[i]);
+        printf("----------------------------\n");
+    }
+    // while (1){
+        // Call walk forward function
+        walk_forward(legs, stride_length, swing_height, num_points, leg_positions);
+    // }
     
-    float offset_angle[NUM_LEGS] = {0.0, -90.0, -180.0, -270.0};
-
-    // Pass the address of each leg and its respective angles to the set_angles function
-    for (int i = 0; i < NUM_LEGS; i++) {
-        set_angles(legs[i], angles[i]);
-    }
-
-    // Call forward kinematics for each leg
-    for (int i = 0; i < NUM_LEGS; i++) {
-        printf("Leg %s (Position %d):\n", legs[i]->name, leg_positions[i]);
-        forward_kinematics(legs[i], angles[i], leg_positions[i]);
-        printf("----------------------------\n");
-    }
-
-    sleep(2);
-
-    // Call inverse kinematics for each leg with the corresponding target position and leg position
-    for (int i = 0; i < NUM_LEGS; i++) {
-        printf("INVERSE KINEMATICS\n\n\n");
-        printf("Leg %s (Position %d):\n", legs[i]->name, leg_positions[i]);
-        inverse_kinematics(legs[i], target_positions[i], leg_positions[i]);
-        printf("----------------------------\n");
-    }
 
     return 0;
 }
