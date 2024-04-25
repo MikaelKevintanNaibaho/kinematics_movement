@@ -191,16 +191,14 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
     //update leg positions for each leg
     for (int i = 0; i < NUM_LEGS; i++) {
         update_leg_position_with_velocity(&curve[i], num_points, legs[i], position_leg[i]);
-    }
-    
-    usleep(100000);
-
-    for (int i = 0; i < NUM_LEGS; i++) {
         float x = legs[i]->joints[3][0];
         float y = legs[i]->joints[3][1];
         float z = legs[i]->joints[3][2];
         float target[3] = {x - 50.0, y, z}; 
         inverse_kinematics(legs[i], target, position_leg[i]);
     }
+    
+    usleep(100000);
+
     // usleep(500000);
 }
