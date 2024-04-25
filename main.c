@@ -42,9 +42,9 @@ int main(void) {
 
     sleep(2);
     
-    crawl_gait(legs, leg_positions);
+    // crawl_gait(legs, leg_positions);
     
-    // ripple_gait(legs, leg_positions);
+    ripple_gait(legs, leg_positions);
 
     return 0;
 }
