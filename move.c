@@ -73,6 +73,10 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     //buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
+    // // Append straight line for moving backward
+    // bezier2d_addPoint(curve, endx_forward, endz_forward);
+    // bezier2d_addPoint(curve, startx, startz);
+
 }
 
 void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz, float endx, float endy)
@@ -126,8 +130,7 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
     printf("updating leg position with fixed delay\n");
 
     float total_distance = 0.0;
-    float prev_x = 0.0;
-    float prev_z = 0.0;
+    float prev_x, prev_z;
     bezier2d_getPos(curve, 0, &prev_x, &prev_z); //get poin pertama
 
     for (int i = 0; i <= number_points; i++) {
@@ -172,7 +175,6 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         long delay = (long)(dt * 1e6);
         usleep(delay);
     }
-
 }
 
 
@@ -202,49 +204,85 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
     // usleep(500000);
 }
 
-void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]) {
-    // Generate trajectories for leg movement
+void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
+{
     struct bezier2d curves[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
+    struct bezier2d stright_back[NUM_LEGS];
+
+    for (int i = 0; i < NUM_LEGS; i++){
         bezier2d_init(&curves[i]);
-        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
+        bezier2d_init(&stright_back[i]);
     }
 
-    // Update leg positions for crawling gait
-    while (1) {
-        for (int i = 0; i < NUM_LEGS; i++) {
-            update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
-        }
-        // Introduce delay between leg movements
-        usleep(10000);
+    for (int i = 0; i < NUM_LEGS; i++) {
+        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
+        generate_stright_back_trajectory(&stright_back[i], legs[i], STRIDE_LENGTH);
     }
+
+    // while (1) {
+    //     for(int i = 0; i < NUM_LEGS; i++){
+    //         update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
+    //     }
+
+    //     usleep(10000);
+
+    //     for (int i = 0; i < NUM_LEGS; i++) {
+    //         update_leg_position_with_velocity(&stright_back[i], NUM_POINTS, legs[i], position_leg[i]);
+    //     }
+
+    //     usleep(10000);
+    // }
+
+    while (1) {
+    // Update leg positions for leg1
+    update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
+    usleep(500000); // Introduce delay between leg movements
+    update_leg_position_with_velocity(&stright_back[2], NUM_POINTS, legs[2], position_leg[2] );
+    // Update leg positions for leg3
+    update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
+    usleep(500000); // Introduce delay between leg movements
+    update_leg_position_with_velocity(&stright_back[0], NUM_POINTS, legs[0], position_leg[0] );
+
+    // Update leg positions for leg2
+    update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
+    usleep(500000); // Introduce delay between leg movements
+    update_leg_position_with_velocity(&stright_back[3], NUM_POINTS, legs[3], position_leg[3] );
+
+    // Update leg positions for leg4
+    update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
+    usleep(500000); // Introduce delay between leg movements
+    update_leg_position_with_velocity(&stright_back[1], NUM_POINTS, legs[1], position_leg[1] );
 }
 
-void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]) {
-    // Generate trajectories for leg movement
-    struct bezier2d curves[NUM_LEGS];
-    struct bezier2d straigth[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curves[i]);
-        bezier2d_init(&straigth[i]);
-        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
-        generate_stright_back_trajectory(&straigth[i], legs[i], STRIDE_LENGTH);
-    }
+// // Main loop for moving forward
+// while (1) {
+//     // Update leg positions for leg1
+//     float target1[3] = {legs[0]->joints[3][0] + STRIDE_LENGTH, legs[0]->joints[3][1], legs[0]->joints[3][2]};
+//     inverse_kinematics(legs[0], target1, position_leg[0]);
+//     usleep(10000); // Introduce delay between leg movements
 
-    // Update leg positions for ripple gait
-    int phase_offset = NUM_LEGS / 3; // Offset for alternating leg movement
-    int phase = 0;
-    while (1) {
-        for (int i = 0; i < NUM_LEGS; i++) {
-            if ((i + phase) % phase_offset == 0 || (i + phase) % phase_offset == phase_offset / 2) {
-                // Move legs with alternating phases to create ripple motion
-                update_leg_position_with_velocity(&curves[i], NUM_POINTS, legs[i], position_leg[i]);
-                
-                usleep(100000);
-            }
-        }
-        phase = (phase + 1) % phase_offset; // Update phase
-        // Introduce delay between leg movements
-        usleep(10000);
+//     // Update leg positions for leg3
+//     float target3[3] = {legs[2]->joints[3][0] + STRIDE_LENGTH, legs[2]->joints[3][1], legs[2]->joints[3][2]};
+//     inverse_kinematics(legs[2], target3, position_leg[2]);
+//     usleep(10000); // Introduce delay between leg movements
+
+//     // Update leg positions for leg2
+//     float target2[3] = {legs[1]->joints[3][0] + STRIDE_LENGTH, legs[1]->joints[3][1], legs[1]->joints[3][2]};
+//     inverse_kinematics(legs[1], target2, position_leg[1]);
+//     usleep(10000); // Introduce delay between leg movements
+
+//     // Update leg positions for leg4
+//     float target4[3] = {legs[3]->joints[3][0] + STRIDE_LENGTH, legs[3]->joints[3][1], legs[3]->joints[3][2]};
+//     inverse_kinematics(legs[3], target4, position_leg[3]);
+//     usleep(10000); // Introduce delay between leg movements
+// }
+
+
+    // Free memory allocated for curves and straight backs
+    for (int i = 0; i < NUM_LEGS; i++) {
+        free(curves[i].xpos);
+        free(curves[i].ypos);
+        free(stright_back[i].xpos);
+        free(stright_back[i].ypos);
     }
 }
