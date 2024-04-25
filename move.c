@@ -251,41 +251,28 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
 //     usleep(10000); // Introduce delay between leg movements
 // }
 
-// Main loop for moving forward with leg sequence leg1-leg3-leg2-leg4
+// Main loop for moving forward
 while (1) {
     // Update leg positions for leg1
-    update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
-    usleep(DESIRED_TIME * 1e6);
+    float target1[3] = {legs[0]->joints[3][0] + STRIDE_LENGTH, legs[0]->joints[3][1], legs[0]->joints[3][2]};
+    inverse_kinematics(legs[0], target1, position_leg[0]);
+    usleep(10000); // Introduce delay between leg movements
 
     // Update leg positions for leg3
-    update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
-    usleep(DESIRED_TIME * 1e6);
+    float target3[3] = {legs[2]->joints[3][0] + STRIDE_LENGTH, legs[2]->joints[3][1], legs[2]->joints[3][2]};
+    inverse_kinematics(legs[2], target3, position_leg[2]);
+    usleep(10000); // Introduce delay between leg movements
 
     // Update leg positions for leg2
-    update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
-    usleep(DESIRED_TIME * 1e6);
+    float target2[3] = {legs[1]->joints[3][0] + STRIDE_LENGTH, legs[1]->joints[3][1], legs[1]->joints[3][2]};
+    inverse_kinematics(legs[1], target2, position_leg[1]);
+    usleep(10000); // Introduce delay between leg movements
 
     // Update leg positions for leg4
-    update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
-    usleep(DESIRED_TIME * 1e6);
-
-    // Rotate leg sequence: leg1-leg3-leg2-leg4
-    SpiderLeg *temp_leg = legs[0];
-    LegPosition temp_pos = position_leg[0];
-
-    legs[0] = legs[1];
-    position_leg[0] = position_leg[1];
-
-    legs[1] = legs[2];
-    position_leg[1] = position_leg[2];
-
-    legs[2] = legs[3];
-    position_leg[2] = position_leg[3];
-
-    legs[3] = temp_leg;
-    position_leg[3] = temp_pos;
+    float target4[3] = {legs[3]->joints[3][0] + STRIDE_LENGTH, legs[3]->joints[3][1], legs[3]->joints[3][2]};
+    inverse_kinematics(legs[3], target4, position_leg[3]);
+    usleep(10000); // Introduce delay between leg movements
 }
-
 
 
     // Free memory allocated for curves and straight backs
