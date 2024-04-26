@@ -249,10 +249,7 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     }
 }
 
-void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, LegPosition leg_position[NUM_LEGS]) {
-    int leg_order[NUM_LEGS] = {0, 3, 1, 2}; // Adjust the leg order according to your robot's configuration
-
-    struct bezier2d curve[NUM_LEGS];
+void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, LegPosition leg_position[NUM_LEGS]) {   struct bezier2d curve[NUM_LEGS];
     struct bezier2d back[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curve[i]);
@@ -261,14 +258,14 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigh
 
     // Generate trajectory
     for (int i = 0; i < NUM_LEGS; i++) {
-            generate_walk_trajectory(&curve[i], legs[leg_order[i]], stride_length, swing_height, leg_position[i]);
-            generate_stright_back_trajectory(&back[i], legs[leg_order[i]], stride_length);
+            generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, leg_position[i]);
+            generate_stright_back_trajectory(&back[i], legs[i], stride_length);
     }
 
     for (int i = 0; i < NUM_POINTS; i++){
         for (int j = 0; j < NUM_LEGS; j++){
-            update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[leg_order[j]], leg_position[j]);
-            update_leg_position_with_velocity(&back[j], NUM_POINTS, legs[leg_order[j]], leg_position[j]);
+            update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[j], leg_position[j]);
+            update_leg_position_with_velocity(&back[j], NUM_POINTS, legs[j], leg_position[j]);
         }
     }
 
