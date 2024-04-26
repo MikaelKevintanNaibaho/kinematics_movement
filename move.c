@@ -264,7 +264,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigh
         if (i % 2 == 0) {
             generate_walk_trajectory(&curve[i], legs[leg_order[i]], stride_length, swing_height, leg_position[i]);
         } else {
-            generate_stright_back_trajectory(&back[i], legs[leg_order[i]], stride_length);
+            generate_stright_back_trajectory(&curve[i], legs[leg_order[i]], stride_length);
         }
     }
 
