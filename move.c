@@ -196,9 +196,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_position[NUM_LEGS]) {
         struct bezier2d *trajectory = (position == KANAN_DEPAN || position == KIRI_DEPAN) ? &swing_trajectory : &stance_trajectory;
 
         update_leg_position_with_velocity(trajectory, NUM_POINTS, legs[i], position);
-        if (trajectory->npoints > NUM_POINTS / 4) {
-            update_leg_position_with_velocity(&trajectory, NUM_POINTS, legs[2], position);
-        }
+
     }
 
 
