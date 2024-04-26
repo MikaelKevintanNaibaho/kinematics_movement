@@ -261,7 +261,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_position[NUM_LEGS]) {
 
     generate_stright_back_trajectory(&stance_trajectory, legs[0], STRIDE_LENGTH);
 
-    for (int phase = 0; phase < swing_trajectory.npoints; phase++) {
+    for (int phase = 0; phase < 5; phase++) {
         //move legs acording to leg positions
         for (int i = 0; i < NUM_LEGS; i++) {
             //get positions
@@ -270,18 +270,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_position[NUM_LEGS]) {
             //determain if the legs in swing or stance based on the position
             struct bezier2d *trajectory = (position == KANAN_DEPAN || position == KIRI_DEPAN) ? &swing_trajectory : &stance_trajectory;
 
-            // Reset trajectory points for the current leg
-            bezier2d_init(trajectory);
-
-            // Regenerate trajectory for the current leg
-            if (position == KANAN_DEPAN || position == KIRI_DEPAN) {
-                generate_walk_trajectory(trajectory, legs[i], STRIDE_LENGTH, SWING_HEIGTH, position);
-            } else {
-                generate_stright_back_trajectory(trajectory, legs[i], STRIDE_LENGTH);
-            }
-
-            // Move the leg along the appropriate trajectory
-            update_leg_position_with_velocity(trajectory, NUM_POINTS, legs[i], position);;
+            update_leg_position_with_velocity(trajectory, NUM_POINTS, legs[i], position);
         }
 
         usleep(100000);
