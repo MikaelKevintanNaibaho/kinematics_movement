@@ -248,53 +248,36 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
         free(stright_back[i].ypos);
     }
 }
-float calculate_phase_shift(int leg_index) {
-  return (2 * M_PI * leg_index) / NUM_LEGS;
-}
-
-void generate_gait_trajectories(struct bezier2d *trajectories, SpiderLeg *legs) {
-  for (int leg_index = 0; leg_index < NUM_LEGS; leg_index++) {
-    float phase_shift = calculate_phase_shift(leg_index);
-
-    // Get leg starting position from leg data
-    float startx = legs[leg_index].joints[3][0];
-    float startz = legs[leg_index].joints[3][2];
-
-    // Adjust control point based on phase shift for wave gait pattern
-    float controlx_offset = STRIDE_LENGTH * sin(phase_shift) / 2;
-    float controlz_offset = SWING_HEIGTH * cos(phase_shift);
-    float controlx = startx + controlx_offset;
-    float controlz = startz + controlz_offset;
-
-    // Endpoint for forward motion (modify for different leg patterns)
-    float endx_forward = startx + STRIDE_LENGTH;
-    float endz_forward = startz;
-
-    // Generate trajectory for current leg with phase shift considered
-    bezier2d_generate_curve(&trajectories[leg_index], startx, startz, controlx, controlz, endx_forward, endz_forward);
-  }
-}
 
 
-void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, LegPosition leg_position[NUM_LEGS]) {   struct bezier2d curve[NUM_LEGS];
-    struct bezier2d back[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curve[i]);
-        bezier2d_init(&back[i]);
-    }
+void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_position[NUM_LEGS]) {
+    struct bezier2d swing_trajectory;
+    struct bezier2d stance_trajectory;
 
-    // Generate trajectory
-    for (int i = 0; i < NUM_LEGS; i++) {
-            generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, leg_position[i]);
-            generate_stright_back_trajectory(&back[i], legs[i], stride_length);
-    }
+    bezier2d_init(&swing_trajectory);
+    bezier2d_init(&stance_trajectory);
 
-    for (int i = 0; i < NUM_POINTS; i++){
-        for (int j = 0; j < NUM_LEGS; j++){
-            update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[j], leg_position[j]);
-            update_leg_position_with_velocity(&back[j], 200, legs[j], leg_position[j]);
+    generate_walk_trajectory(&swing_trajectory, legs[0], STRIDE_LENGTH, SWING_HEIGTH, leg_position[0]);
+
+    generate_stright_back_trajectory(&stance_trajectory, legs[0], STRIDE_LENGTH);
+
+    for (int phase = 0; phase < NUM_POINTS; phase++) {
+        //move legs acording to leg positions
+        for (int i = 0; i < NUM_LEGS; i++) {
+            //get positions
+            LegPosition position = leg_position[i];
+
+            //determain if the legs in swing or stance based on the position
+            struct bezier2d *trajectory = (position == KANAN_DEPAN || position == KIRI_DEPAN) ? &swing_trajectory : &stance_trajectory;
+
+            update_leg_position_with_velocity(trajectory, NUM_POINTS, legs[i], position);
         }
+
+        usleep(100000);
     }
 
-
+    free(swing_trajectory.xpos);
+    free(swing_trajectory.ypos);
+    free(stance_trajectory.xpos);
+    free(stance_trajectory.ypos);
 }
