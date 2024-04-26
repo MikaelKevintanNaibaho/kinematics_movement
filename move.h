@@ -43,4 +43,5 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
 
 void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]);
 void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]);
+void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigth, LegPosition leg_posiiton);
 #endif //MOVE_H

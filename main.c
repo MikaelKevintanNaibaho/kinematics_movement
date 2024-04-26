@@ -42,7 +42,10 @@ int main(void) {
 
     sleep(2);
     
-    crawl_gait(legs, leg_positions);
+    // crawl_gait(legs, leg_positions);
+    while (1) {
+        wave_gait(legs, STRIDE_LENGTH, SWING_HEIGTH, leg_positions);
+    }
     
     // ripple_gait(legs, leg_positions);
 
