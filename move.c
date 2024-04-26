@@ -253,8 +253,10 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigh
     int leg_order[NUM_LEGS] = {0, 3, 1, 2}; // Adjust the leg order according to your robot's configuration
 
     struct bezier2d curve[NUM_LEGS];
+    struct bezier2d back[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curve[i]);
+        bezier2d_init(&back[i]);
     }
 
     // Generate trajectory
@@ -262,7 +264,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigh
         if (i % 2 == 0) {
             generate_walk_trajectory(&curve[i], legs[leg_order[i]], stride_length, swing_height, leg_position[i]);
         } else {
-            generate_stright_back_trajectory(&curve[i], legs[leg_order[i]], stride_length);
+            generate_stright_back_trajectory(&back[i], legs[leg_order[i]], stride_length);
         }
     }
 
