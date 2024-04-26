@@ -261,18 +261,16 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigh
 
     // Generate trajectory
     for (int i = 0; i < NUM_LEGS; i++) {
-        if (i % 2 == 0) {
             generate_walk_trajectory(&curve[i], legs[leg_order[i]], stride_length, swing_height, leg_position[i]);
-        } else {
-            generate_stright_back_trajectory(&curve[i], legs[leg_order[i]], stride_length);
+            generate_stright_back_trajectory(&back[i], legs[leg_order[i]], stride_length);
+    }
+
+    for (int i = 0; i < NUM_POINTS; i++){
+        for (int j = 0; j < NUM_LEGS; j++){
+            update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[leg_order[j]], leg_position[j]);
+            update_leg_position_with_velocity(&back[j], NUM_POINTS, legs[leg_order[j]], leg_position[j]);
         }
     }
 
-    // Update leg positions
-    for (int i = 0; i < NUM_POINTS; i++) {
-        for (int j = 0; j < NUM_LEGS; j++) {
-            update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[leg_order[j]], leg_position[j]);
-            update_leg_position_with_velocity(&back, NUM_POINTS, legs[leg_order[j]], leg_position[j]);
-        }
-    }
+
 }
