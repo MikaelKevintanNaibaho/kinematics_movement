@@ -292,7 +292,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_heigh
     for (int i = 0; i < NUM_POINTS; i++){
         for (int j = 0; j < NUM_LEGS; j++){
             update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[j], leg_position[j]);
-            update_leg_position_with_velocity(&back[j], NUM_POINTS, legs[j], leg_position[j]);
+            update_leg_position_with_velocity(&back[j], 200, legs[j], leg_position[j]);
         }
     }
 
