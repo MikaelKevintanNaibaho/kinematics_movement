@@ -125,7 +125,7 @@ void save_trajectory_points(struct bezier2d *curve, const char *filename, int nu
 
     fclose(file);
 }
-void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, LegPosition position_leg)
+void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, LegPosition position_leg, float phase_shift)
 {
     printf("updating leg position with fixed delay\n");
 
@@ -168,6 +168,8 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         float y = leg->joints[3][1];
         float target_positions[3] = {x, y, z};
 
+        x += phase_shift;
+
         // Update leg position using inverse kinematics
         inverse_kinematics(leg, target_positions, position_leg);
 
@@ -178,96 +180,70 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
 }
 
 
-void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS])
-{
-    struct bezier2d curve[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curve[i]);
-    }
 
-    for (int i = 0; i < NUM_LEGS; i++) {
-        generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, position_leg[i]);
-    }
-
-    //update leg positions for each leg
-    for (int i = 0; i < NUM_LEGS; i++) {
-        update_leg_position_with_velocity(&curve[i], num_points, legs[i], position_leg[i]);
-        float x = legs[i]->joints[3][0];
-        float y = legs[i]->joints[3][1];
-        float z = legs[i]->joints[3][2];
-        float target[3] = {x - 50.0, y, z}; 
-        inverse_kinematics(legs[i], target, position_leg[i]);
-    }
-    
-    usleep(100000);
-
-    // usleep(500000);
+float calculate_phase_shift(int leg_index) {
+  return (2 * M_PI * leg_index) / NUM_LEGS;
 }
 
-void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
-{
-    struct bezier2d curves[NUM_LEGS];
-    struct bezier2d stright_back[NUM_LEGS];
+void generate_gait_trajectories(struct bezier2d *trajectories, SpiderLeg *legs) {
+  for (int leg_index = 0; leg_index < NUM_LEGS; leg_index++) {
+    float phase_shift = calculate_phase_shift(leg_index);
 
-    for (int i = 0; i < NUM_LEGS; i++){
-        bezier2d_init(&curves[i]);
-        bezier2d_init(&stright_back[i]);
-    }
+    // Get leg starting position from leg data
+    float startx = legs[leg_index].joints[3][0];
+    float startz = legs[leg_index].joints[3][2];
 
-    for (int i = 0; i < NUM_LEGS; i++) {
-        generate_walk_trajectory(&curves[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, position_leg[i]);
-        generate_stright_back_trajectory(&stright_back[i], legs[i], STRIDE_LENGTH);
-    }
+    // Adjust control point based on phase shift for wave gait pattern
+    float controlx_offset = STRIDE_LENGTH * sin(phase_shift) / 2;
+    float controlz_offset = SWING_HEIGTH * cos(phase_shift);
+    float controlx = startx + controlx_offset;
+    float controlz = startz + controlz_offset;
 
-    while (1) {
-    // Update leg positions for leg1
-    update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[2], NUM_POINTS, legs[2], position_leg[2]);
-    update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[0], NUM_POINTS, legs[0], position_leg[0] );
+    // Endpoint for forward motion (modify for different leg patterns)
+    float endx_forward = startx + STRIDE_LENGTH;
+    float endz_forward = startz;
 
-    // Update leg positions for leg2
-    update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[3], NUM_POINTS, legs[3], position_leg[3] );
+    // Generate trajectory for current leg with phase shift considered
+    bezier2d_generate_curve(&trajectories[leg_index], startx, startz, controlx, controlz, endx_forward, endz_forward);
+  }
+}
 
-    // Update leg positions for leg4
-    update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[1], NUM_POINTS, legs[1], position_leg[1] );
+void generate_wave_gait_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length, float swing_height, float phase_shift) {
+    // Get the current position of the leg
+    float startx = leg->joints[3][0];
+    float startz = leg->joints[3][2];
+
+    // Calculate the control points for the bezier curve with phase shift
+    float controlx = startx + (stride_length / 2) * sin(phase_shift);
+    float controlz = startz + swing_height * cos(phase_shift);
+
+    // Endpoint for forward motion
+    float endx_forward = startx + stride_length;
+    float endz_forward = startz;
+
+    // Generate the trajectory for the leg with phase shift considered
+    bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 }
 
 
-    // Free memory allocated for curves and straight backs
-    for (int i = 0; i < NUM_LEGS; i++) {
-        free(curves[i].xpos);
-        free(curves[i].ypos);
-        free(stright_back[i].xpos);
-        free(stright_back[i].ypos);
+void generate_wave_gait(SpiderLeg *legs, float stride_length, float swing_height, LegPosition leg_position [NUM_LEGS]) {
+    // Initialize an array to hold trajectories for each leg
+    struct bezier2d trajectories[NUM_LEGS];
+
+    float phase_shift = 0.0;
+    // Generate trajectories for each leg with phase shifts
+    for (int leg_index = 0; leg_index < NUM_LEGS; leg_index++) {
+        phase_shift = calculate_phase_shift(leg_index);
+        generate_wave_gait_trajectory(&trajectories[leg_index], &legs[leg_index], stride_length, swing_height, phase_shift);
+    }
+
+    // Number of points to generate along the trajectories
+    int num_points = 100;
+
+    // Update leg positions with velocity along the generated trajectories
+    for (int leg_index = 0; leg_index < NUM_LEGS; leg_index++) {
+        update_leg_position_with_velocity(&trajectories[leg_index], num_points, &legs[leg_index], leg_position[leg_index], phase_shift);
     }
 }
 
-void wave_gait(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, LegPosition leg_position[NUM_LEGS]) {   struct bezier2d curve[NUM_LEGS];
-    struct bezier2d back[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curve[i]);
-        bezier2d_init(&back[i]);
-    }
 
-    // Generate trajectory
-    for (int i = 0; i < NUM_LEGS; i++) {
-            generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, leg_position[i]);
-            generate_stright_back_trajectory(&back[i], legs[i], stride_length);
-    }
-
-    for (int i = 0; i < NUM_POINTS; i++){
-        for (int j = 0; j < NUM_LEGS; j++){
-            update_leg_position_with_velocity(&curve[j], NUM_POINTS, legs[j], leg_position[j]);
-            update_leg_position_with_velocity(&back[j], NUM_POINTS, legs[j], leg_position[j]);
-        }
-    }
-
-
-}
