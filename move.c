@@ -261,7 +261,7 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_position[NUM_LEGS]) {
 
     generate_stright_back_trajectory(&stance_trajectory, legs[0], STRIDE_LENGTH);
 
-    for (int phase = 0; phase < NUM_POINTS; phase++) {
+    for (int phase = 0; phase < swing_trajectory.npoints; phase++) {
         //move legs acording to leg positions
         for (int i = 0; i < NUM_LEGS; i++) {
             //get positions
