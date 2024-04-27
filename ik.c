@@ -282,7 +282,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     float y = target_positions[1];
     float z = target_positions[2];
 
-    adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
+    // adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
     // angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 
@@ -309,9 +309,9 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
 
-    // if (theta1 > 90) {
-    //     theta1 = 180.0 - theta1;
-    // }
+    if (theta1 > 90) {
+        theta1 = 180.0 - theta1;
+    }
 
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     theta1 += 90.0;
