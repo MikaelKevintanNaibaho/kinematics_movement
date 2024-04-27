@@ -5,6 +5,8 @@
 #include "gsl/gsl_spline.h"
 #include <stdio.h>
 #include <time.h>
+#include <stdbool.h>
+#include <pthread.h>
 
 typedef enum {
     MOVE_FORWARD,
@@ -21,12 +23,22 @@ struct bezier2d {
     int npoints;
 };
 
+struct LegThreadData {
+    struct bezier2d *curve;
+    SpiderLeg *leg;
+    float stride_length;
+    float swing_height;
+    LegPosition position_leg;
+};
+
 #define STRIDE_LENGTH 50.0
 #define SWING_HEIGTH 30.0
 #define NUM_POINTS 30
 #define DESIRED_TIME 0.01
 #define GROUP_SIZE 2
 #define LAG_TIME 0.5
+#define NUM_PHASES 2
+#define PHASE_OFFSET 0.5
 
 void bezier2d_init(struct bezier2d *curve);
 void bezier2d_addPoint(struct bezier2d *curve, float x, float y);
@@ -43,5 +55,8 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
 
 void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]);
 void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]);
-void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_position[NUM_LEGS]);
+void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]);
+
+
+void *move_leg(void *thread_data);
 #endif //MOVE_H
