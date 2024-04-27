@@ -309,9 +309,9 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
 
-    if (theta1 > 90) {
-        theta1 = 180.0 - theta1;
-    }
+    // if (theta1 > 90) {
+    //     theta1 = 180.0 - theta1;
+    // }
 
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     theta1 += 90.0;
@@ -392,7 +392,7 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
         break;
     case KIRI_BELAKANG:
         *adj_x = -x;
-        *adj_y = y;
+        *adj_y = -y;
         *adj_z = z;
         break;
     case KIRI_DEPAN:
