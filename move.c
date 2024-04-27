@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <time.h>
 
-void bezier2d_init(struct bezier2d *curve) {
+void bezier2d_init(struct bezier2d *curve)
+{
     curve->xpos = NULL;
     curve->ypos = NULL;
     curve->npoints = 0;
 }
 
-void bezier2d_addPoint(struct bezier2d *curve, float x, float y) {
+void bezier2d_addPoint(struct bezier2d *curve, float x, float y)
+{
     curve->npoints++;
     curve->xpos = (float *)realloc(curve->xpos, curve->npoints * sizeof(float));
     curve->ypos = (float *)realloc(curve->ypos, curve->npoints * sizeof(float));
@@ -16,7 +18,8 @@ void bezier2d_addPoint(struct bezier2d *curve, float x, float y) {
     curve->ypos[curve->npoints - 1] = y;
 }
 
-void bezier2d_getPos(struct bezier2d *curve, float t, float *xret, float *yret) {
+void bezier2d_getPos(struct bezier2d *curve, float t, float *xret, float *yret)
+{
     int ii, ij;
     float *x, *y;
 
@@ -50,42 +53,45 @@ void bezier2d_getPos(struct bezier2d *curve, float t, float *xret, float *yret) 
     free(y);
 }
 
-void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz, float controlx, float controlz, float endx, float endz){
+void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz, float controlx,
+                             float controlz, float endx, float endz)
+{
     bezier2d_addPoint(curve, startx, startz);
     bezier2d_addPoint(curve, controlx, controlz);
     bezier2d_addPoint(curve, endx, endz);
 }
 
-
-void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length, float swing_height, LegPosition position_leg) 
+void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
+                              float swing_height, LegPosition position_leg)
 {
-    //get current position
+    // get current position
     float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
 
-    //control points
+    // control points
     float controlx = (startx + stride_length) / 2;
     printf("controlx = %f \t", controlx);
     float controlz = startz + 2 * swing_height;
     printf("controlz = %f\n", controlz);
     float endx_forward = startx + stride_length;
     float endz_forward = startz;
-    //buar bezier curve
+    // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
     // // Append straight line for moving backward
     // bezier2d_addPoint(curve, endx_forward, endz_forward);
     // bezier2d_addPoint(curve, startx, startz);
-
 }
 
-void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz, float endx, float endy)
+void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz,
+                                     float endx, float endy)
 {
     bezier2d_addPoint(stright_back, startx, startz);
     bezier2d_addPoint(stright_back, endx, endy);
 }
 
-void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *leg, float stride_length)
+void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *leg,
+                                      float stride_length)
 {
     float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
@@ -97,8 +103,8 @@ void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *
     bezier2d_generate_straight_back(stright_back, startx, startz, endx, endz);
 }
 
-
-void print_trajectory(struct bezier2d *curve, int num_points) {
+void print_trajectory(struct bezier2d *curve, int num_points)
+{
     printf("Trajectory Points:\n");
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
@@ -108,8 +114,8 @@ void print_trajectory(struct bezier2d *curve, int num_points) {
     }
 }
 
-
-void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points) {
+void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points)
+{
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
         printf("Error opening file.\n");
@@ -125,20 +131,21 @@ void save_trajectory_points(struct bezier2d *curve, const char *filename, int nu
 
     fclose(file);
 }
-void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg, LegPosition position_leg)
+void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg,
+                                       LegPosition position_leg)
 {
     printf("updating leg position with fixed delay\n");
 
     float total_distance = 0.0;
     float prev_x, prev_z;
-    bezier2d_getPos(curve, 0, &prev_x, &prev_z); //get poin pertama
+    bezier2d_getPos(curve, 0, &prev_x, &prev_z); // get poin pertama
 
     for (int i = 0; i <= number_points; i++) {
         float t = (float)i / number_points;
-        float x,z;
-        bezier2d_getPos(curve, t, &x, &z); 
+        float x, z;
+        bezier2d_getPos(curve, t, &x, &z);
 
-        //hitung jarak antara dua titik
+        // hitung jarak antara dua titik
         float dx = x - prev_x;
         float dz = z - prev_z;
         total_distance += sqrt(dx * dx + dz * dz);
@@ -147,14 +154,14 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         prev_z = z;
     }
 
-    //hitung velocity base on total distance dan disired duration
+    // hitung velocity base on total distance dan disired duration
     float desired_duration = DESIRED_TIME;
     float average_velocity = total_distance / desired_duration;
 
-    //hitung interval antara dua titik
+    // hitung interval antara dua titik
     float dt = desired_duration / number_points;
 
-    //lakukan untuk setiap titik dan control velocity
+    // lakukan untuk setiap titik dan control velocity
     // Iterate over points and control velocity
     for (int i = 0; i <= number_points; i++) {
         float t = (float)i / number_points;
@@ -166,7 +173,7 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
 
         // Calculate target position for inverse kinematics
         float y = leg->joints[3][1];
-        float target_positions[3] = {x, y, z};
+        float target_positions[3] = { x, y, z };
 
         // Update leg position using inverse kinematics
         inverse_kinematics(leg, target_positions, position_leg);
@@ -177,8 +184,8 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
     }
 }
 
-
-void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height, int num_points, LegPosition position_leg[NUM_LEGS])
+void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_height,
+                  int num_points, LegPosition position_leg[NUM_LEGS])
 {
     struct bezier2d curve[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
@@ -189,16 +196,16 @@ void walk_forward(SpiderLeg *legs[NUM_LEGS], float stride_length, float swing_he
         generate_walk_trajectory(&curve[i], legs[i], stride_length, swing_height, position_leg[i]);
     }
 
-    //update leg positions for each leg
+    // update leg positions for each leg
     for (int i = 0; i < NUM_LEGS; i++) {
         update_leg_position_with_velocity(&curve[i], num_points, legs[i], position_leg[i]);
         float x = legs[i]->joints[3][0];
         float y = legs[i]->joints[3][1];
         float z = legs[i]->joints[3][2];
-        float target[3] = {x - 50.0, y, z}; 
+        float target[3] = { x - 50.0, y, z };
         inverse_kinematics(legs[i], target, position_leg[i]);
     }
-    
+
     usleep(100000);
 
     // usleep(500000);
@@ -209,7 +216,7 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     struct bezier2d curves[NUM_LEGS];
     struct bezier2d stright_back[NUM_LEGS];
 
-    for (int i = 0; i < NUM_LEGS; i++){
+    for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curves[i]);
         bezier2d_init(&stright_back[i]);
     }
@@ -220,25 +227,24 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     }
 
     while (1) {
-    // Update leg positions for leg1
-    update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[2], NUM_POINTS, legs[2], position_leg[2]);
-    update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[0], NUM_POINTS, legs[0], position_leg[0] );
+        // Update leg positions for leg1
+        update_leg_position_with_velocity(&curves[0], NUM_POINTS, legs[0], position_leg[0]);
+        usleep(10000); // Introduce delay between leg movements
+        update_leg_position_with_velocity(&stright_back[2], NUM_POINTS, legs[2], position_leg[2]);
+        update_leg_position_with_velocity(&curves[2], NUM_POINTS, legs[2], position_leg[2]);
+        usleep(10000); // Introduce delay between leg movements
+        update_leg_position_with_velocity(&stright_back[0], NUM_POINTS, legs[0], position_leg[0]);
 
-    // Update leg positions for leg2
-    update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[3], NUM_POINTS, legs[3], position_leg[3] );
+        // Update leg positions for leg2
+        update_leg_position_with_velocity(&curves[1], NUM_POINTS, legs[1], position_leg[1]);
+        usleep(10000); // Introduce delay between leg movements
+        update_leg_position_with_velocity(&stright_back[3], NUM_POINTS, legs[3], position_leg[3]);
 
-    // Update leg positions for leg4
-    update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
-    usleep(10000); // Introduce delay between leg movements
-    update_leg_position_with_velocity(&stright_back[1], NUM_POINTS, legs[1], position_leg[1] );
-}
-
+        // Update leg positions for leg4
+        update_leg_position_with_velocity(&curves[3], NUM_POINTS, legs[3], position_leg[3]);
+        usleep(10000); // Introduce delay between leg movements
+        update_leg_position_with_velocity(&stright_back[1], NUM_POINTS, legs[1], position_leg[1]);
+    }
 
     // Free memory allocated for curves and straight backs
     for (int i = 0; i < NUM_LEGS; i++) {
@@ -249,8 +255,8 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     }
 }
 
-
-void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
+void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
+{
     struct bezier2d curves[NUM_LEGS];
     pthread_t threads[NUM_LEGS];
 
@@ -269,10 +275,9 @@ void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
         pthread_create(&threads[i], NULL, move_leg, (void *)&thread_data[i]);
     }
 
-    for (int i = 0; i <NUM_LEGS; i++) {
+    for (int i = 0; i < NUM_LEGS; i++) {
         pthread_join(threads[i], NULL);
     }
-
 }
 
 void *move_leg(void *thread_data)
@@ -289,4 +294,32 @@ void *move_leg(void *thread_data)
     update_leg_position_with_velocity(curve, NUM_POINTS, leg, position_leg);
 
     pthread_exit(NULL);
+}
+
+void update_leg_wave_gait(struct bezier2d *curve, int num_points, SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
+    float desired_duration = DESIRED_TIME;
+    float dt = desired_duration / num_points;
+
+    for (int i = 0; i <= num_points; i++) {
+        float t = (float)i / num_points;
+
+        // Calculate phase offsets for each leg
+        float phase_offsets[NUM_LEGS];
+        for (int j = 0; j < NUM_LEGS; j++) {
+            phase_offsets[j] = fmod(t + j * (1.0 / NUM_LEGS), 1.0); // Adjust phase offsets for each leg
+        }
+
+        // Calculate positions for each leg based on the phase offsets
+        float x[NUM_LEGS], z[NUM_LEGS];
+        for (int j = 0; j < NUM_LEGS; j++) {
+            bezier2d_getPos(curve, phase_offsets[j], &x[j], &z[j]);
+        }
+
+        // Update leg positions using inverse kinematics
+        for (int j = 0; j < NUM_LEGS; j++) {
+            inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
+        }
+
+        usleep((long)(dt * 1e6));
+    }
 }

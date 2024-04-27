@@ -50,7 +50,7 @@ $(OBJ_DIR):
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
-format:
+format: .clang-format
 	$(CLANG_FORMAT) -i $(SRC) $(wildcard *.h)
 
 cppcheck:

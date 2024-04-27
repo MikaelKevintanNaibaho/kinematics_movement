@@ -1,14 +1,14 @@
 #ifndef IK_H
 #define IK_H
 
+#include "pwm_servo.h"
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include "pwm_servo.h"
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_blas.h>
-#include <gsl/gsl_vector.h>
 
 #define NUM_LINKS 4
 #define NUM_LEGS 4
@@ -27,16 +27,16 @@
 #define SERVO_CHANNEL_11 11
 #define SERVO_CHANNEL_12 12
 
-#define COXA_LENGTH  60.4
+#define COXA_LENGTH 60.4
 #define FEMUR_LENGTH 78.0
-#define TIBIA_LENGTH 167.23 
+#define TIBIA_LENGTH 167.23
 
 #define DELTA_THETA_MAX 1
 #define DELAY_US 1000
 
-
 #define PWM_FREQ 50
-typedef struct {
+typedef struct
+{
     char name[20];
     float COXA;
     float FEMUR;
@@ -45,28 +45,31 @@ typedef struct {
     float theta2;
     float theta3;
     float mounted_angle;
-    float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur joint, [2] - femur-tibia joint, [3] - tip of the leg
+    float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur
+                        // joint, [2] - femur-tibia joint, [3] - tip of the leg
     int servo_channles[3];
 } SpiderLeg;
 
-typedef struct {
+typedef struct
+{
     float alpha;
     float a;
     float d;
     float theta;
-}DHParameters;
+} DHParameters;
 
-typedef struct {
+typedef struct
+{
     float matrix[4][4];
-}DHMatrix;
+} DHMatrix;
 
-typedef enum {
+typedef enum
+{
     KANAN_DEPAN,
     KANAN_BELAKANG,
     KIRI_BELAKANG,
     KIRI_DEPAN
-}LegPosition;
-
+} LegPosition;
 
 float to_degrees(float rad);
 float to_radians(float deg);
@@ -75,25 +78,27 @@ float *get_target(SpiderLeg *leg);
 
 void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_leg);
-void inverse_kinematics(SpiderLeg *leg, float target_positions[3],  LegPosition position_leg);
+void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition position_leg);
 void move_forward(SpiderLeg *leg, float target[3]);
 
-//DH
+// DH
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta);
 void create_DH_matrix(const DHParameters *params, gsl_matrix *matrix);
 void print_DH_matrix(const DHMatrix *matrix);
 void multiply_DH_matrices(const DHMatrix *matrix1, const DHMatrix *matrix2, DHMatrix *result);
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result);
+void calculate_DH_transformation(const DHParameters *params_array, int num_links,
+                                 gsl_matrix *result);
 void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed);
 int angles_equal(float angles1[3], float angles2[3]);
 
-
-//4kaki
+// 4kaki
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3);
 void initialize_all_legs(SpiderLeg *legs[NUM_LEGS]);
 
-//coordinates
-void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y, float *adj_z);
-void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1, float *adj_theta2, float *adj_theta3);
+// coordinates
+void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y,
+                       float *adj_z);
+void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1,
+                  float *adj_theta2, float *adj_theta3);
 
-#endif /*IK_H*/ 
+#endif /*IK_H*/

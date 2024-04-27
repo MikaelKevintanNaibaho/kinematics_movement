@@ -16,7 +16,7 @@ void PCA9685_init()
         return;
     }
 
-    //init
+    // init
     write_byte(MODE1, 0x00);
     write_byte(MODE2, 0x04);
 }
@@ -26,13 +26,14 @@ void write_byte(uint8_t reg, uint8_t val)
     uint8_t buf[2];
     buf[0] = reg;
     buf[1] = val;
-    if(write(i2c_fd, buf, 2) != 2) {
+    if (write(i2c_fd, buf, 2) != 2) {
         perror("Error writing byte");
         return;
     }
 }
 
-uint8_t read_byte(uint8_t reg) {
+uint8_t read_byte(uint8_t reg)
+{
     uint8_t buf[1];
     buf[0] = reg;
     if (write(i2c_fd, buf, 1) != 1) {
@@ -49,16 +50,15 @@ uint8_t read_byte(uint8_t reg) {
 void set_pwm_freq(int freq)
 {
     uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 * freq) - 1);
-    write_byte(MODE1, 0x10); //sleep
+    write_byte(MODE1, 0x10); // sleep
     write_byte(PRE_SCALE, prescale_val);
-    write_byte(MODE1, 0x80); //restart
-    write_byte(MODE2, 0x04); //totem pole (default)
+    write_byte(MODE1, 0x80); // restart
+    write_byte(MODE2, 0x04); // totem pole (default)
 }
 void set_pwm_duty(uint8_t led, int value)
 {
     set_pwm(led, 0, value);
 }
-
 
 void set_pwm(uint8_t led, int on_value, int off_value)
 {
@@ -67,7 +67,6 @@ void set_pwm(uint8_t led, int on_value, int off_value)
     write_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1), off_value & 0xFF);
     write_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1) + 1, off_value >> 8);
 }
-
 
 int get_pwm(uint8_t led)
 {
@@ -79,7 +78,7 @@ int get_pwm(uint8_t led)
 }
 
 void set_pwm_angle(uint8_t channel, int angle, int freq)
-{   
+{
     if (angle < 0) {
         angle = 0;
     } else if (angle > 180) {
