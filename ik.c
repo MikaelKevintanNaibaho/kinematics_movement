@@ -191,7 +191,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
         zero_offset = 90.0;
         break;
     case KIRI_BELAKANG:
-        zero_offset = 90.0;
+        zero_offset = -180.0;
         break;
     case KANAN_BELAKANG:
         zero_offset = 90.0;
