@@ -191,7 +191,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
         zero_offset = 90.0;
         break;
     case KIRI_BELAKANG:
-        zero_offset = 180.0;
+        zero_offset = 90.0;
         break;
     case KANAN_BELAKANG:
         zero_offset = 90.0;
@@ -310,7 +310,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta3 = degrees(theta3);
 
     if (theta1 > 90) {
-        theta1 = 180.0 + theta1;
+        theta1 = 180.0 - theta1;
     }
 
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
