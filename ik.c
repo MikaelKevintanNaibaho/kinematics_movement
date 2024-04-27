@@ -325,7 +325,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     float angles[3] = { theta1, theta2, theta3 };
     set_angles(leg, angles);
     forward_kinematics(leg, angles, position_leg);
-    printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
+    // printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
 }
 
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3)
