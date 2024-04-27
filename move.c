@@ -317,8 +317,9 @@ void update_leg_wave_gait(struct bezier2d *curve, int num_points, SpiderLeg *leg
 
         // Update leg positions using inverse kinematics
         for (int j = 0; j < NUM_LEGS; j++) {
-            inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
-            printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
+          printf("------------------------------\n");
+          inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
+          printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
         }
 
         usleep((long)(dt * 1e6));
