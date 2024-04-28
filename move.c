@@ -68,6 +68,7 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     // get current position
     float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
+    printf("startx = %f, startz %f\n", startx, startz);
 
     // control points
     float controlx = startx + stride_length / 2;
