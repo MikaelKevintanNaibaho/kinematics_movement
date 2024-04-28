@@ -5,7 +5,7 @@
 int main(void)
 {
     // Initialize PCA9685 if necessary
-    PCA9685_init();
+    // PCA9685_init();
 
     // Declare instances for each leg
     SpiderLeg leg_kiri_depan;
@@ -45,14 +45,14 @@ int main(void)
 
     sleep(2);
 
-    struct bezier2d curve;
-    bezier2d_init(&curve);
-
-    generate_walk_trajectory(&curve, legs[0], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[0]);
-    // //
+    struct bezier2d curve[NUM_LEGS];
+    for (int i = 0; i < NUM_LEGS; i++) {
+      bezier2d_init(&curve[i]);
+      generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
+    }
     // crawl_gait(legs, leg_positions);
     while (1) {
-      update_leg_wave_gait(&curve, NUM_POINTS, legs, leg_positions);
+      update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
     }
 
     // ripple_gait(legs, leg_positions);
