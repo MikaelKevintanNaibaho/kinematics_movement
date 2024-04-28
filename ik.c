@@ -349,37 +349,6 @@ void initialize_all_legs(SpiderLeg *legs[NUM_LEGS])
     initialize_leg(legs[3], "KANAN_DEPAN", SERVO_CHANNEL_10, SERVO_CHANNEL_11, SERVO_CHANNEL_12);
 }
 
-void adjust_angle(float theta1, float theta2, float theta3, LegPosition position, float *adj_theta1,
-                  float *adj_theta2, float *adj_theta3)
-{
-    switch (position) {
-    case KANAN_DEPAN:
-        *adj_theta1 = theta1;
-        *adj_theta2 = theta2;
-        *adj_theta3 = theta3;
-        break;
-    case KANAN_BELAKANG:
-        *adj_theta1 = -theta1;
-        *adj_theta2 = theta2;
-        *adj_theta3 = theta3;
-        break;
-    case KIRI_BELAKANG:
-        *adj_theta1 = theta1 + M_PI;
-        *adj_theta2 = theta2;
-        *adj_theta3 = theta3;
-        break;
-    case KIRI_DEPAN:
-        *adj_theta1 = M_PI / 2 - (theta1 - M_PI / 2);
-        *adj_theta2 = theta2;
-        *adj_theta3 = theta3;
-        break;
-    default:
-        *adj_theta1 = theta1;
-        *adj_theta2 = theta2;
-        *adj_theta3 = theta3;
-        break;
-    }
-}
 
 void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y,
                        float *adj_z)
@@ -391,13 +360,13 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
         *adj_z = z;
         break;
     case KANAN_BELAKANG:
-        *adj_x = -y;
-        *adj_y = x;
+        *adj_x = -x;
+        *adj_y = -y;
         *adj_z = z;
         break;
     case KIRI_BELAKANG:
-        *adj_x = -x;
-        *adj_y = -y;
+        *adj_x = y;
+        *adj_y = -x;
         *adj_z = z;
         break;
     case KIRI_DEPAN:
