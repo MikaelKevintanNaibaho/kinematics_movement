@@ -256,7 +256,7 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
     }
 }
 
-void update_leg_wave_gait(struct bezier2d *curve, int num_points, SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
+void update_leg_wave_gait(struct bezier2d *curve[NUM_LEGS], int num_points, SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;
 
@@ -272,7 +272,7 @@ void update_leg_wave_gait(struct bezier2d *curve, int num_points, SpiderLeg *leg
         // Calculate positions for each leg based on the phase offsets
         float x[NUM_LEGS], z[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            bezier2d_getPos(curve, phase_offsets[j], &x[j], &z[j]);
+            bezier2d_getPos(curve[i], phase_offsets[j], &x[j], &z[j]);
         }
 
         // Update leg positions using inverse kinematics
