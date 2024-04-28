@@ -214,10 +214,10 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
         x = 0;
     }
 
-    if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
-        x = -x;
-    }
-    
+    // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
+    //     x = -x;
+    // }
+
     float y = gsl_matrix_get(trans_matrix, 1, 3);
     float z = gsl_matrix_get(trans_matrix, 2, 3);
 
