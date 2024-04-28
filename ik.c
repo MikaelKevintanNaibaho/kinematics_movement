@@ -214,9 +214,9 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
         x = 0;
     }
 
-    // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
-    //     x = -x;
-    // }
+    if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
+        x = -x;
+    }
     float y = gsl_matrix_get(trans_matrix, 1, 3);
     float z = gsl_matrix_get(trans_matrix, 2, 3);
 
@@ -282,7 +282,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     float y = target_positions[1];
     float z = target_positions[2];
 
-    // adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
+    adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
     // angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 
