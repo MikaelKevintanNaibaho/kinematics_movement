@@ -45,14 +45,14 @@ int main(void)
 
     sleep(2);
 
-    struct bezier2d curve;
-    bezier2d_init(&curve);
+    // struct bezier2d curve;
+    // bezier2d_init(&curve);
 
-    generate_walk_trajectory(&curve, legs[0], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[0]);
-    //
-    // crawl_gait(legs, leg_positions);
-    while (1) {
-      update_leg_wave_gait(&curve, NUM_POINTS, legs, leg_positions);
+    // generate_walk_trajectory(&curve, legs[0], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[0]);
+    // //
+    crawl_gait(legs, leg_positions);
+    // while (1) {
+    //   update_leg_wave_gait(&curve, NUM_POINTS, legs, leg_positions);
     // while (1) {
     //     // wave_gait(legs, STRIDE_LENGTH, SWING_HEIGTH, leg_positions);
     //     wave_gait(legs, leg_positions);
