@@ -48,7 +48,7 @@ int main(void)
     struct bezier2d curve;
     bezier2d_init(&curve);
 
-    generate_walk_trajectory(&curve, legs[0], -STRIDE_LENGTH, SWING_HEIGTH, leg_positions[0]);
+    generate_walk_trajectory(&curve, legs[0], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[0]);
     //
     // crawl_gait(legs, leg_positions);
     while (1) {
