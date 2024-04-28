@@ -370,8 +370,8 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
         *adj_z = z;
         break;
     case KIRI_DEPAN:
-        *adj_x = y;
-        *adj_y = -x;
+        *adj_x = -y;
+        *adj_y = x;
         *adj_z = z;
         break;
     default:
