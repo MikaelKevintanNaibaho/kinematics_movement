@@ -210,9 +210,9 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     calculate_DH_transformation(params_array, NUM_LINKS, trans_matrix);
 
     float x = fabs(gsl_matrix_get(trans_matrix, 0, 3));
-    if (x < 0) {
-        x = 0;
-    }
+    // if (x < 0) {
+    //     x = 0;
+    // }
 
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     x = -x;
@@ -311,13 +311,13 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta3 = degrees(theta3);
      
 
-    if (theta1 > 90) {
-        theta1 = 180.0 - theta1;
-    }
+    // if (theta1 > 90) {
+    //     theta1 = 180.0 - theta1;
+    // }
 
-    if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
-        theta1 += 90.0;
-    }
+    // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
+    //     theta1 += 90.0;
+    // }
 
     // Ensure angles are within the valid range
     // theta1 = normalize_angle(theta1);
