@@ -45,26 +45,18 @@ int main(void)
 
     sleep(2);
 
-    struct bezier2d curve[NUM_LEGS];
+    struct bezier2d curve;
+    bezier2d_init(&curve);
 
-    for (int  i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curve[i]);
-        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG){
-          generate_walk_trajectory(&curve[i], legs[i], -STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
-        } else {
-          generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
-        }
-
-    }
+    generate_walk_trajectory(&curve, legs[0], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[0]);
     //
     // crawl_gait(legs, leg_positions);
     while (1) {
       update_leg_wave_gait(&curve, NUM_POINTS, legs, leg_positions);
-    }
     // while (1) {
     //     // wave_gait(legs, STRIDE_LENGTH, SWING_HEIGTH, leg_positions);
     //     wave_gait(legs, leg_positions);
-    // }
+    }
 
     // ripple_gait(legs, leg_positions);
 
