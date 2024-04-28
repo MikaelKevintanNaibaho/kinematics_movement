@@ -311,7 +311,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
 
     theta1 = normalize_angle(theta1);
     theta2 = normalize_angle(theta2);
-    theta3 = normalize_angle(theta3);
+    theta3 = normalize_angle(theta3);      
 
     if (theta1 > 90) {
         theta1 = 180.0 - theta1;

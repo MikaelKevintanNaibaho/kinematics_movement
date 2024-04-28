@@ -61,6 +61,7 @@ void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz,
     bezier2d_addPoint(curve, endx, endz);
 }
 
+
 void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
                               float swing_height, LegPosition position_leg)
 {
@@ -253,47 +254,6 @@ void crawl_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS])
         free(stright_back[i].xpos);
         free(stright_back[i].ypos);
     }
-}
-
-void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
-{
-    struct bezier2d curves[NUM_LEGS];
-    pthread_t threads[NUM_LEGS];
-
-    struct LegThreadData thread_data[NUM_LEGS];
-
-    for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curves[i]);
-    }
-
-    for (int i = 0; i < NUM_LEGS; i++) {
-        thread_data[i].curve = &curves[i];
-        thread_data[i].leg = legs[i];
-        thread_data[i].stride_length = STRIDE_LENGTH;
-        thread_data[i].swing_height = SWING_HEIGTH;
-        thread_data[i].position_leg = leg_positions[i];
-        pthread_create(&threads[i], NULL, move_leg, (void *)&thread_data[i]);
-    }
-
-    for (int i = 0; i < NUM_LEGS; i++) {
-        pthread_join(threads[i], NULL);
-    }
-}
-
-void *move_leg(void *thread_data)
-{
-    struct LegThreadData *data = (struct LegThreadData *)thread_data;
-    struct bezier2d *curve = data->curve;
-    SpiderLeg *leg = data->leg;
-    float stride_length = data->stride_length;
-    float swing_height = data->swing_height;
-    LegPosition position_leg = data->position_leg;
-
-    generate_walk_trajectory(curve, leg, stride_length, swing_height, position_leg);
-
-    update_leg_position_with_velocity(curve, NUM_POINTS, leg, position_leg);
-
-    pthread_exit(NULL);
 }
 
 void update_leg_wave_gait(struct bezier2d *curve, int num_points, SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
