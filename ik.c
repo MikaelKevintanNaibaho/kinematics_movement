@@ -194,7 +194,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
         zero_offset = 180.0;
         break;
     case KANAN_BELAKANG:
-        zero_offset = 90.0;
+        zero_offset = 270.0;
     default:
         break;
     }
@@ -283,7 +283,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     float y = target_positions[1];
     float z = target_positions[2];
 
-    // adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
+    adjust_coordinate(x, y, z, position_leg, &x, &y, &z);
     // angle antara coxa dengan horizontal plane
     float theta1 = atan2(x, y);
 
@@ -315,6 +315,9 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
         theta1 = 180.0 - theta1;
     }
 
+    if (theta1 < 0) {
+        theta1 = -theta1;
+    }
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     theta1 += 90.0;
     // }
@@ -357,8 +360,8 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
         *adj_z = z;
         break;
     case KANAN_BELAKANG:
-        *adj_x = -y;
-        *adj_y = x;
+        *adj_x = y;
+        *adj_y = -x;
         *adj_z = z;
         break;
     case KIRI_BELAKANG:

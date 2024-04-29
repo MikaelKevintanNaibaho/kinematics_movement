@@ -276,6 +276,10 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
             bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
         }
 
+        for (int j = 0; j < NUM_LEGS; j++) {
+            printf("Y value at joints[3][1] for leg %d: %f\n", j, legs[j]->joints[3][1]);
+        }
+
         // Update leg positions using inverse kinematics
         for (int j = 0; j < NUM_LEGS; j++) {
           printf("------------------------------\n");
