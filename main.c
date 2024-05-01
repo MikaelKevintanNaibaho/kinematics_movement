@@ -29,10 +29,10 @@ int main(void)
                                             KANAN_DEPAN };
 
     // Define initial angles for the stance position
-    float stance_angles[NUM_LEGS][3] = { { 45.0, 130.0, 130.0 },
-                                         { 45.0, 130.0, 130.0 },
-                                         { 45.0, 130.0, 130.0 },
-                                         { 45.0, 130.0, 130.0 } };
+    float stance_angles[NUM_LEGS][3] = { { 45.0, 100.0, 110.0 },
+                                         { 45.0, 100.0, 110.0 },
+                                         { 45.0, 100.0, 110.0 },
+                                         { 45.0, 100.0, 110.0 } };
 
     // Set initial angles using forward kinematics
     for (int i = 0; i < NUM_LEGS; i++) {
@@ -46,10 +46,10 @@ int main(void)
     sleep(2);
 
     float target[NUM_LEGS][3] = {
-      {150.0, 84, -117},
-      {10.0, 84, -97},
-      {10.0, 84, -97},
-      {150.0, 84, -117}
+      {76.0, 76, -151},
+      {10.0, 76, -77},
+      {10.0, 76, -77},
+      {76.0, 76, -151}
 
     };
 
