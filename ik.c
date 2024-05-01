@@ -314,11 +314,9 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
 
-    float orientation_offset[NUM_LEGS] = {0, -90.0, -180.0, 90.0};
+    float orientation_offset[NUM_LEGS] = { 0, -90.0, -180.0, 90.0 };
 
     theta1 += orientation_offset[position_leg];
-     
-
 
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     theta1 += 90.0;
@@ -331,7 +329,6 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     if (theta1 > 90) {
         theta1 = 180.0 - theta1;
     }
-
 
     float angles[3] = { theta1, theta2, theta3 };
     set_angles(leg, angles);
@@ -354,7 +351,6 @@ void initialize_all_legs(SpiderLeg *legs[NUM_LEGS])
     initialize_leg(legs[2], "KANAN_BELAKANG", SERVO_CHANNEL_7, SERVO_CHANNEL_8, SERVO_CHANNEL_9);
     initialize_leg(legs[3], "KANAN_DEPAN", SERVO_CHANNEL_10, SERVO_CHANNEL_11, SERVO_CHANNEL_12);
 }
-
 
 void adjust_coordinate(float x, float y, float z, LegPosition position, float *adj_x, float *adj_y,
                        float *adj_z)

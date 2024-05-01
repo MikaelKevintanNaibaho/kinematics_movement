@@ -6,6 +6,7 @@ int main(void)
 {
     // Initialize PCA9685 if necessary
     PCA9685_init();
+    setup_interrupt_handler(interrupt_handler);
 
     // Declare instances for each leg
     SpiderLeg leg_kiri_depan;
@@ -29,10 +30,9 @@ int main(void)
                                             KANAN_DEPAN };
 
     // Define initial angles for the stance position
-    float stance_angles[NUM_LEGS][3] = { { 45.0, 90.0, 90.0 },
-                                         { 45.0, 90.0, 90.0 },
-                                         { 45.0, 90.0, 90.0 },
-                                         { 45.0, 90.0, 90.0 } };
+    float stance_angles[NUM_LEGS][3] = {
+        { 45.0, 90.0, 90.0 }, { 45.0, 90.0, 90.0 }, { 45.0, 90.0, 90.0 }, { 45.0, 90.0, 90.0 }
+    };
 
     // Set initial angles using forward kinematics
     for (int i = 0; i < NUM_LEGS; i++) {
@@ -45,21 +45,26 @@ int main(void)
 
     sleep(2);
 
-
     struct bezier2d curve[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
-      bezier2d_init(&curve[i]);
-      if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
-        generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
-      } else {
-        generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
-      }
-      print_trajectory(&curve[i], 30);
+        bezier2d_init(&curve[i]);
+        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
+            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+                                   leg_positions[i]);
+        } else {
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+                                     leg_positions[i]);
+        }
+        print_trajectory(&curve[i], 30);
     }
     // crawl_gait(legs, leg_positions);
     while (1) {
-      // update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
-      update_leg_crawl_gait(curve, NUM_POINTS, legs, leg_positions);
+        if (should_stop()) {
+            printf("Interrupt signal received. Stopping leg movement.\n");
+            break;
+        }
+        // update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+        update_leg_crawl_gait(curve, NUM_POINTS, legs, leg_positions);
     }
 
     // ripple_gait(legs, leg_positions);
