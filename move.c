@@ -344,6 +344,10 @@ void update_leg_crawl_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spid
             printf("------------------------------\n");
             // For crawl gait, adjust leg positions to create diagonal movement
             float z_offset = (j % 2 == 0) ? LEG_HEIGHT_OFFSET : -LEG_HEIGHT_OFFSET;
+
+              if (j == 1 || j == 4) {
+                z_offset *= -1;
+            }
             inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j] + z_offset}, leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
         }
