@@ -182,23 +182,23 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     float theta3 =
         -radians(angles[2]) + radians(90); // -90 because of angle offset of mounting_servo
 
-    float zero_offset = 0.0;
-    switch (position_leg) {
-    case KANAN_DEPAN:
-        zero_offset = 0.0;
-        break;
-    case KIRI_DEPAN:
-        zero_offset = 90.0;
-        break;
-    case KIRI_BELAKANG:
-        zero_offset = 180.0;
-        break;
-    case KANAN_BELAKANG:
-        zero_offset = 270.0;
-    default:
-        break;
-    }
-    theta1 += radians(zero_offset);
+    // float zero_offset = 0.0;
+    // switch (position_leg) {
+    // case KANAN_DEPAN:
+    //     zero_offset = 0.0;
+    //     break;
+    // case KIRI_DEPAN:
+    //     zero_offset = 90.0;
+    //     break;
+    // case KIRI_BELAKANG:
+    //     zero_offset = 180.0;
+    //     break;
+    // case KANAN_BELAKANG:
+    //     zero_offset = 270.0;
+    // default:
+    //     break;
+    // }
+    // theta1 += radians(zero_offset);
 
     DHParameters params_array[NUM_LINKS];
     init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
@@ -310,7 +310,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
 
-    float orientation_offset[NUM_LEGS] = {0, 90.0, 180.0, 270.0};
+    float orientation_offset[NUM_LEGS] = {0, 90.0, 90.0, 90.0};
 
     theta1 += orientation_offset[position_leg];
      
