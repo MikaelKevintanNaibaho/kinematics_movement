@@ -42,6 +42,8 @@ struct LegThreadData
 #define LAG_TIME 0.5
 #define NUM_PHASES 2
 
+#define LEG_HEIGHT_OFFSET 20.0
+
 #define PHASE_OFFSET_1 0.0 // Phase offset for leg 1
 #define PHASE_OFFSET_2 0.25 // Phase offset for leg 2
 #define PHASE_OFFSET_3 0.5 // Phase offset for leg 3
@@ -72,6 +74,7 @@ void ripple_gait(SpiderLeg *legs[NUM_LEGS], LegPosition position_leg[NUM_LEGS]);
 void wave_gait(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]);
 
 void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points, SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]);
+void update_leg_crawl_gait(struct bezier2d curve[NUM_LEGS], int num_points, SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) ;
 const char* leg_position_to_string(LegPosition position);
 
 void wave_forward(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]);

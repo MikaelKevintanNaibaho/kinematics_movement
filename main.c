@@ -58,7 +58,8 @@ int main(void)
     }
     // crawl_gait(legs, leg_positions);
     while (1) {
-      update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+      // update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+      update_leg_crawl_gait(curve, NUM_POINTS, legs, leg_positions);
     }
 
     // ripple_gait(legs, leg_positions);
