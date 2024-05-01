@@ -71,22 +71,13 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     printf("startx = %f, startz %f\n", startx, startz);
 
     // control points
-    float controlx = 0.0;
-    if (position_leg == KIRI_BELAKANG || position_leg == KANAN_BELAKANG) {
-        controlx = startx - stride_length / 2;
-    } else {
-        controlx = startx + stride_length / 2;
-    }
+    float controlx = startx + stride_length / 2;
+
     
     printf("controlx = %f \t", controlx);
     float controlz = startz + 2 * swing_height;
     printf("controlz = %f\n", controlz);
-    float endx_forward = 0.0;
-    if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
-        endx_forward = startx - stride_length;
-    } else {
-        endx_forward = startx + stride_length;
-    }
+    float endx_forward = startx + stride_length;
     float endz_forward = startz;
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
@@ -94,6 +85,29 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     // Append straight line for moving backward
     bezier2d_addPoint(curve, endx_forward, endz_forward);
     bezier2d_addPoint(curve, startx, startz);
+}
+
+void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length, float swing_height, LegPosition leg_position)
+{
+    float startx = leg->joints[3][0] + stride_length / 2;
+    float startz = leg->joints[3][2];
+
+    float controlx = startx + stride_length / 2;
+
+    
+    printf("controlx = %f \t", controlx);
+    float controlz = startz - 2 * swing_height;
+    printf("controlz = %f\n", controlz);
+    float endx_forward = startx - stride_length;
+    float endz_forward = startz;
+    // buar bezier curve
+    bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
+
+    // Append straight line for moving backward
+    bezier2d_addPoint(curve, endx_forward, endz_forward);
+    bezier2d_addPoint(curve, startx, startz);
+
+
 }
 
 void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz,

@@ -57,6 +57,7 @@ void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx
 
 void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
                               float swing_height, LegPosition position_leg);
+void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length, float swing_height, LegPosition leg_position);
 void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *leg,
                                       float stride_length);
 void print_trajectory(struct bezier2d *curve, int num_points);

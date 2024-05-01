@@ -49,7 +49,11 @@ int main(void)
     struct bezier2d curve[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
       bezier2d_init(&curve[i]);
-      generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
+      if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
+        generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
+      } else {
+        generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
+      }
       print_trajectory(&curve[i], 30);
     }
     // crawl_gait(legs, leg_positions);
