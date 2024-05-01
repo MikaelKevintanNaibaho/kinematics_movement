@@ -8,31 +8,7 @@ int main(void)
     PCA9685_init();
     setup_interrupt_handler(interrupt_handler);
 
-    // Declare instances for each leg
-    SpiderLeg leg_kiri_depan;
-    SpiderLeg leg_kiri_belakang;
-    SpiderLeg leg_kanan_belakang;
-    SpiderLeg leg_kanan_depan;
-
-    // Declare an array of pointers to SpiderLeg instances
-    SpiderLeg *legs[NUM_LEGS] = { &leg_kiri_depan, &leg_kiri_belakang, &leg_kanan_belakang,
-                                  &leg_kanan_depan };
-
-    // Pass the array of pointers to SpiderLeg instances to the
-    // initialize_all_legs function
-    initialize_all_legs(legs);
-
-    // Define parameters for walking gait
-    // Number of points for trajectory interpolation
-
-    // Define leg positions
-    LegPosition leg_positions[NUM_LEGS] = { KIRI_DEPAN, KIRI_BELAKANG, KANAN_BELAKANG,
-                                            KANAN_DEPAN };
-
-    // Define initial angles for the stance position
-    float stance_angles[NUM_LEGS][3] = {
-        { 45.0, 90.0, 90.0 }, { 45.0, 90.0, 90.0 }, { 45.0, 90.0, 90.0 }, { 45.0, 90.0, 90.0 }
-    };
+    initialize_all_legs();
 
     // Set initial angles using forward kinematics
     for (int i = 0; i < NUM_LEGS; i++) {

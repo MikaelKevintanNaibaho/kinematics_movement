@@ -47,7 +47,11 @@ typedef enum
     KIRI_DEPAN
 } LegPosition;
 
+extern SpiderLeg *legs[NUM_LEGS];
+extern LegPosition leg_positions[NUM_LEGS];
+extern float stance_angles[NUM_LEGS][3];
+
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3);
-void initialize_all_legs(SpiderLeg *legs[NUM_LEGS]);
+void initialize_all_legs();
 
 #endif /*LEG_H*/
