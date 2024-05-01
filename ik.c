@@ -310,7 +310,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
 
-    float orientation_offset[NUM_LEGS] = {0, 90.0, 90.0, 90.0};
+    float orientation_offset[NUM_LEGS] = {0, -90.0, -180.0, 90.0};
 
     theta1 += orientation_offset[position_leg];
      
