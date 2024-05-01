@@ -5,7 +5,7 @@
 int main(void)
 {
     // Initialize PCA9685 if necessary
-    PCA9685_init();
+    // PCA9685_init();
 
     // Declare instances for each leg
     SpiderLeg leg_kiri_depan;
@@ -45,16 +45,28 @@ int main(void)
 
     sleep(2);
 
-    struct bezier2d curve[NUM_LEGS];
-    for (int i = 0; i < NUM_LEGS; i++) {
-      bezier2d_init(&curve[i]);
-      generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
-      print_trajectory(&curve[i], 30);
+    float target[NUM_LEGS][3] = {
+      {150.0, 84, -117},
+      {10.0, 84, -117},
+      {10.0, 84, -117},
+      {150.0, 84, -117}
+
+    };
+
+    for (int i = 0 ; i < NUM_LEGS; i++) {
+      inverse_kinematics(legs[i], target[i], leg_positions[i]);
     }
-    // crawl_gait(legs, leg_positions);
-    while (1) {
-      update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
-    }
+
+    // struct bezier2d curve[NUM_LEGS];
+    // for (int i = 0; i < NUM_LEGS; i++) {
+    //   bezier2d_init(&curve[i]);
+    //   generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
+    //   print_trajectory(&curve[i], 30);
+    // }
+    // // crawl_gait(legs, leg_positions);
+    // // while (1) {
+    //   update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+    // // }
 
     // ripple_gait(legs, leg_positions);
 
