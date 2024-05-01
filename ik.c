@@ -126,15 +126,8 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
 
     float x = fabs(gsl_matrix_get(trans_matrix, 0, 3));
 
-    // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
-    //     x = -x;
-    // }
-
     float y = gsl_matrix_get(trans_matrix, 1, 3);
 
-    if (y < 0) {
-        y = -y;
-    }
     float z = gsl_matrix_get(trans_matrix, 2, 3);
 
     const float position[3] = { x, y, z };
@@ -152,49 +145,6 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
 
 void inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosition position_leg)
 {
-    // float x;
-    // if((target_positions[0]) < 0){
-    //    if (target_positions[0] + leg->joints[3][0] < 0){
-    //         x = leg->joints[3][0];
-    //         printf("not posible\n");
-    //     }else{
-    //         x = target_positions[0] + leg->joints[3][0];
-    //     }
-
-    // } else if(target_positions[0] > 0){
-    //     x = target_positions[0] + leg->joints[3][0];
-    // } else {
-    //     x = leg->joints[3][0];
-    // }
-
-    // printf("x = %.2f\n", x);
-
-    // float y;
-    // if (target_positions[1] < 0){
-    //     if (target_positions[1] + leg->joints[3][1] < 0){
-    //         y = target_positions[1] + leg->joints[3][1];
-    //         y = fabs(y);
-    //     } else {
-    //         y = target_positions[1] + leg->joints[3][1];
-    //     }
-    // } else if (target_positions[1] > 0){
-    //     y = target_positions[1] + leg->joints[3][1];
-    // } else {
-    //     y = leg->joints[3][1];
-    // }
-
-    // printf("y = %.2f\n", y);
-
-    // float z;
-    // if (target_positions[2] < 0){
-    //     z = target_positions[2] + leg->joints[3][2];
-    // } else if(target_positions[2] > 0 ){
-    //     z = target_positions[2] - leg->joints[3][2];
-    // } else {
-    //     z = leg->joints[3][2];
-    // }
-    // printf("z = %.2f\n", z);
-    // z = fabs(z);
     float x = target_positions[0];
     float y = target_positions[1];
     float z = target_positions[2];
@@ -230,9 +180,6 @@ void inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosi
 
     theta1 += orientation_offset[position_leg];
 
-    // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
-    //     theta1 += 90.0;
-    // }
     // Ensure angles are within the valid range
     theta1 = normalize_angle(theta1);
     theta2 = normalize_angle(theta2);
