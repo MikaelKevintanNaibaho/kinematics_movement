@@ -185,26 +185,26 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     float zero_offset = 0.0;
     switch (position_leg) {
     case KANAN_DEPAN:
-        zero_offset = -90.0;
+        zero_offset = 0.0;
         break;
     case KIRI_DEPAN:
         zero_offset = 90.0;
         break;
     case KIRI_BELAKANG:
-        zero_offset = 90.0;
+        zero_offset = 180.0;
         break;
     case KANAN_BELAKANG:
-        zero_offset = -180.0;
+        zero_offset = 270.0;
     default:
         break;
     }
-    float rotate_end_effector = zero_offset;
+    theta1 += radians(zero_offset);
 
     DHParameters params_array[NUM_LINKS];
     init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
     init_DH_params(&params_array[1], radians(0.0), FEMUR_LENGTH, 0.0, theta2);
     init_DH_params(&params_array[2], radians(-90.0), TIBIA_LENGTH, 0.0, (theta3 - radians(90.0)));
-    init_DH_params(&params_array[3], radians(90.0), 0.0, 0.0, radians(rotate_end_effector));
+    init_DH_params(&params_array[3], radians(90.0), 0.0, 0.0, radians(-90.0));
 
     gsl_matrix *trans_matrix = gsl_matrix_alloc(4, 4);
     calculate_DH_transformation(params_array, NUM_LINKS, trans_matrix);
@@ -309,23 +309,25 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta1 = degrees(theta1);
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
+
+    float orientation_offset[NUM_LEGS] = {0, 90.0, 180.0, 270.0};
+
+    theta1 += orientation_offset[position_leg];
      
 
-    // if (theta1 > 90) {
-    //     theta1 = 180.0 - theta1;
-    // }
 
-    // if (theta1 < 0) {
-    //     theta1 = -theta1;
-    // }
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     theta1 += 90.0;
     // }
-
     // Ensure angles are within the valid range
-    // theta1 = normalize_angle(theta1);
-    // theta2 = normalize_angle(theta2);
-    // theta3 = normalize_angle(theta3);
+    theta1 = normalize_angle(theta1);
+    theta2 = normalize_angle(theta2);
+    theta3 = normalize_angle(theta3);
+
+    if (theta1 > 90) {
+        theta1 = 180.0 - theta1;
+    }
+
 
     float angles[3] = { theta1, theta2, theta3 };
     set_angles(leg, angles);
@@ -360,8 +362,8 @@ void adjust_coordinate(float x, float y, float z, LegPosition position, float *a
         *adj_z = z;
         break;
     case KANAN_BELAKANG:
-        *adj_x = y;
-        *adj_y = -x;
+        *adj_x = -y;
+        *adj_y = x;
         *adj_z = z;
         break;
     case KIRI_BELAKANG:
