@@ -45,28 +45,17 @@ int main(void)
 
     sleep(2);
 
-    float target[NUM_LEGS][3] = {
-      {76.0, 76, -151},
-      {10.0, 76, -110},
-      {10.0, 76, -110},
-      {76.0, 76, -151}
 
-    };
-
-    for (int i = 0 ; i < NUM_LEGS; i++) {
-      inverse_kinematics(legs[i], target[i], leg_positions[i]);
+    struct bezier2d curve[NUM_LEGS];
+    for (int i = 0; i < NUM_LEGS; i++) {
+      bezier2d_init(&curve[i]);
+      generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
+      print_trajectory(&curve[i], 30);
     }
-
-    // struct bezier2d curve[NUM_LEGS];
-    // for (int i = 0; i < NUM_LEGS; i++) {
-    //   bezier2d_init(&curve[i]);
-    //   generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH, leg_positions[i]);
-    //   print_trajectory(&curve[i], 30);
-    // }
-    // // crawl_gait(legs, leg_positions);
-    // // while (1) {
-    //   update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
-    // // }
+    // crawl_gait(legs, leg_positions);
+    while (1) {
+      update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+    }
 
     // ripple_gait(legs, leg_positions);
 
