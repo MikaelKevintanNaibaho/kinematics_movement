@@ -183,44 +183,38 @@ void update_leg_crawl_gait(struct bezier2d curve[NUM_LEGS], int num_points,
 {
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;
-    while (1) {
-        if (should_stop()) {
-            printf("Interrupt signal recieved. stoping update_leg...\n");
-            break;
+
+    for (int i = 0; i <= num_points; i++) {
+        float t = (float)i / num_points;
+
+        // Calculate phase offsets for each leg in a crawl gait
+        float phase_offsets[NUM_LEGS];
+        for (int j = 0; j < NUM_LEGS; j++) {
+            // Adjust phase offsets for diagonal leg movement
+            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
         }
 
-        for (int i = 0; i <= num_points; i++) {
-            float t = (float)i / num_points;
-
-            // Calculate phase offsets for each leg in a crawl gait
-            float phase_offsets[NUM_LEGS];
-            for (int j = 0; j < NUM_LEGS; j++) {
-                // Adjust phase offsets for diagonal leg movement
-                phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
-            }
-
-            // Calculate positions for each leg based on the phase offsets
-            float x[NUM_LEGS], z[NUM_LEGS];
-            for (int j = 0; j < NUM_LEGS; j++) {
-                bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
-            }
-
-            // Update leg positions using inverse kinematics
-            for (int j = 0; j < NUM_LEGS; j++) {
-                printf("------------------------------\n");
-                // For crawl gait, adjust leg positions to create diagonal movement
-                // float z_offset = (j % 2 == 0) ? LEG_HEIGHT_OFFSET : -LEG_HEIGHT_OFFSET;
-
-                //   if (j == 1 || j == 4) {
-                //     z_offset *= -1;
-                // }
-                inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
-                                   leg_positions[j]);
-                printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
-            }
-
-            usleep((long)(dt * 1e6));
+        // Calculate positions for each leg based on the phase offsets
+        float x[NUM_LEGS], z[NUM_LEGS];
+        for (int j = 0; j < NUM_LEGS; j++) {
+            bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
         }
+
+        // Update leg positions using inverse kinematics
+        for (int j = 0; j < NUM_LEGS; j++) {
+            printf("------------------------------\n");
+            // For crawl gait, adjust leg positions to create diagonal movement
+            // float z_offset = (j % 2 == 0) ? LEG_HEIGHT_OFFSET : -LEG_HEIGHT_OFFSET;
+
+            //   if (j == 1 || j == 4) {
+            //     z_offset *= -1;
+            // }
+            inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
+                                leg_positions[j]);
+            printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
+        }
+
+        usleep((long)(dt * 1e6));
     }
 }
 

@@ -6,7 +6,6 @@ int main(void)
 {
     // Initialize PCA9685 if necessary
     PCA9685_init();
-    setup_interrupt_handler(interrupt_handler);
 
     initialize_all_legs();
 
@@ -35,10 +34,6 @@ int main(void)
     }
     // crawl_gait(legs, leg_positions);
     while (1) {
-        if (should_stop()) {
-            printf("Interrupt signal received. Stopping leg movement.\n");
-            break;
-        }
         // update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
         update_leg_crawl_gait(curve, NUM_POINTS, legs, leg_positions);
     }

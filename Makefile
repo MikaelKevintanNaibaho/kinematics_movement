@@ -14,7 +14,6 @@ SRC = \
 	dh.c \
 	leg.c \
 	bezier.c \
-	interrupt.c \
 
 # Object files directory
 OBJ_DIR = build/obj
