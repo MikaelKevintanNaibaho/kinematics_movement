@@ -44,7 +44,6 @@ struct LegThreadData
 #define PHASE_OFFSET_3 0.5 // Phase offset for leg 3
 #define PHASE_OFFSET_4 0.75 // Phase offset for leg 4
 
-
 void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
                               float swing_height, LegPosition position_leg);
 void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
@@ -55,7 +54,6 @@ void print_trajectory(struct bezier2d *curve, int num_points);
 void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points);
 void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg,
                                        LegPosition position_leg);
-
 
 void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
                           SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]);

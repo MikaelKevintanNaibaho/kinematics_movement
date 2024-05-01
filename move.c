@@ -99,7 +99,6 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
 {
     printf("updating leg position with fixed delay\n");
 
-    float total_distance = 0.0;
     float prev_x, prev_z;
     bezier2d_getPos(curve, 0, &prev_x, &prev_z); // get poin pertama
 
@@ -108,18 +107,12 @@ void update_leg_position_with_velocity(struct bezier2d *curve, int number_points
         float x, z;
         bezier2d_getPos(curve, t, &x, &z);
 
-        // hitung jarak antara dua titik
-        float dx = x - prev_x;
-        float dz = z - prev_z;
-        total_distance += sqrt(dx * dx + dz * dz);
-
         prev_x = x;
         prev_z = z;
     }
 
     // hitung velocity base on total distance dan disired duration
     float desired_duration = DESIRED_TIME;
-    float average_velocity = total_distance / desired_duration;
 
     // hitung interval antara dua titik
     float dt = desired_duration / number_points;

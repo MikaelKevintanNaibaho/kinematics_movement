@@ -19,5 +19,4 @@ void bezier2d_generate_curve(struct bezier2d *curve, float startx, float startz,
 void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz,
                                      float endx, float endy);
 
-
 #endif /*BEZIER_H*/

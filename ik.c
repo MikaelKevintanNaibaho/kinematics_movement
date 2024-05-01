@@ -45,7 +45,7 @@ void set_angles(SpiderLeg *leg, float angles[3])
 }
 
 // Helper function to check if two sets of angles are approximately equal
-int angles_equal(float angles1[3], float angles2[3])
+int angles_equal(const float angles1[3], const float angles2[3])
 {
     for (int i = 0; i < 3; ++i) {
         if (fabs(angles1[i] - angles2[i]) > 0.01) {
@@ -125,9 +125,6 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     calculate_DH_transformation(params_array, NUM_LINKS, trans_matrix);
 
     float x = fabs(gsl_matrix_get(trans_matrix, 0, 3));
-    if (x < 0) {
-        x = 0;
-    }
 
     // if (position_leg == KANAN_BELAKANG || position_leg == KIRI_BELAKANG) {
     //     x = -x;
@@ -140,7 +137,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     }
     float z = gsl_matrix_get(trans_matrix, 2, 3);
 
-    float position[3] = { x, y, z };
+    const float position[3] = { x, y, z };
 
     // Update leg joints end-effector
     for (int i = 0; i < 3; i++) {
@@ -153,7 +150,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     gsl_matrix_free(trans_matrix);
 }
 
-void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition position_leg)
+void inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosition position_leg)
 {
     // float x;
     // if((target_positions[0]) < 0){
@@ -229,7 +226,7 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     theta2 = degrees(theta2);
     theta3 = degrees(theta3);
 
-    float orientation_offset[NUM_LEGS] = { 0, -90.0, -180.0, 90.0 };
+    const float orientation_offset[NUM_LEGS] = { 0, -90.0, -180.0, 90.0 };
 
     theta1 += orientation_offset[position_leg];
 
@@ -250,4 +247,3 @@ void inverse_kinematics(SpiderLeg *leg, float target_positions[3], LegPosition p
     forward_kinematics(leg, angles, position_leg);
     // printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
 }
-

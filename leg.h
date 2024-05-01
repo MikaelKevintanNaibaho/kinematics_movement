@@ -20,11 +20,12 @@
 #define SERVO_CHANNEL_11 11
 #define SERVO_CHANNEL_12 12
 
-#define COXA_LENGTH  60.4
+#define COXA_LENGTH 60.4
 #define FEMUR_LENGTH 78.0
-#define TIBIA_LENGTH 167.23 
+#define TIBIA_LENGTH 167.23
 
-typedef struct {
+typedef struct
+{
     char name[20];
     float COXA;
     float FEMUR;
@@ -33,20 +34,20 @@ typedef struct {
     float theta2;
     float theta3;
     float mounted_angle;
-    float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur joint, [2] - femur-tibia joint, [3] - tip of the leg
+    float joints[4][3]; // Joint positions: [0] - start joint, [1] - coxa-femur joint, [2] -
+                        // femur-tibia joint, [3] - tip of the leg
     int servo_channles[3];
 } SpiderLeg;
 
-typedef enum {
+typedef enum
+{
     KANAN_DEPAN,
     KANAN_BELAKANG,
     KIRI_BELAKANG,
     KIRI_DEPAN
-}LegPosition;
+} LegPosition;
 
 void initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3);
 void initialize_all_legs(SpiderLeg *legs[NUM_LEGS]);
-
-
 
 #endif /*LEG_H*/

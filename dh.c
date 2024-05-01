@@ -1,6 +1,5 @@
 #include "dh.h"
 
-
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta)
 {
     params->alpha = alpha;

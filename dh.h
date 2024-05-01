@@ -6,15 +6,17 @@
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_vector.h>
 
-typedef struct {
+typedef struct
+{
     float alpha;
     float a;
     float d;
     float theta;
-}DHParameters;
+} DHParameters;
 
 void init_DH_params(DHParameters *params, float alpha, float a, float d, float theta);
 void create_DH_matrix(const DHParameters *params, gsl_matrix *matrix);
-void calculate_DH_transformation(const DHParameters *params_array, int num_links, gsl_matrix *result);
+void calculate_DH_transformation(const DHParameters *params_array, int num_links,
+                                 gsl_matrix *result);
 
 #endif /*DH_H*/
