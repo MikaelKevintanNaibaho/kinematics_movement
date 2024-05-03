@@ -30,7 +30,7 @@ struct LegThreadData
 };
 
 #define STRIDE_LENGTH 100.0
-#define SWING_HEIGTH 50.0
+#define SWING_HEIGTH 100.0
 #define NUM_POINTS 30
 #define DESIRED_TIME 0.00001
 #define GROUP_SIZE 2

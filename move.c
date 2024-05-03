@@ -210,7 +210,7 @@ void update_leg_crawl_gait(struct bezier2d curve[NUM_LEGS], int num_points,
             //     z_offset *= -1;
             // }
             inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
-                                leg_positions[j]);
+                               leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
         }
 
