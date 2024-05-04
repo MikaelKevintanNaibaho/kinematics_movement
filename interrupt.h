@@ -8,6 +8,8 @@
 
 extern int is_program_running;
 
+
+void switch_interrupt(void);
 void init_interrupt(void);
 void start_program(void);
 void stop_program(void);

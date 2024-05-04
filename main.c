@@ -18,9 +18,10 @@ int main(void)
 
     while (1)
     {
+        switch_interrupt();
         if(is_program_running) {
             move_forward();
-        }
+        }   
     }
     
 
