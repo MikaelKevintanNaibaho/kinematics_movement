@@ -15,13 +15,15 @@ int main(void)
 
     init_interrupt();
 
-    while (1)
+    while (!is_program_running)
     {
-        if(is_program_running) {
-            move_forward();
-        } else{
-            return 0;
-        }
+        // You can add a delay here to avoid high CPU usage
+        delay(100);
+    }
+
+    while (is_program_running)
+    {
+        move_forward();
     }
     
 
