@@ -1,6 +1,7 @@
 #include "ik.h"
 #include "move.h"
 #include "pwm_servo.h"
+#include "interrupt.h"
 
 int main(void)
 {
@@ -13,7 +14,15 @@ int main(void)
     stand_position();
     sleep(2);
 
-    move_forward();
+    init_interrupt();
+
+    while (1)
+    {
+        if(is_program_running) {
+            move_forward();
+        }
+    }
+    
 
     return 0;
 }

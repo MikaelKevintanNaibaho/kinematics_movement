@@ -1,27 +1,34 @@
+#include <wiringPi.h>
 #include "interrupt.h"
 
-// Global variable to indicate whether the interrupt flag is set
-volatile sig_atomic_t interrupt_flag = false;
-
-// Signal handler function
-void interrupt_handler(int signum)
+int is_program_running = 0;
+void switch_interrupt(void)
 {
-    // Set the flag to indicate an interrupt has occurred
-    interrupt_flag = true;
+    if (digitalRead(SWITCH_PIN) == LOW) {
+        if (is_program_running) {
+            stop_program();
+        } else {
+            start_program();
+        }
+    }
 }
 
-// Function to initialize signal handler
-void setup_interrupt_handler(void (*handler)(int))
+void init_interrupt(void)
 {
-    struct sigaction sa;
-    sa.sa_handler = handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
+    wiringPiSetupGpio();
+    pinMode(SWITCH_PIN, INPUT);
+    pullUpDnControl(SWITCH_PIN, PUD_UP);
+    wiringPiISR(SWITCH_PIN, INT_EDGE_FALLING, &switch_interrupt);
 }
 
-// Function to check if an interrupt has occurred
-bool should_stop(void)
+void start_program(void)
 {
-    return interrupt_flag;
+    printf("starting program ...\n");
+    is_program_running = 1;
+}
+
+void stop_program(void)
+{
+    printf("stopping program ...\n");
+    is_program_running = 0;
 }

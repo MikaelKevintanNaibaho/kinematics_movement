@@ -3,7 +3,7 @@ CC = gcc
 
 # Compiler flags
 CFLAGS = -Wall -Wextra -std=c11 -g 
-LDFLAGS = -lgsl -lgslcblas -lm
+LDFLAGS = -lgsl -lgslcblas -lwiringpi -lm
 
 # Source files
 SRC = \
@@ -14,6 +14,7 @@ SRC = \
 	dh.c \
 	leg.c \
 	bezier.c \
+	interrupt.c \
 
 # Object files directory
 OBJ_DIR = build/obj
