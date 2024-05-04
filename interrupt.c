@@ -4,7 +4,7 @@
 int is_program_running = 0;
 void switch_interrupt(void)
 {
-    if (digitalRead(SWITCH_PIN) == HIGH) {
+    if (digitalRead(SWITCH_PIN) == LOW) {
         if (!is_program_running) {
             start_program();
         }
