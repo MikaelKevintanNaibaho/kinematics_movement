@@ -16,12 +16,9 @@ int main(void)
 
     init_interrupt();
 
-    while (1)
+    while (is_program_running)
     {
-        switch_interrupt();
-        if(is_program_running) {
-            move_forward();
-        }   
+{       move_forward();
     }
     
 
