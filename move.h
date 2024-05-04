@@ -9,6 +9,7 @@
 #include <time.h>
 #include "interrupt.h"
 #include "bezier.h"
+#include "leg.h"
 
 typedef enum
 {
@@ -64,4 +65,8 @@ const char *leg_position_to_string(LegPosition position);
 void wave_forward(SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]);
 
 void *move_leg(void *thread_data);
+
+// movement relative function
+void stand_position(void);
+void move_forward(void);
 #endif // MOVE_H

@@ -20,7 +20,6 @@ float *get_target(SpiderLeg *leg);
 void set_angles(SpiderLeg *leg, float angles[3]);
 void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_leg);
 void inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosition position_leg);
-void move_forward(SpiderLeg *leg, float target[3]);
 
 void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed);
 int angles_equal(const float angles1[3], const float angles2[3]);

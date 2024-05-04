@@ -233,3 +233,33 @@ const char *leg_position_to_string(LegPosition position)
         return "Unknown";
     }
 }
+
+void stand_position(void)
+{
+    for (int i = 0; i < NUM_LEGS; i++) {
+        printf("standby position for Leg %s (Position %d):\n", legs[i]->name, leg_positions[i]);
+        set_angles(legs[i], stance_angles[i]);
+        forward_kinematics(legs[i], stance_angles[i], leg_positions[i]);
+        printf("----------------------------\n");
+    }
+}
+
+void move_forward(void)
+{
+    struct bezier2d curve[NUM_LEGS];
+    for (int i = 0; i < NUM_LEGS; i++) {
+        bezier2d_init(&curve[i]);
+        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
+            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+                                   leg_positions[i]);
+        } else {
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+                                     leg_positions[i]);
+        }
+        print_trajectory(&curve[i], 30);
+    }
+
+    while (1) {
+        update_leg_crawl_gait(curve, NUM_POINTS, legs, leg_positions);
+    }
+}
