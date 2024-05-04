@@ -5,9 +5,13 @@ int is_program_running = 0;
 void switch_interrupt(void)
 {
     if (digitalRead(SWITCH_PIN) == HIGH) {
-        start_program();
-    } else{
-        stop_program();
+        if (!is_program_running) {
+            start_program();
+        }
+    } else {
+        if (is_program_running) {
+            stop_program();
+        }
     }
 }
 
