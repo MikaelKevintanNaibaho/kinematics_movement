@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-#define SWITCH_PIN 16
+#define SWITCH_PIN 17
 
 extern int is_program_running;
 
