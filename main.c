@@ -12,7 +12,6 @@ int main(void)
 
     // Set initial angles using forward kinematics
     stand_position();
-    sleep(2);
 
     init_interrupt();
 
