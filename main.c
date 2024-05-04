@@ -18,7 +18,7 @@ int main(void)
 
     while (is_program_running)
     {
-{       move_forward();
+        move_forward();
     }
     
 
