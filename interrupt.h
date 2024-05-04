@@ -2,9 +2,9 @@
 #define INTERRUPT_H
 
 #include <stdio.h>
-#include <wiringPi.h>
 
-#define SWITCH_PIN 17
+
+#define SWITCH_PIN 16
 
 extern int is_program_running;
 
