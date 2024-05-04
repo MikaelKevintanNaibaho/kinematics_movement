@@ -25,6 +25,7 @@ int main(void)
         }
         else
         {
+            stand_position();
             // If the switch is off, pause the program
             // You can add additional functionality here if needed
             // For example, you can keep the robot in its current position
