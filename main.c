@@ -15,16 +15,24 @@ int main(void)
 
     init_interrupt();
 
-    while (!is_program_running)
+   while (1)
     {
-        // You can add a delay here to avoid high CPU usage
+        // Check if the switch is turned on
+        if (is_program_running)
+        {
+            // If the switch is on, move forward
+            move_forward();
+        }
+        else
+        {
+            // If the switch is off, pause the program
+            // You can add additional functionality here if needed
+            // For example, you can keep the robot in its current position
+            // Or you can add logic to respond to other inputs or events
+        }
+        
+        // Add a small delay to avoid high CPU usage
         delay(100);
-    }
-
-    while (is_program_running)
-    {
-        move_forward();
-        switch_interrupt();
     }
     
 
