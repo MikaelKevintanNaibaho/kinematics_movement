@@ -15,7 +15,7 @@ void switch_interrupt(void)
 
 void init_interrupt(void)
 {
-    wiringPiSetup();
+    wiringPiSetupGpio();
     pinMode(SWITCH_PIN, INPUT);
     pullUpDnControl(SWITCH_PIN, PUD_UP);
     wiringPiISR(SWITCH_PIN, INT_EDGE_FALLING, &switch_interrupt);
