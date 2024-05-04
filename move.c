@@ -178,7 +178,7 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     }
 }
 
-void update_leg_crawl_gait(struct bezier2d curve[NUM_LEGS], int num_points,
+void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
                            SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
 {
     float desired_duration = DESIRED_TIME;
@@ -260,6 +260,6 @@ void move_forward(void)
     }
 
     while (1) {
-        update_leg_crawl_gait(curve, NUM_POINTS, legs, leg_positions);
+        update_leg_trot_gait(curve, NUM_POINTS, legs, leg_positions);
     }
 }
