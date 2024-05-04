@@ -3,7 +3,7 @@ CC = gcc
 
 # Compiler flags
 CFLAGS = -Wall -Wextra -std=c11 -g 
-LDFLAGS = -lgsl -lgslcblas -lwiringpi -lm
+LDFLAGS = -lgsl -lgslcblas -lwiringPi -lm
 
 # Source files
 SRC = \
