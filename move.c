@@ -19,9 +19,16 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
-    // Append straight line for moving backward
-    bezier2d_addPoint(curve, endx_forward, endz_forward);
-    bezier2d_addPoint(curve, startx, startz);
+    float startx_2 = endx_forward;
+    float startz_2 = endz_forward;
+
+    float controlx_2 = startx_2 - stride_length / 2;
+    float controlz_2 = startz_2 + swing_height;
+
+    float endx_2 = startx_2 - stride_length;
+    float endz_2 = startz_2;
+    
+    bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
 }
 
 void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
@@ -41,9 +48,17 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
-    // Append straight line for moving backward
-    bezier2d_addPoint(curve, endx_forward, endz_forward);
-    bezier2d_addPoint(curve, startx, startz);
+    float startx_2 = endx_forward;
+    float startz_2 = endz_forward;
+
+    float controlx_2 = startx_2 + stride_length / 2;
+    float controlz_2 = startz_2 - swing_height;
+
+    float endx_2 = startx_2 + stride_length;
+    float endz_2 = startz_2;
+    
+    bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
+
 }
 
 void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz,
@@ -208,7 +223,7 @@ void move_forward(void)
             generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
                                    leg_positions[i]);
         } else {
-            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, 100,
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
                                      leg_positions[i]);
         }
         print_trajectory(&curve[i], 30);
