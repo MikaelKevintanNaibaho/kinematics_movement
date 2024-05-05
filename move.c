@@ -125,7 +125,7 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         // Calculate phase offsets for each leg
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            phase_offsets[j] = fmod(t + 2 * j * (1.0 / NUM_LEGS), 1.0); // Adjust phase offsets for each leg
+            phase_offsets[j] = fmod(t + j * (1.0 / NUM_LEGS), 1.0);
         }
 
 
