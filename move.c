@@ -94,51 +94,6 @@ void save_trajectory_points(struct bezier2d *curve, const char *filename, int nu
 
     fclose(file);
 }
-void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg,
-                                       LegPosition position_leg)
-{
-    printf("updating leg position with fixed delay\n");
-
-    float prev_x, prev_z;
-    bezier2d_getPos(curve, 0, &prev_x, &prev_z); // get poin pertama
-
-    for (int i = 0; i <= number_points; i++) {
-        float t = (float)i / number_points;
-        float x, z;
-        bezier2d_getPos(curve, t, &x, &z);
-
-        prev_x = x;
-        prev_z = z;
-    }
-
-    // hitung velocity base on total distance dan disired duration
-    float desired_duration = DESIRED_TIME;
-
-    // hitung interval antara dua titik
-    float dt = desired_duration / number_points;
-
-    // lakukan untuk setiap titik dan control velocity
-    // Iterate over points and control velocity
-    for (int i = 0; i <= number_points; i++) {
-        float t = (float)i / number_points;
-        float x, z;
-        bezier2d_getPos(curve, t, &x, &z);
-
-        // Print position of current point
-        printf("Point %d: (%.2f, %.2f)\n", i, x, z);
-
-        // Calculate target position for inverse kinematics
-        float y = leg->joints[3][1];
-        float target_positions[3] = { x, y, z };
-
-        // Update leg position using inverse kinematics
-        inverse_kinematics(leg, target_positions, position_leg);
-
-        // Introduce delay based on desired velocity
-        long delay = (long)(dt * 1e6);
-        usleep(delay);
-    }
-}
 
 void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
                           SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
@@ -190,8 +145,8 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         // Calculate phase offsets for each leg in a crawl gait
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            // Adjust phase offsets for diagonal leg movement
-            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
+            // Adjust phase offsets for trot gait
+            phase_offsets[j] = fmod(t + (j % 3 == 0 ? 0.0 : (j % 3 == 1 ? 0.5 : 0.25)), 1.0);
         }
 
         // Calculate positions for each leg based on the phase offsets
