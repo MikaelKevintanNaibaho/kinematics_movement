@@ -145,6 +145,7 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
             inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
                                leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
+            usleep(10000);
         }
 
         usleep((long)(dt * 1e6));
