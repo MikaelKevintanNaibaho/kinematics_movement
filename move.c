@@ -23,9 +23,9 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     float startz_2 = endz_forward;
 
     float controlx_2 = startx_2 - stride_length / 2;
-    float controlz_2 = startz_2 - swing_height;
+    float controlz_2 = startz_2 - swing_height/2;
 
-    float endx_2 = startx_2 - stride_length - 20.0;
+    float endx_2 = startx_2 - stride_length ;
     float endz_2 = startz_2;
     
     bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
@@ -34,7 +34,7 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
 void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
                             float swing_height, LegPosition leg_position)
 {
-    float startx = leg->joints[3][0] + stride_length;
+    float startx = leg->joints[3][0];
     float startz = leg->joints[3][2];
     printf("startx = %f, startz %f\n", startx, startz);
 
@@ -48,20 +48,20 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
-    // float startx_2 = endx_forward;
-    // float startz_2 = endz_forward;
+    float startx_2 = endx_forward;
+    float startz_2 = endz_forward;
 
-    // float controlx_2 = startx_2 + stride_length / 2;
-    // float controlz_2 = startz_2 - swing_height;
+    float controlx_2 = startx_2 + stride_length / 2;
+    float controlz_2 = startz_2 - swing_height/2;
 
-    // float endx_2 = startx_2 + stride_length;
-    // float endz_2 = startz_2;
+    float endx_2 = startx_2 + stride_length;
+    float endz_2 = startz_2;
     
-    // bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
+    bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
 
-    // Append straight line for moving backward
-    bezier2d_addPoint(curve, endx_forward, endz_forward);
-    bezier2d_addPoint(curve, startx, startz);
+    // // Append straight line for moving backward
+    // bezier2d_addPoint(curve, endx_forward, endz_forward);
+    // bezier2d_addPoint(curve, startx, startz);
 }
 
 void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz,
@@ -165,10 +165,6 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         for (int j = 0; j < NUM_LEGS; j++) {
             // Adjust phase offsets for diagonal leg movement
             phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
-            if (j == 0 || j == 3) { // Adjust the x-coordinate of the trajectory for front and back legs
-                phase_offsets[j] += STRIDE_LENGTH * phase_offsets[j];
-            }
-            
         }
 
         // Calculate positions for each leg based on the phase offsets
@@ -237,7 +233,7 @@ void move_forward(void)
     }
 
     while (is_program_running) {
-        update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+        update_leg_trot_gait(curve, NUM_POINTS, legs, leg_positions);
         usleep(100);
     }
 }
