@@ -146,7 +146,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
             // Adjust phase offsets for diagonal leg movement
-            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.90), 1.0);
+            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
         }
 
         // Calculate positions for each leg based on the phase offsets
@@ -208,7 +208,7 @@ void move_forward(void)
             generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
                                    leg_positions[i]);
         } else {
-            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, 100,
                                      leg_positions[i]);
         }
         print_trajectory(&curve[i], 30);
