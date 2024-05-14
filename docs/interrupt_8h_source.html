@@ -65,21 +65,26 @@ $(function() {
 <div class="title">interrupt.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef INTERRUPT_H</span></div>
+<a href="interrupt_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef INTERRUPT_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define INTERRUPT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define SWITCH_PIN 17</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="interrupt_8h.html#a440cba9fe36b500faeee32b622f4d6e8">    6</a></span>&#160;<span class="preprocessor">#define SWITCH_PIN 17</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> is_program_running;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code" href="interrupt_8h.html#aebb81fe422fb67577014b444042a3ec5">is_program_running</a>;</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">void</span> switch_interrupt(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keywordtype">void</span> init_interrupt(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">void</span> start_program(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> stop_program(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">void</span> <a class="code" href="interrupt_8h.html#afdd27549bf5cd8b5a03480c89f44601e">switch_interrupt</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keywordtype">void</span> <a class="code" href="interrupt_8h.html#ae333b3351e63da959ca986e52324d850">init_interrupt</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">void</span> <a class="code" href="interrupt_8h.html#ab1f78e210984d01da37121dac17c2ed0">start_program</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> <a class="code" href="interrupt_8h.html#a797f13a1868a5cfcd1ff81c5ae1fe065">stop_program</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* INTERRUPT_H */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="ainterrupt_8h_html_a797f13a1868a5cfcd1ff81c5ae1fe065"><div class="ttname"><a href="interrupt_8h.html#a797f13a1868a5cfcd1ff81c5ae1fe065">stop_program</a></div><div class="ttdeci">void stop_program(void)</div><div class="ttdef"><b>Definition:</b> <a href="interrupt_8c_source.html#l00032">interrupt.c:32</a></div></div>
+<div class="ttc" id="ainterrupt_8h_html_ab1f78e210984d01da37121dac17c2ed0"><div class="ttname"><a href="interrupt_8h.html#ab1f78e210984d01da37121dac17c2ed0">start_program</a></div><div class="ttdeci">void start_program(void)</div><div class="ttdef"><b>Definition:</b> <a href="interrupt_8c_source.html#l00026">interrupt.c:26</a></div></div>
+<div class="ttc" id="ainterrupt_8h_html_ae333b3351e63da959ca986e52324d850"><div class="ttname"><a href="interrupt_8h.html#ae333b3351e63da959ca986e52324d850">init_interrupt</a></div><div class="ttdeci">void init_interrupt(void)</div><div class="ttdef"><b>Definition:</b> <a href="interrupt_8c_source.html#l00018">interrupt.c:18</a></div></div>
+<div class="ttc" id="ainterrupt_8h_html_aebb81fe422fb67577014b444042a3ec5"><div class="ttname"><a href="interrupt_8h.html#aebb81fe422fb67577014b444042a3ec5">is_program_running</a></div><div class="ttdeci">int is_program_running</div><div class="ttdef"><b>Definition:</b> <a href="interrupt_8c_source.html#l00004">interrupt.c:4</a></div></div>
+<div class="ttc" id="ainterrupt_8h_html_afdd27549bf5cd8b5a03480c89f44601e"><div class="ttname"><a href="interrupt_8h.html#afdd27549bf5cd8b5a03480c89f44601e">switch_interrupt</a></div><div class="ttdeci">void switch_interrupt(void)</div><div class="ttdef"><b>Definition:</b> <a href="interrupt_8c_source.html#l00005">interrupt.c:5</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
