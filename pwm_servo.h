@@ -16,17 +16,17 @@
 #define SUBADR1 0x02 // I2C-bus subaddress 1
 #define SUBADR2 0x03 // I2C-bus subaddress 2
 #define SUBADR3 0x04 // I2C-bus subaddress 3
-#define ALLCALLADR 0x05 // LED All Call I2C-bus address
-#define LED0 0x6 // LED0 start register
-#define LED0_ON_L 0x6 // LED0 output and brightness control byte 0
-#define LED0_ON_H 0x7 // LED0 output and brightness control byte 1
-#define LED0_OFF_L 0x8 // LED0 output and brightness control byte 2
-#define LED0_OFF_H 0x9 // LED0 output and brightness control byte 3
-#define LED_MULTIPLIER 4 // For the other 15 channels
-#define ALLLED_ON_L 0xFA // load all the LEDn_ON registers, byte 0 (turn 0-7 channels on)
-#define ALLLED_ON_H 0xFB // load all the LEDn_ON registers, byte 1 (turn 8-15 channels on)
-#define ALLLED_OFF_L 0xFC // load all the LEDn_OFF registers, byte 0 (turn 0-7 channels off)
-#define ALLLED_OFF_H 0xFD // load all the LEDn_OFF registers, byte 1 (turn 8-15 channels off)
+#define ALLCALLADR 0x05 // channel All Call I2C-bus address
+#define channel0 0x6 // channel0 start register
+#define channel0_ON_L 0x6 // channel0 output and brightness control byte 0
+#define channel0_ON_H 0x7 // channel0 output and brightness control byte 1
+#define channel0_OFF_L 0x8 // channel0 output and brightness control byte 2
+#define channel0_OFF_H 0x9 // channel0 output and brightness control byte 3
+#define channel_MULTIPLIER 4 // For the other 15 channels
+#define ALLchannel_ON_L 0xFA // load all the channeln_ON registers, byte 0 (turn 0-7 channels on)
+#define ALLchannel_ON_H 0xFB // load all the channeln_ON registers, byte 1 (turn 8-15 channels on)
+#define ALLchannel_OFF_L 0xFC // load all the channeln_OFF registers, byte 0 (turn 0-7 channels off)
+#define ALLchannel_OFF_H 0xFD // load all the channeln_OFF registers, byte 1 (turn 8-15 channels off)
 #define PRE_SCALE 0xFE // prescaler for output frequency
 #define CLOCK_FREQ 25000000.0 // 25MHz default osc clock
 #define ANGLE_RANGE 180
@@ -38,11 +38,11 @@ extern int i2c_fd;
 void PCA9685_init();
 void write_byte(uint8_t reg, uint8_t val);
 void set_pwm_freq(int freq);
-void set_pwm_duty(uint8_t led, int value);
-void set_pwm(uint8_t led, int on_value, int off_value);
+void set_pwm_duty(uint8_t channel, int value);
+void set_pwm(uint8_t channel, int on_value, int off_value);
 void set_pwm_angle(uint8_t channel, int angle, int freq);
 
-int get_pwm(uint8_t led);
+int get_pwm(uint8_t channel);
 
 uint8_t read_byte(uint8_t reg);
 

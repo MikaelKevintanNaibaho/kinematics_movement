@@ -3,11 +3,9 @@
 
 #include <stdio.h>
 
-
 #define SWITCH_PIN 17
 
 extern int is_program_running;
-
 
 void switch_interrupt(void);
 void init_interrupt(void);

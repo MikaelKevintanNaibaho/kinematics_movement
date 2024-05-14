@@ -14,7 +14,7 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     printf("controlx = %f \t", controlx);
     float controlz = startz + 2 * swing_height;
     printf("controlz = %f\n", controlz);
-    float endx_forward = startx + stride_length ;
+    float endx_forward = startx + stride_length;
     float endz_forward = startz;
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
@@ -23,11 +23,11 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     float startz_2 = endz_forward;
 
     float controlx_2 = startx_2 - stride_length / 2;
-    float controlz_2 = startz_2 - swing_height/2;
+    float controlz_2 = startz_2 - swing_height / 2;
 
-    float endx_2 = startx_2 - stride_length ;
+    float endx_2 = startx_2 - stride_length;
     float endz_2 = startz_2;
-    
+
     bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
 }
 
@@ -52,11 +52,11 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     float startz_2 = endz_forward;
 
     float controlx_2 = startx_2 + stride_length / 2;
-    float controlz_2 = startz_2 - swing_height/2;
+    float controlz_2 = startz_2 - swing_height / 2;
 
     float endx_2 = startx_2 + stride_length;
     float endz_2 = startz_2;
-    
+
     bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
 
     // // Append straight line for moving backward
@@ -128,7 +128,6 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
             phase_offsets[j] = fmod(t + j * (1.0 / NUM_LEGS), 1.0);
         }
 
-
         // Calculate positions for each leg based on the phase offsets
         float x[NUM_LEGS], z[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
@@ -153,7 +152,7 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
 }
 
 void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
-                           SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
+                          SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
 {
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;

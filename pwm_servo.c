@@ -2,11 +2,14 @@
 
 int i2c_fd;
 
+/**
+ * @brief Initialize the PCA9685 module i2c
+ */
 void PCA9685_init()
 {
     i2c_fd = open(I2C_DEVICE, O_RDWR);
     if (i2c_fd < 0) {
-        perror("Failed to open the i2c device");
+        perror("Faichannel to open the i2c device");
         return;
     }
 
@@ -21,6 +24,12 @@ void PCA9685_init()
     write_byte(MODE2, 0x04);
 }
 
+/**
+ * @brief Write a byte to the specified register.
+ * 
+ * @param reg Register adress.
+ * @param val Value to write.
+ */
 void write_byte(uint8_t reg, uint8_t val)
 {
     uint8_t buf[2];
@@ -32,21 +41,32 @@ void write_byte(uint8_t reg, uint8_t val)
     }
 }
 
+/**
+ * @brief Reads a bytes from the specified register.
+ * 
+ * @param reg Register address
+ * @return Read byte.
+ */
 uint8_t read_byte(uint8_t reg)
 {
     uint8_t buf[1];
     buf[0] = reg;
     if (write(i2c_fd, buf, 1) != 1) {
-        perror("Write failed");
+        perror("Write faichannel");
         return 0;
     }
     if (read(i2c_fd, buf, 1) != 1) {
-        perror("Read failed");
+        perror("Read faichannel");
         return 0;
     }
     return buf[0];
 }
 
+/**
+ * @brief sets pwm frequency.
+ * 
+ * @param freq Frequency value.
+*/
 void set_pwm_freq(int freq)
 {
     uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 * freq) - 1);
@@ -55,28 +75,55 @@ void set_pwm_freq(int freq)
     write_byte(MODE1, 0x80); // restart
     write_byte(MODE2, 0x04); // totem pole (default)
 }
-void set_pwm_duty(uint8_t led, int value)
+
+/**
+ * @brief Set pwm duty cycle for a specific Channel
+ * 
+ * @param channel channel number
+ * @param value Duty cycle value
+ */
+void set_pwm_duty(uint8_t channel, int value)
 {
-    set_pwm(led, 0, value);
+    set_pwm(channel, 0, value);
 }
 
-void set_pwm(uint8_t led, int on_value, int off_value)
+/**
+ * @brief sets the pwm parameters for a specific channel.
+ * 
+ * @param channel channel number.
+ * @param on_value ON value.
+ */
+void set_pwm(uint8_t channel, int on_value, int off_value)
 {
-    write_byte(LED0_ON_L + LED_MULTIPLIER * (led - 1), on_value & 0xFF);
-    write_byte(LED0_ON_L + LED_MULTIPLIER * (led - 1) + 1, on_value >> 8);
-    write_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1), off_value & 0xFF);
-    write_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1) + 1, off_value >> 8);
+    write_byte(channel0_ON_L + channel_MULTIPLIER * (channel - 1), on_value & 0xFF);
+    write_byte(channel0_ON_L + channel_MULTIPLIER * (channel - 1) + 1, on_value >> 8);
+    write_byte(channel0_OFF_L + channel_MULTIPLIER * (channel - 1), off_value & 0xFF);
+    write_byte(channel0_OFF_L + channel_MULTIPLIER * (channel - 1) + 1, off_value >> 8);
 }
 
-int get_pwm(uint8_t led)
+/**
+ * @brief reads the pwm value of a specific channel.
+ * 
+ * @param channel channel number.
+ * @return pwm value.
+ */
+int get_pwm(uint8_t channel)
 {
-    int led_value = 0;
-    led_value = read_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1));
-    led_value |= (read_byte(LED0_OFF_L + LED_MULTIPLIER * (led - 1) + 1) << 8);
+    int channel_value = 0;
+    channel_value = read_byte(channel0_OFF_L + channel_MULTIPLIER * (channel - 1));
+    channel_value |= (read_byte(channel0_OFF_L + channel_MULTIPLIER * (channel - 1) + 1) << 8);
 
-    return led_value;
+    return channel_value;
 }
 
+
+/**
+ * @brief set the pwm angle for a servo motor
+ * 
+ * @param channel channel number.
+ * @param angle Angle value (0 - 180)
+ * @param freq PWM frequency
+ */
 void set_pwm_angle(uint8_t channel, int angle, int freq)
 {
     if (angle < 0) {
