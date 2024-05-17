@@ -84,6 +84,27 @@ void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *
     bezier2d_generate_straight_back(stright_back, startx, startz, endx, endz);
 }
 
+void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float stride_length,
+                                   float swing_height, LegPosition position_leg)
+{
+    // ambil posisi terkini pada 3d coordinate
+    float startx = leg->joints[3][0];
+    float starty = leg->joints[3][1];
+    float startz = leg->joints[3][2];
+
+    // define control point untuk belok kiri
+    float controlx = startx +  2 * startx;
+    float controly = starty + stride_length;
+    float controlz = startz + 2 * swing_height;
+
+    float endx = startx;
+    float endy = starty + stride_length;
+    float endz = startz;
+
+    bezier3d_generate_curve(curve, startx, starty, startz, controlx, controly, controlz, endx, endy,
+                            endz);
+}
+
 void print_trajectory(struct bezier2d *curve, int num_points)
 {
     printf("Trajectory Points:\n");
@@ -191,6 +212,36 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     }
 }
 
+void update_leg_left(struct bezier3d curve[NUM_LEGS], int num_points, SpiderLeg *legs[NUM_LEGS],
+                     LegPosition leg_positons[NUM_LEGS])
+{
+    float desired_duration = DESIRED_TIME;
+    float dt = desired_duration / num_points;
+
+    for (int i = 0; i <= num_points; i++) {
+        float t = (float)i / num_points;
+
+        // Calculate phase offsets for each leg
+        float phase_offsets[NUM_LEGS];
+        for (int j = 0; j < NUM_LEGS; j++) {
+            phase_offsets[j] = fmod(t + j * (1.0 / NUM_LEGS), 1.0);
+        }
+
+        // Calculate positions for each leg based on the phase offsets
+        float x[NUM_LEGS], y[NUM_LEGS], z[NUM_LEGS];
+        for (int j = 0; j < NUM_LEGS; j++) {
+            bezier3d_getpos(&curve[j], phase_offsets[j], &x[j], &y[j], &z[j]);
+        }
+
+        // Update leg positions using inverse kinematics
+        for (int j = 0; j < NUM_LEGS; j++) {
+            inverse_kinematics(legs[j], (float[]){ x[j], y[j], z[j] }, leg_positions[j]);
+        }
+
+        usleep((long)(dt * 1e6));
+    }
+}
+
 const char *leg_position_to_string(LegPosition position)
 {
     switch (position) {
@@ -223,10 +274,10 @@ void move_forward(void)
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curve[i]);
         if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
-            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
                                    leg_positions[i]);
         } else {
-            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGTH,
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
                                      leg_positions[i]);
         }
         print_trajectory(&curve[i], 30);
@@ -235,5 +286,18 @@ void move_forward(void)
     while (is_program_running) {
         update_leg_trot_gait(curve, NUM_POINTS, legs, leg_positions);
         usleep(100);
+    }
+}
+
+void move_left_turn(void)
+{
+    struct bezier3d curve[NUM_LEGS];
+    for(int i = 0; i < NUM_LEGS; i++) {
+        bezier3d_init(&curve[i]);
+        generate_turn_left_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
+    }
+    
+    while(is_program_running) {
+        update_leg_left(curve, NUM_POINTS, legs, leg_positions);
     }
 }
