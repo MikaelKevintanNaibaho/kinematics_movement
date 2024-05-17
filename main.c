@@ -6,7 +6,7 @@
 int main(void)
 {
     // Initialize PCA9685 if necessary
-    PCA9685_init();
+    // PCA9685_init();
 
     initialize_all_legs();
 
@@ -31,6 +31,9 @@ int main(void)
         // Add a small delay to avoid high CPU usage
         delay(100);
     }
+
+    /*testing turn left relative functions*/
+    // move_left_turn();
 
     return 0;
 }

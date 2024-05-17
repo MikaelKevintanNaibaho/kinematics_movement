@@ -26,7 +26,7 @@ void PCA9685_init()
 
 /**
  * @brief Write a byte to the specified register.
- * 
+ *
  * @param reg Register adress.
  * @param val Value to write.
  */
@@ -43,7 +43,7 @@ void write_byte(uint8_t reg, uint8_t val)
 
 /**
  * @brief Reads a bytes from the specified register.
- * 
+ *
  * @param reg Register address
  * @return Read byte.
  */
@@ -64,9 +64,9 @@ uint8_t read_byte(uint8_t reg)
 
 /**
  * @brief sets pwm frequency.
- * 
+ *
  * @param freq Frequency value.
-*/
+ */
 void set_pwm_freq(int freq)
 {
     uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 * freq) - 1);
@@ -78,7 +78,7 @@ void set_pwm_freq(int freq)
 
 /**
  * @brief Set pwm duty cycle for a specific Channel
- * 
+ *
  * @param channel channel number
  * @param value Duty cycle value
  */
@@ -89,7 +89,7 @@ void set_pwm_duty(uint8_t channel, int value)
 
 /**
  * @brief sets the pwm parameters for a specific channel.
- * 
+ *
  * @param channel channel number.
  * @param on_value ON value.
  */
@@ -103,7 +103,7 @@ void set_pwm(uint8_t channel, int on_value, int off_value)
 
 /**
  * @brief reads the pwm value of a specific channel.
- * 
+ *
  * @param channel channel number.
  * @return pwm value.
  */
@@ -116,10 +116,9 @@ int get_pwm(uint8_t channel)
     return channel_value;
 }
 
-
 /**
  * @brief set the pwm angle for a servo motor
- * 
+ *
  * @param channel channel number.
  * @param angle Angle value (0 - 180)
  * @param freq PWM frequency

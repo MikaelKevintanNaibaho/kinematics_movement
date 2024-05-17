@@ -26,7 +26,8 @@
 #define ALLchannel_ON_L 0xFA // load all the channeln_ON registers, byte 0 (turn 0-7 channels on)
 #define ALLchannel_ON_H 0xFB // load all the channeln_ON registers, byte 1 (turn 8-15 channels on)
 #define ALLchannel_OFF_L 0xFC // load all the channeln_OFF registers, byte 0 (turn 0-7 channels off)
-#define ALLchannel_OFF_H 0xFD // load all the channeln_OFF registers, byte 1 (turn 8-15 channels off)
+#define ALLchannel_OFF_H                                                                           \
+    0xFD // load all the channeln_OFF registers, byte 1 (turn 8-15 channels off)
 #define PRE_SCALE 0xFE // prescaler for output frequency
 #define CLOCK_FREQ 25000000.0 // 25MHz default osc clock
 #define ANGLE_RANGE 180
