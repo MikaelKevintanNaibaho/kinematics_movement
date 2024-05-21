@@ -1,0 +1,65 @@
+@startuml
+hide empty description
+
+[*] --> Wait
+state "<b>Wait</b>\n<i>Menunggu start signal</i>" as Wait
+state "<b>Search_korban</b>\n<i>Mencari korban</i>" as Search_korban{
+    [*] --> Not_Detected
+    state "<b>Not Detected</b>\n<i>Belum mendeteksi korban</i>" as Not_Detected
+    state "<b>Move Forward</b>\n<i>Bergerak maju</i>" as MoveForward
+    state "<b>Scan Surroundings</b>\n<i>Memindai sekitar</i>" as ScanSurroundings
+    state "<b>Victim Detected</b>\n<i>Korban terdeteksi</i>" as VictimDetected
+    
+    Not_Detected --> MoveForward : no victim in sight
+    MoveForward --> ScanSurroundings : reached scanning point
+    ScanSurroundings --> VictimDetected : victim detected
+    VictimDetected --> Not_Detected : victim rescued or not visible
+}
+state "<b>Rescue</b>\n<i>Mencapit dan menyelamatkan korban</i> " as Rescue{
+    [*] --> Approach_Victim
+    state "<b>Approach Victim</b>\n<i>Mendekati korban</i>" as Approach_Victim
+    state "<b>Grip Victim</b>\n<i>Menggenggam korban</i>" as Grip_Victim
+    state "<b>Lift</b>\n<i>Mengangkat korban</i>" as Lift
+    state "<b>Carry</b>\n<i>Membawa korban</i>" as Carry
+
+    Approach_Victim --> Grip_Victim : close to victim
+    Grip_Victim --> Lift : victim gripped
+    Lift --> Carry : victim lifted
+    Carry --> Approach_Save_Zone : carrying victim
+}
+state "<b>Move to Save Zone</b>\n<i>Bergerak ke zona aman</i>" as Move_to_save_zone{
+    [*] --> Not_At_Save_Zone
+    state "<b>Not At Save Zone</b>\n<i>Belum sampai di zona aman</i>" as Not_At_Save_Zone
+    state "<b>Move Forward</b>\n<i>Bergerak maju</i>" as MoveForward
+    state "<b>Obstacle Detected</b>\n<i>Hambatan terdeteksi</i>" as ObstacleDetected
+    state "<b>Turn to Avoid</b>\n<i>Memutar untuk menghindari</i>" as TurnToAvoid
+    state "<b>Move to Save Zone</b>\n<i>Bergerak ke zona aman</i>" as MoveToSaveZone
+
+    Not_At_Save_Zone --> MoveForward : no obstacle ahead
+    Not_At_Save_Zone --> ObstacleDetected : obstacle detected
+    ObstacleDetected --> TurnToAvoid : determine direction to avoid
+    TurnToAvoid --> MoveForward : obstacle avoided
+    MoveForward --> Not_At_Save_Zone : not yet reached save zone
+}
+
+state "<b>Release Victim</b>\n<i>Melepaskan korban</i>" as Release_victim{
+    [*] --> Holding_Victim
+    state "<b>Holding Victim</b>\n<i>Menggenggam korban</i>" as Holding_Victim
+    state "<b>Approach Save Zone</b>\n<i>Mendekati zona aman</i>" as Approach_Save_Zone
+    state "<b>Release</b>\n<i>Melepaskan korban</i>" as Release
+
+    Holding_Victim --> Approach_Save_Zone : victim gripped
+    Approach_Save_Zone --> Release : arrived at save zone
+    Release --> Holding_Victim : victim released
+}
+state "<b>Climb Stairs</b>\n<i>Memanjat tangga</i>" as Climb_stairs
+state "<b>Finished</b>\n<i>Misi selesai</i>" as Finish
+
+Wait --> Search_korban : start switch
+Search_korban --> Rescue : Korban\nterdeteksi
+Rescue --> Move_to_save_zone : korban di angkat
+Move_to_save_zone --> Release_victim : sampai di save zone
+Release_victim -->Search_korban
+
+
+@enduml

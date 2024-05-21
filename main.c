@@ -6,7 +6,7 @@
 int main(void)
 {
     // Initialize PCA9685 if necessary
-    // PCA9685_init();
+    PCA9685_init();
 
     initialize_all_legs();
 

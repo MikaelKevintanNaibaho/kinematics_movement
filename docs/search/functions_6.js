@@ -1,8 +1,0 @@
-var searchData=
-[
-  ['init_5fdh_5fparams_201',['init_DH_params',['../dh_8c.html#af94724f0b17cce49372c981f68e30d89',1,'init_DH_params(DHParameters *params, float alpha, float a, float d, float theta):&#160;dh.c'],['../dh_8h.html#af94724f0b17cce49372c981f68e30d89',1,'init_DH_params(DHParameters *params, float alpha, float a, float d, float theta):&#160;dh.c']]],
-  ['init_5finterrupt_202',['init_interrupt',['../interrupt_8c.html#ae333b3351e63da959ca986e52324d850',1,'init_interrupt(void):&#160;interrupt.c'],['../interrupt_8h.html#ae333b3351e63da959ca986e52324d850',1,'init_interrupt(void):&#160;interrupt.c']]],
-  ['initialize_5fall_5flegs_203',['initialize_all_legs',['../leg_8c.html#aad43cfa4c8fc5d6eebfa5a27c50e1a97',1,'initialize_all_legs():&#160;leg.c'],['../leg_8h.html#aad43cfa4c8fc5d6eebfa5a27c50e1a97',1,'initialize_all_legs():&#160;leg.c']]],
-  ['initialize_5fleg_204',['initialize_leg',['../leg_8c.html#acc7b76c942981dca23e53843d02ce565',1,'initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3):&#160;leg.c'],['../leg_8h.html#acc7b76c942981dca23e53843d02ce565',1,'initialize_leg(SpiderLeg *leg, const char *name, int servo_ch1, int servo_ch2, int servo_ch3):&#160;leg.c']]],
-  ['inverse_5fkinematics_205',['inverse_kinematics',['../ik_8c.html#acd86e36f6f6060920366fd8531414f04',1,'inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosition position_leg):&#160;ik.c'],['../ik_8h.html#acd86e36f6f6060920366fd8531414f04',1,'inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosition position_leg):&#160;ik.c']]]
-];
