@@ -6,14 +6,14 @@
 int main(void)
 {
     // Initialize PCA9685 if necessary
-    PCA9685_init();
+    // PCA9685_init();
 
     initialize_all_legs();
 
     // Set initial angles using forward kinematics
     stand_position();
 
-    init_interrupt();
+    // init_interrupt();
 
     while (1) {
         // Check if the switch is turned on
