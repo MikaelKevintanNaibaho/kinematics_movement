@@ -299,5 +299,6 @@ void move_left_turn(void)
     
     while(is_program_running) {
         update_leg_left(curve, NUM_POINTS, legs, leg_positions);
+        usleep(100000);
     }
 }
