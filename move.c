@@ -116,6 +116,17 @@ void print_trajectory(struct bezier2d *curve, int num_points)
     }
 }
 
+void print_trajectory_3d(struct bezier3d *curve, int num_points) {
+    printf("Trajectory Points:\n");
+    for (int i = 0; i <= num_points; i++) {
+        float t = (float)i / num_points;
+        float x, y, z;
+        bezier3d_getpos(curve, t, &x, &y, &z);
+        printf("Point %d: (%.2f, %.2f, %.2f)\n", i, x, y, z);
+    }
+}
+
+
 void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points)
 {
     FILE *file = fopen(filename, "w");
@@ -295,6 +306,7 @@ void move_left_turn(void)
     for(int i = 0; i < NUM_LEGS; i++) {
         bezier3d_init(&curve[i]);
         generate_turn_left_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
+        print_trajectory(&curve[i], 40);
     }
     
     while(is_program_running) {

@@ -57,6 +57,7 @@ void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float
 
 // printing and saving//
 void print_trajectory(struct bezier2d *curve, int num_points);
+void print_trajectory_3d(struct bezier3d *curve, int num_points);
 void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points);
 
 // making leg posiiton update
