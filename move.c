@@ -93,8 +93,8 @@ void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float
     float startz = leg->joints[3][2];
 
     // define control point untuk belok kiri
-    float controlx = startx -  2 * startx;
-    float controly = starty + stride_length;
+    float controlx = startx +  2 * startx;
+    float controly = starty - stride_length / 2;
     float controlz = startz + 2 * swing_height;
 
     float endx = startx;
