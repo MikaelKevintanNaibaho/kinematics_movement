@@ -224,24 +224,22 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
 }
 
 void update_leg_left(struct bezier3d curve[NUM_LEGS], int num_points, SpiderLeg *legs[NUM_LEGS],
-                     LegPosition leg_positons[NUM_LEGS])
+                     LegPosition leg_positions[NUM_LEGS])
 {
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;
-
+    
+    // Define the desired gait pattern for each leg (phase offsets)
+    float phase_offsets[NUM_LEGS] = { 0.0, 0.25, 0.5, 0.75 }; // Example: Trot gait
+    
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg
-        float phase_offsets[NUM_LEGS];
-        for (int j = 0; j < NUM_LEGS; j++) {
-            phase_offsets[j] = fmod(t + j * (1.0 / NUM_LEGS), 1.0);
-        }
-
-        // Calculate positions for each leg based on the phase offsets
+        // Update positions for each leg based on the gait pattern
         float x[NUM_LEGS], y[NUM_LEGS], z[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            bezier3d_getpos(&curve[j], phase_offsets[j], &x[j], &y[j], &z[j]);
+            float phase_offset = fmod(t + phase_offsets[j], 1.0);
+            bezier3d_getpos(&curve[j], phase_offset, &x[j], &y[j], &z[j]);
         }
 
         // Update leg positions using inverse kinematics
@@ -252,6 +250,7 @@ void update_leg_left(struct bezier3d curve[NUM_LEGS], int num_points, SpiderLeg 
         usleep((long)(dt * 1e6));
     }
 }
+
 
 const char *leg_position_to_string(LegPosition position)
 {
@@ -306,7 +305,7 @@ void move_left_turn(void)
     for(int i = 0; i < NUM_LEGS; i++) {
         bezier3d_init(&curve[i]);
         generate_turn_left_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
-        print_trajectory(&curve[i], 40);
+        print_trajectory_3d(&curve[i], NUM_POINTS);
     }
     
     while(is_program_running) {
