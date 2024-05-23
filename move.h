@@ -45,6 +45,11 @@ struct LegThreadData
 #define PHASE_OFFSET_3 0.5 // Phase offset for leg 3
 #define PHASE_OFFSET_4 0.75 // Phase offset for leg 4
 
+// Constants for balance control
+#define PITCH_THRESHOLD 5.0  // Threshold for pitch deviation (degrees)
+#define ROLL_THRESHOLD 5.0   // Threshold for roll deviation (degrees)
+#define LEG_ADJUSTMENT_ANGLE 2.0  // Angle to adjust leg position (degrees)
+
 // generating trajectory
 void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
                               float swing_height, LegPosition position_leg);

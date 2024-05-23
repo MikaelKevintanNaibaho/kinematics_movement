@@ -313,3 +313,43 @@ void move_left_turn(void)
         usleep(100000);
     }
 }
+
+void adjust_leg_positions(float pitch, float roll, SpiderLeg *legs[NUM_LEGS])
+{
+    for (int i = 0; i < NUM_LEGS; i++) {
+        // Adjust leg positions based on pitch
+        if (fabs(pitch) > PITCH_THRESHOLD) {
+            float adjustment = pitch > 0 ? LEG_ADJUSTMENT_ANGLE : -LEG_ADJUSTMENT_ANGLE;
+            legs[i]->theta1 += adjustment;
+        }
+
+        // Adjust leg positions based on roll
+        if (fabs(roll) > ROLL_THRESHOLD) {
+            float adjustment = roll > 0 ? LEG_ADJUSTMENT_ANGLE : -LEG_ADJUSTMENT_ANGLE;
+            legs[i]->theta2 += adjustment;
+            legs[i]->theta3 -= adjustment; // Adjust opposite leg segment to maintain balance
+        }
+
+        // Ensure leg angles are within valid range
+        legs[i]->theta1 = normalize_angle(legs[i]->theta1);
+        legs[i]->theta2 = normalize_angle(legs[i]->theta2);
+        legs[i]->theta3 = normalize_angle(legs[i]->theta3);
+    }
+}
+
+void self_balance(float roll, float pitch)
+{
+    while (is_program_running) {
+
+        // Adjust leg positions based on pitch and roll
+        adjust_leg_positions(pitch, roll, legs);
+
+        // Update leg positions with adjusted angles
+        for (int i = 0; i < NUM_LEGS; i++) {
+            set_angles(legs[i], (float[]){ legs[i]->theta1, legs[i]->theta2, legs[i]->theta3 });
+        }
+
+        // Add delay before next iteration to control loop frequency
+        usleep(100000); // Adjust as needed based on desired loop frequency
+    }
+}
