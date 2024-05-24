@@ -200,7 +200,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
             if (j == 0 || j == 2) {
                 phase_offsets[j] = fmod(t + 0.5, 1.0); // Trot group 1
             } else {
-                phase_offsets[j] = fmod(t + 0.5, 1.0); // Trot group 2 with slight delay
+                phase_offsets[j] = fmod(t + 0.375, 1.0); // Trot group 2 with slight delay
             }
         }
 
