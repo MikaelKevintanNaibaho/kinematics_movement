@@ -183,20 +183,25 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     }
 }
 
-void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
-                          SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
-{
+void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, SpiderLeg* legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;
+
+    // Trot groups: {0, 3} and {1, 2}
+    int trot1[] = {0, 3};
+    int trot2[] = {1, 2};
 
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg in a crawl gait
+        // Calculate phase offsets for each leg in a trot gait
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            // Adjust phase offsets for diagonal leg movement
-            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
+            if (j == 0 || j == 3) {
+                phase_offsets[j] = fmod(t + 0.5, 1.0); // Trot group 1
+            } else {
+                phase_offsets[j] = fmod(t, 1.0); // Trot group 2
+            }
         }
 
         // Calculate positions for each leg based on the phase offsets
@@ -208,14 +213,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         // Update leg positions using inverse kinematics
         for (int j = 0; j < NUM_LEGS; j++) {
             printf("------------------------------\n");
-            // For crawl gait, adjust leg positions to create diagonal movement
-            // float z_offset = (j % 2 == 0) ? LEG_HEIGHT_OFFSET : -LEG_HEIGHT_OFFSET;
-
-            //   if (j == 1 || j == 4) {
-            //     z_offset *= -1;
-            // }
-            inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
-                               leg_positions[j]);
+            inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
         }
 
