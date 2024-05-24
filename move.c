@@ -190,30 +190,29 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
     // Calculate time increment
     float dt = desired_duration / num_points;
 
-    // Loop through time steps
     for (int i = 0; i <= num_points; i++) {
-        float t = (float)i / num_points;
+    float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg in a rotating tetrapod gait
-        float phase_offsets[NUM_LEGS];
-        phase_offsets[0] = fmod(t, 1.0);
-        phase_offsets[1] = fmod(t + 0.25, 1.0);
-        phase_offsets[2] = fmod(t + 0.5, 1.0);
-        phase_offsets[3] = fmod(t + 0.75, 1.0);
+    // Calculate phase offsets for each leg in a rotating tripod gait
+    float phase_offsets[NUM_LEGS];
+    phase_offsets[0] = fmod(t, 1.0);
+    phase_offsets[1] = fmod(t + 0.333, 1.0);
+    phase_offsets[2] = fmod(t + 0.666, 1.0);
+    phase_offsets[3] = 0; // Keep the fourth leg in the starting position
 
-        // Calculate positions for each leg based on the phase offsets
-        float x[NUM_LEGS], z[NUM_LEGS];
-        for (int j = 0; j < NUM_LEGS; j++) {
-            bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
-        }
+    // Calculate positions for each leg based on the phase offsets
+    float x[NUM_LEGS], z[NUM_LEGS];
+    for (int j = 0; j < NUM_LEGS; j++) {
+        bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
+    }
 
-        // Update leg positions using inverse kinematics
-        for (int j = 0; j < NUM_LEGS; j++) {
-            inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
-            printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
-        }
+    // Update leg positions using inverse kinematics
+    for (int j = 0; j < NUM_LEGS; j++) {
+        inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
+        printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
+    }
 
-        usleep((long)(dt * 1e6)); // Pause between steps
+    usleep((long)(dt * 1e6)); // Pause between steps
     }
 }
 
