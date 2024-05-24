@@ -197,10 +197,14 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
         // Calculate phase offsets for each leg in a trot gait with slight phase delay for stability
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            if (j == 0 || j == 2) {
-                phase_offsets[j] = fmod(t + 0.5, 1.0); // Trot group 1
-            } else {
-                phase_offsets[j] = fmod(t + 0.375, 1.0); // Trot group 2 with slight delay
+            if (j == 0) {
+                phase_offsets[j] = fmod(t + 0.5, 1.0); // Leg 0
+            } else if (j == 1) {
+                phase_offsets[j] = fmod(t + 0.25, 1.0); // Leg 1 with slight delay
+            } else if (j == 2) {
+                phase_offsets[j] = fmod(t + 0.75, 1.0); // Leg 2 with more delay
+            } else if (j == 3) {
+                phase_offsets[j] = fmod(t, 1.0); // Leg 3
             }
         }
 
