@@ -186,7 +186,7 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
 void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, SpiderLeg* legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
     float desired_duration = DESIRED_TIME;
 
-    desired_duration *= 0.5;
+    desired_duration *= 0.004;
     float dt = desired_duration / num_points;
 
 
