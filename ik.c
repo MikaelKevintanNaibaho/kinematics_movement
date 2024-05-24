@@ -197,3 +197,4 @@ void inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosi
     forward_kinematics(leg, angles, position_leg);
     // printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
 }
+

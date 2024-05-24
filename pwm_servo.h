@@ -9,7 +9,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#define I2C_DEVICE "/dev/i2c-1"
+#define I2C_DEVICE "/dev/i2c-2"
 #define PCA9685_SLAVE_ADDR 0x40
 #define MODE1 0x00 // Mode  register  1
 #define MODE2 0x01 // Mode  register  2
