@@ -5,7 +5,7 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
 {
     // get current position
     float startx = leg->joints[3][0];
-    float startz = leg->joints[3][2];
+    float startz = leg->joints[3][2] + 20.0;
     printf("startx = %f, startz %f\n", startx, startz);
 
     // control points
@@ -186,7 +186,6 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
 void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, SpiderLeg* legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
     float desired_duration = DESIRED_TIME;
 
-    desired_duration *= 0.004;
     float dt = desired_duration / num_points;
 
 
