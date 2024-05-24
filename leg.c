@@ -42,18 +42,18 @@ void initialize_all_legs()
 
     // Define initial angles for the stance position
     stance_angles[0][0] = 45.0;
-    stance_angles[0][1] = 90.0;
-    stance_angles[0][2] = 90.0;
+    stance_angles[0][1] = 120.0;
+    stance_angles[0][2] = 120.0;
 
     stance_angles[1][0] = 45.0;
-    stance_angles[1][1] = 90.0;
-    stance_angles[1][2] = 90.0;
+    stance_angles[1][1] = 120.0;
+    stance_angles[1][2] = 120.0;
 
     stance_angles[2][0] = 45.0;
-    stance_angles[2][1] = 90.0;
-    stance_angles[2][2] = 90.0;
+    stance_angles[2][1] = 120.0;
+    stance_angles[2][2] = 120.0;
 
     stance_angles[3][0] = 45.0;
-    stance_angles[3][1] = 90.0;
-    stance_angles[3][2] = 90.0;
+    stance_angles[3][1] = 120.0;
+    stance_angles[3][2] = 120.0;
 }
