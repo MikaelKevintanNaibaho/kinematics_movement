@@ -188,8 +188,8 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
     float dt = desired_duration / num_points;
 
     // Trot groups: {0, 3} and {1, 2}
-    int trot1[] = {0, 3};
-    int trot2[] = {1, 2};
+    int trot1[] = {0, 2};
+    int trot2[] = {1, 3};
 
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
