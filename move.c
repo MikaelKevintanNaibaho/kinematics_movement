@@ -48,16 +48,16 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
 
-    // float startx_2 = endx_forward;
-    // float startz_2 = endz_forward;
+    float startx_2 = endx_forward;
+    float startz_2 = endz_forward;
 
-    // float controlx_2 = startx_2 + stride_length / 2;
-    // float controlz_2 = startz_2 - swing_height / 2;
+    float controlx_2 = startx_2 + stride_length / 2;
+    float controlz_2 = startz_2 - swing_height / 2;
 
-    // float endx_2 = startx_2 + stride_length;
-    // float endz_2 = startz_2;
+    float endx_2 = startx_2 + stride_length;
+    float endz_2 = startz_2;
 
-    // bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
+    bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
 
     // // Append straight line for moving backward
     // bezier2d_addPoint(curve, endx_forward, endz_forward);
