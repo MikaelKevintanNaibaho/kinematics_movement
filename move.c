@@ -211,7 +211,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
         printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
     }
 
-    usleep((long)(dt * 1e6)); // Pause between steps
+    usleep((long)(dt * 1e3)); // Pause between steps
     }
 }
 
