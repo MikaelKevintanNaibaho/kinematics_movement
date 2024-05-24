@@ -198,7 +198,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
         float phase_offsets[NUM_LEGS];
         int leg_index = (int)(t * NUM_LEGS) % NUM_LEGS;
         for (int j = 0; j < NUM_LEGS; j++) {
-            phase_offsets[j] = (j == leg_index) ? fmod(t, 1.0) : fmod(t + 0.5, 1.0); // Lift one leg at a time
+            phase_offsets[j] = (j == leg_index) ? fmod(t, 1.0) : fmod(t + 0.745, 1.0); // Lift one leg at a time
         }
 
         // Calculate positions for each leg based on the phase offsets
