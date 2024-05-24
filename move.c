@@ -184,20 +184,22 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
 }
 
 void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, SpiderLeg* legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS]) {
+    // Define desired time and number of points
     float desired_duration = DESIRED_TIME;
 
+    // Calculate time increment
     float dt = desired_duration / num_points;
 
-
+    // Loop through time steps
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg in a trot gait
+        // Calculate phase offsets for each leg in a rotating tetrapod gait
         float phase_offsets[NUM_LEGS];
-        for (int j = 0; j < NUM_LEGS; j++) {
-            phase_offsets[j] = fmod(t + (j % 2) * 0.5, 1.0);
-        }
-
+        phase_offsets[0] = fmod(t, 1.0);
+        phase_offsets[1] = fmod(t + 0.25, 1.0);
+        phase_offsets[2] = fmod(t + 0.5, 1.0);
+        phase_offsets[3] = fmod(t + 0.75, 1.0);
 
         // Calculate positions for each leg based on the phase offsets
         float x[NUM_LEGS], z[NUM_LEGS];
@@ -207,12 +209,11 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points, Spide
 
         // Update leg positions using inverse kinematics
         for (int j = 0; j < NUM_LEGS; j++) {
-            printf("------------------------------\n");
             inverse_kinematics(legs[j], (float[]){x[j], legs[j]->joints[3][1], z[j]}, leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
         }
 
-        usleep((long)(dt * 1e6));
+        usleep((long)(dt * 1e6)); // Pause between steps
     }
 }
 
