@@ -30,10 +30,10 @@ struct LegThreadData
     LegPosition position_leg;
 };
 
-#define STRIDE_LENGTH 50.0
+#define STRIDE_LENGTH 100.0
 #define SWING_HEIGHT 70.0
-#define NUM_POINTS 30
-#define DESIRED_TIME 0.1
+#define NUM_POINTS 70.0
+#define DESIRED_TIME 0.0001
 #define GROUP_SIZE 2
 #define LAG_TIME 0.5
 #define NUM_PHASES 2
