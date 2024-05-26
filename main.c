@@ -35,7 +35,7 @@ int main(void)
         // Check if the switch is turned on
         if (is_program_running) {
             // If the switch is on, move forward
-            move_forward();
+            move_forward();     
             // move_left_turn();
             // move_left_turn();
         } else {
