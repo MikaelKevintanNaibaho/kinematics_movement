@@ -33,6 +33,7 @@ int main(void)
 
     while (1) {
         // Check if the switch is turned on
+        move_forward();
         if (is_program_running) {
             // If the switch is on, move forward
             move_forward();     
