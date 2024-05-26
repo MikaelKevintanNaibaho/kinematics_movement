@@ -293,7 +293,7 @@ void move_forward(void)
         print_trajectory(&curve[i], 30);
     }
 
-    while (1) {
+    while (is_program_running) {
         update_leg_trot_gait(curve, NUM_POINTS, legs, leg_positions);
         usleep(100);
     }
