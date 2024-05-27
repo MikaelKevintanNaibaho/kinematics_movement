@@ -49,7 +49,7 @@ int main(void)
 
     // set_angle_sg90(-90);
     // sleep(2);
-    set_angle_sg90(50);
+    set_angle_sg90(100);
 
     return 0;
 }
