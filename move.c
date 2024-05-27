@@ -192,11 +192,11 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg in a crawl gait
+        // Calculate phase offsets for each leg in a trot gait
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
             // Adjust phase offsets for diagonal leg movement
-            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
+            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.0 : 0.5), 1.0);
         }
 
         // Calculate positions for each leg based on the phase offsets
@@ -208,12 +208,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         // Update leg positions using inverse kinematics
         for (int j = 0; j < NUM_LEGS; j++) {
             printf("------------------------------\n");
-            // For crawl gait, adjust leg positions to create diagonal movement
-            // float z_offset = (j % 2 == 0) ? LEG_HEIGHT_OFFSET : -LEG_HEIGHT_OFFSET;
-
-            //   if (j == 1 || j == 4) {
-            //     z_offset *= -1;
-            // }
+            // For trot gait, adjust leg positions to create diagonal movement
             inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
                                leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));
@@ -222,6 +217,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         usleep((long)(dt * 1e6));
     }
 }
+
 
 void update_leg_left(struct bezier3d curve[NUM_LEGS], int num_points, SpiderLeg *legs[NUM_LEGS],
                      LegPosition leg_positions[NUM_LEGS])
