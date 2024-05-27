@@ -42,16 +42,27 @@
 
 //     return 0;
 // }
-
-int main(void)
-{
+int main() {
+    // Initialize the PCA9685 module
     PCA9685_init();
 
-    set_angle_sg90(30);
-    sleep(2);
-    set_angle_sg90(50);
-    sleep(2);
-    set_angle_sg90(70);
+    // Set the PWM frequency to 50Hz for servos
+    set_pwm_freq(50);
+
+    // Test SG90 servo on channel 0
+    int angle;
+
+    for (angle = 0; angle <= 180; angle += 30) {
+        set_sg90_angle(CAPIT_UJUNG, angle);
+        printf("Set angle to %d degrees\n", angle);
+        sleep(1); // Wait for 1 second
+    }
+
+    for (angle = 180; angle >= 0; angle -= 30) {
+        set_sg90_angle(CAPIT_UJUNG, angle);
+        printf("Set angle to %d degrees\n", angle);
+        sleep(1); // Wait for 1 second
+    }
 
     return 0;
 }

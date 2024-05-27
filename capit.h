@@ -8,7 +8,7 @@
 #define CAPIT_UJUNG 14
 #define FREQ 50
 
-void set_angle_sg90(int angle);
+void set_sg90_angle(uint8_t channel, int angle);
 
 
 
