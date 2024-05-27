@@ -192,7 +192,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg in a trot gait
+        // Calculate phase offsets for each leg in a creep gait
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
             // Adjust phase offsets for creep gait
@@ -203,12 +203,15 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         float x[NUM_LEGS], z[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
             bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
+
+            // Adjust the x position to ensure forward movement
+            x[j] += t * FORWARD_DISPLACEMENT;
         }
 
         // Update leg positions using inverse kinematics
         for (int j = 0; j < NUM_LEGS; j++) {
             printf("------------------------------\n");
-            // For trot gait, adjust leg positions to create diagonal movement
+            // For creep gait, adjust leg positions to move one leg at a time
             inverse_kinematics(legs[j], (float[]) { x[j], legs[j]->joints[3][1], z[j] },
                                leg_positions[j]);
             printf("Leg Position: %s\n", leg_position_to_string(leg_positions[j]));

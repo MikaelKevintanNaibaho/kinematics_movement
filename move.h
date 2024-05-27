@@ -37,7 +37,7 @@ struct LegThreadData
 #define GROUP_SIZE 2
 #define LAG_TIME 0.5
 #define NUM_PHASES 2
-
+#define FORWARD_DISPLACEMENT 0.01 
 #define LEG_HEIGHT_OFFSET 20.0
 
 #define PHASE_OFFSET_1 0.0 // Phase offset for leg 1
