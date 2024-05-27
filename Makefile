@@ -16,6 +16,7 @@ SRC = \
 	bezier.c \
 	interrupt.c \
 	state_machine.c \
+	cappit.c \
 
 # Object files directory
 OBJ_DIR = build/obj
