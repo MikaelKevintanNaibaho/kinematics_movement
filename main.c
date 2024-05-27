@@ -31,9 +31,6 @@ int main(void)
             // For example, you can keep the robot in its current position
             // Or you can add logic to respond to other inputs or events
         }
-
-        // Add a small delay to avoid high CPU usage
-        delay(100);
     }
 
     /*testing turn left relative functions*/
