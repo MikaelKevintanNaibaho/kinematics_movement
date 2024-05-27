@@ -50,13 +50,7 @@ int main() {
     set_pwm_freq(50);
 
     // Test SG90 servo on channel 0
-    int angle;
-
-    for (angle = 0; angle <= 90; angle += 30) {
-        set_angle_mg(CAPIT_BASE, angle);
-        printf("Set angle to %d degrees\n", angle);
-        sleep(1); // Wait for 1 second
-    }
+   set_angle_mg(CAPIT_BASE, 180);
 
     // for (angle = 90; angle >= 0; angle -= 30) {
     //     set_sg90_angle(CAPIT_BASE, angle);
