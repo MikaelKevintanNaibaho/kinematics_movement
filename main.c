@@ -53,13 +53,13 @@ int main() {
     int angle;
 
     for (angle = 0; angle <= 180; angle += 30) {
-        set_sg90_angle(CAPIT_UJUNG, angle);
+        set_sg90_angle(CAPIT_BASE, angle);
         printf("Set angle to %d degrees\n", angle);
         sleep(1); // Wait for 1 second
     }
 
     for (angle = 180; angle >= 0; angle -= 30) {
-        set_sg90_angle(CAPIT_UJUNG, angle);
+        set_sg90_angle(CAPIT_BASE, angle);
         printf("Set angle to %d degrees\n", angle);
         sleep(1); // Wait for 1 second
     }
