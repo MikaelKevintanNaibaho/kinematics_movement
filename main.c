@@ -47,7 +47,7 @@ int main(void)
 {
     PCA9685_init();
 
-    set_angle_sg90(90);
+    set_angle_sg90(-90);
     sleep(2);
     set_angle_sg90(0);
 
