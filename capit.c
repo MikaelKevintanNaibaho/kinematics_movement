@@ -23,7 +23,7 @@ void set_pwm_angle_sg90(uint8_t channel, int angle, int freq)
 
 void set_angle_sg90(int angle)
 {
-   set_pwm_angle_sg90(CAPIT_UJUNG, angle, FREQ);
+   set_pwm_angle_sg90(CAPIT_BASE, angle, FREQ);
 }
 
 
