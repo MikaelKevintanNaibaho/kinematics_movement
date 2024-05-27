@@ -137,3 +137,4 @@ void set_pwm_angle(uint8_t channel, int angle, int freq)
 
     set_pwm_freq(freq);
 }
+
