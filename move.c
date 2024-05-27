@@ -195,8 +195,8 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         // Calculate phase offsets for each leg in a trot gait
         float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
-            // Adjust phase offsets for diagonal leg movement
-            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.0 : 0.5), 1.0);
+            // Adjust phase offsets for creep gait
+            phase_offsets[j] = fmod(t + (float)j / NUM_LEGS, 1.0);
         }
 
         // Calculate positions for each leg based on the phase offsets
