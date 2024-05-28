@@ -25,7 +25,7 @@ void turun_capit(void)
 }
 void naik_capit(void)
 {
-    set_angle_mg(180);
+    set_angle_mg(90);
 }
 
 void capit(void)

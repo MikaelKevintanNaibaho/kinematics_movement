@@ -37,10 +37,7 @@ int main(void)
     // /*testing turn left relative functions*/
     // // move_left_turn();
 
-    turun_capit();
-    sleep(2);
-    naik_capit();
-    
+    capit();
 
     return 0;
 }
