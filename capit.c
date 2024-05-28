@@ -31,13 +31,13 @@ void naik_capit(void)
 void capit(void)
 {
     turun_capit();
-    usleep(500);
+    sleep(1);
     buka_capit();
 
 }
 void letak(void)
 {
     tutup_capit();
-    usleep(500);
+    sleep(1);
     naik_capit();
 }
