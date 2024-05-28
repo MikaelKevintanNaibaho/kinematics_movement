@@ -115,11 +115,11 @@ void generate_turn_left_trajectory_fl(struct bezier3d *curve, SpiderLeg *leg, fl
 
     // define control point untuk belok kiri
     float controlx = startx ;
-    float controly = starty + stride_length;
+    float controly = starty - stride_length;
     float controlz = startz + 2 * swing_height;
 
     float endx = startx;
-    float endy = starty -  stride_length;
+    float endy = starty +  stride_length;
     float endz = startz;
 
     bezier3d_generate_curve(curve, startx, starty, startz, controlx, controly, controlz, endx, endy,
