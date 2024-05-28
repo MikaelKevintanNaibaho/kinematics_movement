@@ -38,8 +38,8 @@ int main(void)
     // // move_left_turn();
 
     capit();
-    sleep(5);
-    letak();
+    // sleep(5);
+    // letak();
     
 
     return 0;
