@@ -105,27 +105,6 @@ void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float
                             endz);
 }
 
-void generate_turn_left_trajectory_fl(struct bezier3d *curve, SpiderLeg *leg, float stride_length,
-                                   float swing_height, LegPosition position_leg)
-{
-    // ambil posisi terkini pada 3d coordinate
-    float startx = leg->joints[3][0];
-    float starty = leg->joints[3][1];
-    float startz = leg->joints[3][2];
-
-    // define control point untuk belok kiri
-    float controlx = startx ;
-    float controly = starty - stride_length;
-    float controlz = startz + 2 * swing_height;
-
-    float endx = startx;
-    float endy = starty +  stride_length;
-    float endz = startz;
-
-    bezier3d_generate_curve(curve, startx, starty, startz, controlx, controly, controlz, endx, endy,
-                            endz);
-}
-
 void print_trajectory(struct bezier2d *curve, int num_points)
 {
     printf("Trajectory Points:\n");
@@ -329,12 +308,7 @@ void move_left_turn(void)
     struct bezier3d curve[NUM_LEGS];
     for(int i = 0; i < NUM_LEGS; i++) {
         bezier3d_init(&curve[i]);
-        if(leg_positions  == KANAN_DEPAN){
-            generate_turn_left_trajectory_fl(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
-        }
-        else{
-            generate_turn_left_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
-        }
+        generate_turn_left_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
         print_trajectory_3d(&curve[i], NUM_POINTS);
     }
     
