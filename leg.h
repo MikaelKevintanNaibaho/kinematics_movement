@@ -24,6 +24,8 @@
 #define FEMUR_LENGTH 78.0
 #define TIBIA_LENGTH 167.23
 
+#define SUDUT_AWAL 90.0
+
 typedef struct
 {
     char name[20];
