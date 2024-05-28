@@ -52,7 +52,7 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     float startz_2 = endz_forward;
 
     float controlx_2 = startx_2 + stride_length / 2;
-    float controlz_2 = startz_2 - swing_height / 2;
+    float controlz_2 = startz_2 - 2 * swing_height;
 
     float endx_2 = startx_2 + stride_length;
     float endz_2 = startz_2;
