@@ -14,7 +14,7 @@ void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stri
     printf("controlx = %f \t", controlx);
     float controlz = startz + 2 * swing_height;
     printf("controlz = %f\n", controlz);
-    float endx_forward = startx;
+    float endx_forward = startx + 2 * stride_length;
     float endz_forward = startz;
     // buar bezier curve
     bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
