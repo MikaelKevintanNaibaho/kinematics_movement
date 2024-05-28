@@ -97,8 +97,8 @@ void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float
     float controly = starty - stride_length;
     float controlz = startz + 2 * swing_height;
 
-    float endx = startx - stride_length;
-    float endy = starty - stride_length;
+    float endx = startx;
+    float endy = starty +  2 * stride_length;
     float endz = startz;
 
     bezier3d_generate_curve(curve, startx, starty, startz, controlx, controly, controlz, endx, endy,
