@@ -1,27 +1,43 @@
 #include "capit.h"
 
-void set_pwm_angle_mg(uint8_t channel, int angle, int freq) {
-    if (angle < 0) {
-        angle = 0;
-    } else if (angle > 180) {
-        angle = 180;
-    }
 
-    int pulse_width = MIN_PULSE_WIDTH_MG960 + ((MAX_PULSE_WIDTH_MG960 - MIN_PULSE_WIDTH_MG960) * angle / 180);
-
-    set_pwm_duty(channel, pulse_width);
-
-    set_pwm_freq(freq);
+void set_angle_mg(int angle)
+{
+    set_pwm_angle(CAPIT_BASE, angle, FREQ);
 }
 
+void set_angle_sg(int angle)
+{
+    set_pwm_angle(CAPIT_UJUNG, angle, FREQ);
+}
 
-void set_angle_mg(uint8_t channel, int angle) {
-    if (angle < 0) {
-        angle = 0;
-    } else if (angle > 180) {
-        angle = 180;
-    }
+void buka_capit(void)
+{
+    set_angle_sg(180);
+}
+void tutup_capit(void)
+{
+    set_angle_sg(80);
+}
+void turun_capit(void)
+{
+    set_angle_mg(180);
+}
+void naik_capit(void)
+{
+    set_angle_mg(90);
+}
 
-    int pulse_width = 1000 + ((2000 - 1000) * angle / 180);
-    set_pwm_duty(channel, pulse_width);
+void capit(void)
+{
+    turun_capit();
+    usleep(500);
+    buka_capit();
+
+}
+void letak(void)
+{
+    tutup_capit();
+    usleep(500);
+    naik_capit();
 }
