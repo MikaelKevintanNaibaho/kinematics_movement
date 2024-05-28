@@ -329,7 +329,7 @@ void move_left_turn(void)
     struct bezier3d curve[NUM_LEGS];
     for(int i = 0; i < NUM_LEGS; i++) {
         bezier3d_init(&curve[i]);
-        if(LegPosition  == KANAN_DEPAN){
+        if(leg_positions  == KANAN_DEPAN){
             generate_turn_left_trajectory_fl(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
         }
         else{
