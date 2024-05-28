@@ -5,7 +5,7 @@
 
 //channel
 #define CAPIT_BASE 13
-#define CAPIT_UJUNG 15
+#define CAPIT_UJUNG 14
 #define FREQ 50
 
 void set_angle_mg(int angle);
