@@ -93,12 +93,12 @@ void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float
     float startz = leg->joints[3][2];
 
     // define control point untuk belok kiri
-    float controlx = startx ;
-    float controly = starty - stride_length;
+    float controlx = startx +  2 * startx;
+    float controly = starty - stride_length / 2;
     float controlz = startz + 2 * swing_height;
 
     float endx = startx;
-    float endy = starty +  stride_length;
+    float endy = starty + stride_length;
     float endz = startz;
 
     bezier3d_generate_curve(curve, startx, starty, startz, controlx, controly, controlz, endx, endy,
@@ -229,15 +229,11 @@ void update_leg_left(struct bezier3d curve[NUM_LEGS], int num_points, SpiderLeg 
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;
     
-
+    // Define the desired gait pattern for each leg (phase offsets)
+    float phase_offsets[NUM_LEGS] = { 0.0, 0.25, 0.5, 0.75 }; // Example: Trot gait
+    
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
-
-        float phase_offsets[NUM_LEGS];
-        for (int j = 0; j < NUM_LEGS; j++) {
-            // Adjust phase offsets for diagonal leg movement
-            phase_offsets[j] = fmod(t + (j % 2 == 0 ? 0.25 : 0.75), 1.0);
-        }
 
         // Update positions for each leg based on the gait pattern
         float x[NUM_LEGS], y[NUM_LEGS], z[NUM_LEGS];
@@ -314,6 +310,7 @@ void move_left_turn(void)
     
     while(is_program_running) {
         update_leg_left(curve, NUM_POINTS, legs, leg_positions);
+        usleep(100000);
     }
 }
 
