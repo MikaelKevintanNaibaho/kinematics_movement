@@ -196,7 +196,7 @@ void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         float t = (float)i / num_points;
 
         // Define phase offsets for trot gait
-        float phase_offsets[NUM_LEGS] = { 0.0, 0.5, 0.5, 0.0 }; // Diagonal pairs
+        float phase_offsets[NUM_LEGS] = { 0.0, 0.5, 0.0, 0.5 }; // Diagonal pairs
 
         // Calculate positions for each leg based on the phase offsets
         float x[NUM_LEGS], z[NUM_LEGS];
