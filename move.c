@@ -158,15 +158,14 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     for (int i = 0; i <= num_points; i++) {
         float t = (float)i / num_points;
 
-        // Calculate phase offsets for each leg
-        float phase_offsets[NUM_LEGS];
-        for (int j = 0; j < NUM_LEGS; j++) {
-            phase_offsets[j] = fmod(t + j * (1.0 / NUM_LEGS), 1.0);
-        }
-
         // Calculate positions for each leg based on the phase offsets
         float x[NUM_LEGS], z[NUM_LEGS];
+        // Declare phase_offsets here so it's accessible throughout the loop
+        float phase_offsets[NUM_LEGS];
         for (int j = 0; j < NUM_LEGS; j++) {
+            float phase = t + (float)j / NUM_LEGS; // Adjust phase to cover the entire range [0, 1]
+            phase_offsets[j] = fmod(phase, 1.0);   // Ensure phase is in the range [0, 1]
+            phase_offsets[j] = 0.5 * (1 + sin(2 * M_PI * phase_offsets[j]));
             bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
         }
 
@@ -186,6 +185,8 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         usleep((long)(dt * 1e6));
     }
 }
+
+
 void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
                           SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
 {
@@ -285,7 +286,7 @@ void move_forward(void)
     }
 
     while (is_program_running) {
-        update_leg_trot_gait(curve, NUM_POINTS, legs, leg_positions);
+        update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
         usleep(100);
     }
 }
