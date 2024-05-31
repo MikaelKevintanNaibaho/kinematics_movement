@@ -57,7 +57,7 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
 
     // Control points for the stance phase
     float controlx_2 = startx_2 + stride_length / 2;
-    float controlz_2 = startz_2;
+    float controlz_2 = startz_2 - swing_height / 2;
 
     // End points for the stance phase
     float endx_2 = startx_2 + stride_length;
