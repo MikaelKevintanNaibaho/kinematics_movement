@@ -275,13 +275,15 @@ void move_forward(void)
     struct bezier2d curve[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curve[i]);
-        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
-            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+        // if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
+        //     generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+        //                            leg_positions[i]);
+        // } else {
+        //     generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+        //                              leg_positions[i]);
+        // }
+        generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
                                    leg_positions[i]);
-        } else {
-            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
-                                     leg_positions[i]);
-        }
     }
 
     while (is_program_running) {
