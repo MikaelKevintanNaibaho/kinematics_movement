@@ -41,19 +41,19 @@ void initialize_all_legs()
     leg_positions[3] = KANAN_DEPAN;
 
     // Define initial angles for the stance position
-    stance_angles[0][0] = 90.0;
+    stance_angles[0][0] = 45.0;
     stance_angles[0][1] = SUDUT_AWAL;
     stance_angles[0][2] = SUDUT_AWAL;
 
-    stance_angles[1][0] = 0.0;
+    stance_angles[1][0] = 45.0;
     stance_angles[1][1] = SUDUT_AWAL;
     stance_angles[1][2] = SUDUT_AWAL;
 
-    stance_angles[2][0] = 90.0;
+    stance_angles[2][0] = 45.0;
     stance_angles[2][1] = SUDUT_AWAL;
     stance_angles[2][2] = SUDUT_AWAL;
 
-    stance_angles[3][0] = 0.0;
+    stance_angles[3][0] = 45.0;
     stance_angles[3][1] = SUDUT_AWAL;
     stance_angles[3][2] = SUDUT_AWAL;
 }
