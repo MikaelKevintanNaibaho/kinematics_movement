@@ -162,7 +162,7 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         float x[NUM_LEGS], z[NUM_LEGS];
         // Declare phase_offsets here so it's accessible throughout the loop
         float phase_offsets[NUM_LEGS];
-        float phase_multiplier = 0.75;
+        float phase_multiplier = 0.5;
         for (int j = 0; j < NUM_LEGS; j++) {
             float phase = t + (float)j / NUM_LEGS; // Adjust phase to cover the entire range [0, 1]
             phase_offsets[j] = fmod(phase * phase_multiplier, 1.0); 
