@@ -41,11 +41,11 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     float startz = leg->joints[3][2];
 
     // Control points for the swing phase
-    float controlx = startx - stride_length / 2;
-    float controlz = startz + swing_height;
+    float controlx = startx + stride_length / 2;
+    float controlz = startz + 2 * swing_height;
 
     // End points for the swing phase
-    float endx_forward = startx - stride_length;
+    float endx_forward = startx + stride_length;
     float endz_forward = startz;
 
     // Generate swing phase curve
@@ -56,11 +56,11 @@ void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride
     float startz_2 = endz_forward;
 
     // Control points for the stance phase
-    float controlx_2 = startx_2 + stride_length / 2;
+    float controlx_2 = startx_2 - stride_length / 2;
     float controlz_2 = startz_2 - swing_height / 2;
 
     // End points for the stance phase
-    float endx_2 = startx_2 + stride_length;
+    float endx_2 = startx_2 - stride_length;
     float endz_2 = startz_2;
 
     // Generate stance phase curve
@@ -275,15 +275,13 @@ void move_forward(void)
     struct bezier2d curve[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curve[i]);
-        // if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
-        //     generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
-        //                            leg_positions[i]);
-        // } else {
-        //     generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
-        //                              leg_positions[i]);
-        // }
-        generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
+            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
                                    leg_positions[i]);
+        } else {
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+                                     leg_positions[i]);
+        }
     }
 
     while (is_program_running) {
