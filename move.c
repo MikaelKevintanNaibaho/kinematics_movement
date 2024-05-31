@@ -164,8 +164,8 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
         float phase_offsets[NUM_LEGS];
         float phase_multiplier = 0.5;
         for (int j = 0; j < NUM_LEGS; j++) {
-            float phase = t + (float)j / NUM_LEGS; // Adjust phase to cover the entire range [0, 1]
-            phase_offsets[j] = fmod(phase * phase_multiplier, 1.0); 
+            float phase_offset = t + (float)(j % 2) / (2.0f * NUM_LEGS); // Adjust for tripod stance
+            phase_offsets[j] = fmod(phase_offset, 1.0);
             bezier2d_getPos(&curve[j], phase_offsets[j], &x[j], &z[j]);
         }
 
