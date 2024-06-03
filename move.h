@@ -8,8 +8,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "interrupt.h"
-#include "bezier.h"
-#include "leg.h"
+#include "trajectory.h"
 
 typedef enum
 {
@@ -50,11 +49,6 @@ struct LegThreadData
 #define ROLL_THRESHOLD 5.0   // Threshold for roll deviation (degrees)
 #define LEG_ADJUSTMENT_ANGLE 2.0  // Angle to adjust leg position (degrees)
 
-// generating trajectory
-void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
-                              float swing_height, LegPosition position_leg);
-void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
-                            float swing_height, LegPosition leg_position);
 void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *leg,
                                       float stride_length);
 void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float stride_length,

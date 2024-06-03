@@ -17,6 +17,7 @@ SRC = \
 	interrupt.c \
 	state_machine.c \
 	capit.c \
+	trajectory.c \
 
 # Object files directory
 OBJ_DIR = build/obj

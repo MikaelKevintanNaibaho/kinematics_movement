@@ -1,73 +1,5 @@
 #include "move.h"
 
-void generate_walk_trajectory(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
-                              float swing_height, LegPosition position_leg)
-{
-    // get current position
-    float startx = leg->joints[3][0] - stride_length;
-    float startz = leg->joints[3][2];
-
-    // control points untuk swing
-    float controlx = startx + stride_length / 2;
-    float controlz = startz + 2 * swing_height;
-
-    //end point of swing phase
-    float endx_forward = startx + stride_length;
-    float endz_forward = startz;
-
-    // buat swing curve
-    bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
-
-    //start stance phase
-    float startx_2 = endx_forward;
-    float startz_2 = endz_forward;
-    
-    //control point stance phase
-    float controlx_2 = startx_2 - stride_length / 2;
-    float controlz_2 = startz_2 - swing_height / 2;
-
-    //end point stance phase
-    float endx_2 = startx_2 - stride_length;
-    float endz_2 = startz_2;
-
-    bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
-}
-
-// Updated generate_walk_back_leg function
-void generate_walk_back_leg(struct bezier2d *curve, SpiderLeg *leg, float stride_length,
-                            float swing_height, LegPosition leg_position)
-{
-    float startx = leg->joints[3][0];
-    float startz = leg->joints[3][2];
-
-    // Control points for the swing phase
-    float controlx = startx - stride_length / 2;
-    float controlz = startz + 2 * swing_height;
-
-    // End points for the swing phase
-    float endx_forward = startx - stride_length;
-    float endz_forward = startz;
-
-    // Generate swing phase curve
-    bezier2d_generate_curve(curve, startx, startz, controlx, controlz, endx_forward, endz_forward);
-
-    // Starting points for the stance phase
-    float startx_2 = endx_forward;
-    float startz_2 = endz_forward;
-
-    // Control points for the stance phase
-    float controlx_2 = startx_2 + stride_length / 2;
-    float controlz_2 = startz_2 - swing_height / 2;
-
-    // End points for the stance phase
-    float endx_2 = startx_2 + stride_length;
-    float endz_2 = startz_2;
-
-    // Generate stance phase curve
-    bezier2d_generate_curve(curve, startx_2, startz_2, controlx_2, controlz_2, endx_2, endz_2);
-}
-
-
 void bezier2d_generate_straight_back(struct bezier2d *stright_back, float startx, float startz,
                                      float endx, float endy)
 {
@@ -277,7 +209,7 @@ void move_forward(void)
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&curve[i]);
         if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
-            generate_walk_back_leg(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+            generate_walk_back_leg_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
                                    leg_positions[i]);
         } else {
             generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
