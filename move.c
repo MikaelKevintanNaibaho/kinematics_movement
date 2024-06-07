@@ -205,23 +205,49 @@ void stand_position(void)
 
 void move_forward(void)
 {
-    struct bezier2d curve[NUM_LEGS];
+    struct bezier2d swing_curve[NUM_LEGS];
+    struct bezier2d stance_curve[NUM_LEGS];
+    
+    // Generate swing and stance trajectories for each leg
     for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&curve[i]);
-        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
-            generate_walk_back_leg_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
-                                   leg_positions[i]);
-        } else {
-            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
-                                     leg_positions[i]);
-        }
+        bezier2d_init(&swing_curve[i]);
+        bezier2d_init(&stance_curve[i]);
+        generate_swing_phase(&swing_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
+                             STRIDE_LENGTH, SWING_HEIGHT, leg_positions[i]);
+        generate_stance_phase(&stance_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
+                              STRIDE_LENGTH, leg_positions[i]);
     }
 
+    float phase_offsets[NUM_LEGS] = { 0.0, 0.5, 0.0, 0.5 }; // Diagonal pairs
+    
+    float t = 0.0; // Initialize t
+    
     while (is_program_running) {
-        update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
-        usleep(100);
+        // Calculate positions for each leg based on the phase offsets
+        float x[NUM_LEGS], z[NUM_LEGS];
+        for (int i = 0; i < NUM_LEGS; i++) {
+            float phase_offset = fmod(t + phase_offsets[i], 1.0);
+            struct bezier2d *curve;
+            if (i % 2 == 0) { // If even index, use swing curve
+                curve = &swing_curve[i];
+            } else { // If odd index, use stance curve
+                curve = &stance_curve[i];
+            }
+            bezier2d_getPos(curve, phase_offset, &x[i], &z[i]);
+        }
+
+        // Update leg positions using inverse kinematics
+        for (int i = 0; i < NUM_LEGS; i++) {
+            inverse_kinematics(legs[i], (float[]) { x[i], legs[i]->joints[3][1], z[i] }, leg_positions[i]);
+        }
+
+        // Increment t for the next iteration
+        t += 0.01; // Adjust as needed
+
+        usleep(10000); // Adjust as needed
     }
 }
+
 
 void move_left_turn(void)
 {
