@@ -78,6 +78,7 @@ int main(void) {
 
     for (int i = 0; i <= 12; i++) {
         calibrate_servo(i);
+        adjust_servo(i, 0);
     }
 
     return 0;
