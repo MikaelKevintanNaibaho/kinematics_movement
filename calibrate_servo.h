@@ -1,0 +1,19 @@
+#ifndef CALIBRATE_SERVO_H
+#define CALIBRATE_SERVO_H
+
+#include "pwm_servo.h"
+
+#define SERVO_CHANNEL_1 1
+#define SERVO_CHANNEL_2 2
+#define SERVO_CHANNEL_3 3
+#define SERVO_CHANNEL_4 4
+#define SERVO_CHANNEL_5 5
+#define SERVO_CHANNEL_6 6
+#define SERVO_CHANNEL_7 7
+#define SERVO_CHANNEL_8 8
+#define SERVO_CHANNEL_9 9
+#define SERVO_CHANNEL_10 10
+#define SERVO_CHANNEL_11 11
+#define SERVO_CHANNEL_12 12
+
+#endif //CALIBRATE_SERVO_H
