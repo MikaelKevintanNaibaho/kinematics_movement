@@ -1,7 +1,5 @@
 #include "calibrate_servo.h"
 
-struct CalibrationData calibration_data[12];
-
 void set_zero(void) {
     set_pwm_angle(SERVO_CHANNEL_1, 0);
     set_pwm_angle(SERVO_CHANNEL_2, 0);
@@ -24,18 +22,21 @@ void set_pwm_angle_manual(uint8_t channel, int pulse_width)
 
 void calibrate_servo(uint8_t channel)
 {
-    int min_pulse_width;
+    int min_pulse_width, max_pulse_width;
     char done;
     do {
-       int min_pulse_width;
-        printf("Calibrating minimum pulse width for channel %d\n", channel);
         // Set servo to minimum position
         printf("Set servo to minimum position and enter pulse width: ");
         min_pulse_width = read_int_from_terminal();
         set_pwm_angle_manual(channel, min_pulse_width);
-        printf("Channel %d - Min Pulse Width: %d", channel, min_pulse_width);
-        // Save the minimum pulse width to calibration data
-        calibration_data[channel - 1].min_pulse_width = min_pulse_width;
+
+        // Set servo to maximum position
+        printf("Set servo to maximum position and enter pulse width: ");
+        max_pulse_width = read_int_from_terminal();
+        set_pwm_angle_manual(channel, max_pulse_width);
+
+        // Print the calibration values
+        printf("Channel %d - Min Pulse Width: %d, Max Pulse Width: %d\n", channel, min_pulse_width, max_pulse_width);
         printf("Are you satisfied with these values? (y/n): ");
         done = read_char_from_terminal();
     } while (done != 'y' && done != 'Y');
@@ -70,20 +71,6 @@ char read_char_from_terminal()
     return value;
 }
 
-void save_calibration_data(const char *filename, struct CalibrationData *calibration_data, size_t size) {
-    FILE *file = fopen(filename, "wb"); // Open the file in binary write mode
-    if (file == NULL) {
-        perror("Error opening file");
-        exit(EXIT_FAILURE);
-    }
-
-    // Write the calibration data array to the file
-    fwrite(calibration_data, sizeof(struct CalibrationData), size, file);
-
-    // Close the file
-    fclose(file);
-}
-
 int main(void) {
     PCA9685_init();
 
@@ -92,8 +79,6 @@ int main(void) {
     for (int i = 0; i <= 12; i++) {
         calibrate_servo(i);
     }
-
-    save_calibration_data("calibration_data.bin", calibration_data, sizeof(calibration_data) / sizeof(calibration_data[0]));
 
     return 0;
 }
