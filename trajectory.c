@@ -63,7 +63,7 @@ void generate_walk_back_leg_trajectory(struct bezier2d *curve, SpiderLeg *leg, f
     float startz_swing = leg->joints[3][2];
 
     //buat swing phase
-    generate_swing_phase(curve, startx_swing, startz_swing, stride_length, swing_height, BACK);
+    generate_swing_phase(curve, startx_swing, startz_swing, stride_length, swing_height + 20, BACK);
 
     //update start position untuk stance phase
     float startx_stance = startx_swing - stride_length;
