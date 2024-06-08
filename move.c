@@ -227,27 +227,25 @@ void move_forward(void)
     for (int i = 0; i < NUM_LEGS; i++) {
         bezier2d_init(&swing_curve[i]);
         bezier2d_init(&stance_curve[i]);
-        if (leg_positions == KIRI_DEPAN || leg_positions == KANAN_DEPAN){
+        if (leg_positions[i] == KIRI_DEPAN || leg_positions[i] == KANAN_DEPAN) {
             generate_swing_phase(&swing_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                             STRIDE_LENGTH, SWING_HEIGHT, FRONT);
+                                 STRIDE_LENGTH, SWING_HEIGHT, 1);
             generate_stance_phase(&stance_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                              STRIDE_LENGTH, FRONT);
-        } else{
+                                  STRIDE_LENGTH, 1);
+        } else {
             generate_swing_phase(&swing_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                             STRIDE_LENGTH, SWING_HEIGHT, BACK);
+                                 STRIDE_LENGTH, SWING_HEIGHT, -1);
             generate_stance_phase(&stance_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                              STRIDE_LENGTH, BACK);
+                                  STRIDE_LENGTH, -1);
         }
-        
     }
 
     while (is_program_running) {
-        if (leg_positions == KIRI_DEPAN || leg_positions == KANAN_DEPAN) {
-
-        }
         update_leg_trot_gait(swing_curve, stance_curve, NUM_POINTS, legs, leg_positions);
+        usleep(10000);
     }
 }
+
 
 
 
