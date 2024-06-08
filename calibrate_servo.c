@@ -32,9 +32,12 @@ void calibrate_servo(uint8_t channel)
         // Set servo to minimum position
         printf("Set servo to minimum position and enter pulse width: ");
         min_pulse_width = read_int_from_terminal();
-        set_pwm_duty(channel, min_pulse_width);
+        set_pwm_angle_manual(channel, min_pulse_width);
+        printf("Channel %d - Min Pulse Width: %d", channel, min_pulse_width);
         // Save the minimum pulse width to calibration data
         calibration_data[channel - 1].min_pulse_width = min_pulse_width;
+        printf("Are you satisfied with these values? (y/n): ");
+        done = read_char_from_terminal();
     } while (done != 'y' && done != 'Y');
 }
 
