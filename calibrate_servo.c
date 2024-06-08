@@ -42,6 +42,21 @@ void calibrate_servo(uint8_t channel)
     } while (done != 'y' && done != 'Y');
 }
 
+void adjust_servo(uint8_t channel, int angle)
+{
+    if (angle < 0) {
+        angle = 0;
+    } else if (angle > 180) {
+        angle = 180;
+    }
+
+    int min_pulse_width = calibration_data[channel - 1].min_pulse_width;
+    int max_pulse_width = calibration_data[channel - 1].max_pulse_width;
+
+    int pulse_width = min_pulse_width + ((max_pulse_width - min_pulse_width) * angle / 180);
+    set_pwm_duty(channel, pulse_width);
+}
+
 int read_int_from_terminal()
 {
     int value;
@@ -63,6 +78,7 @@ int main(void) {
 
     for (int i = 0; i <= 12; i++) {
         calibrate_servo(i);
+        adjust_servo(i, 0);
     }
 
     return 0;
