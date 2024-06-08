@@ -2,6 +2,7 @@
 #define CALIBRATE_SERVO_H
 
 #include "pwm_servo.h"
+#include <stdlib.h>
 
 #define SERVO_CHANNEL_1 1
 #define SERVO_CHANNEL_2 2

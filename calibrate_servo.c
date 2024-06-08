@@ -1,5 +1,7 @@
 #include "calibrate_servo.h"
 
+struct CalibrationData calibration_data[12];
+
 void set_zero(void) {
     set_pwm_angle(SERVO_CHANNEL_1, 0);
     set_pwm_angle(SERVO_CHANNEL_2, 0);
@@ -65,6 +67,20 @@ char read_char_from_terminal()
     return value;
 }
 
+void save_calibration_data(const char *filename, struct CalibrationData *calibration_data, size_t size) {
+    FILE *file = fopen(filename, "wb"); // Open the file in binary write mode
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    // Write the calibration data array to the file
+    fwrite(calibration_data, sizeof(struct CalibrationData), size, file);
+
+    // Close the file
+    fclose(file);
+}
+
 int main(void) {
     PCA9685_init();
 
@@ -74,7 +90,7 @@ int main(void) {
         calibrate_servo(i);
     }
 
-    save_calibration_data("calibration_data.bin", calibration_data);
+    save_calibration_data("calibration_data.bin", calibration_data, sizeof(calibration_data) / sizeof(calibration_data[0]));
 
     return 0;
 }
