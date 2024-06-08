@@ -118,44 +118,29 @@ void update_leg_wave_gait(struct bezier2d curve[NUM_LEGS], int num_points,
     }
 }
 
-void update_leg_trot_gait(struct bezier2d swing_curve[NUM_LEGS], struct bezier2d stance_curve[NUM_LEGS], int num_points,
+
+void update_leg_trot_gait(struct bezier2d curve[NUM_LEGS], int num_points,
                           SpiderLeg *legs[NUM_LEGS], LegPosition leg_positions[NUM_LEGS])
 {
     float desired_duration = DESIRED_TIME;
     float dt = desired_duration / num_points;
 
-    float t = 0.0;
+    for (int i = 0; i <= num_points; i++) {
+        float t = (float)i / num_points;
 
-    while (is_program_running) {
         // Define phase offsets for trot gait
         float phase_offsets[NUM_LEGS] = { 0.0, 0.5, 0.0, 0.5 }; // Diagonal pairs
 
         // Calculate positions for each leg based on the phase offsets
         float x[NUM_LEGS], z[NUM_LEGS];
-        for (int i = 0; i < NUM_LEGS; i++) {
-            float phase_offset = fmod(t + phase_offsets[i], 1.0);
-            struct bezier2d *curve;
-            if (phase_offset < 0.5) {
-                // Swing phase
-                curve = &swing_curve[i];
-                phase_offset *= 2.0; // Normalize to 0-1 range for the swing phase
-            } else {
-                // Stance phase
-                curve = &stance_curve[i];
-                phase_offset = (phase_offset - 0.5) * 2.0; // Normalize to 0-1 range for the stance phase
-            }
-            bezier2d_getPos(curve, phase_offset, &x[i], &z[i]);
+        for (int j = 0; j < NUM_LEGS; j++) {
+            float phase_offset = fmod(t + phase_offsets[j], 1.0);
+            bezier2d_getPos(&curve[j], phase_offset, &x[j], &z[j]);
         }
 
         // Update leg positions using inverse kinematics
-        for (int i = 0; i < NUM_LEGS; i++) {
-            inverse_kinematics(legs[i], (float[]){ x[i], legs[i]->joints[3][1], z[i] }, leg_positions[i]);
-        }
-
-        // Increment t for the next iteration
-        t += dt;
-        if (t >= 1.0) {
-            t = 0.0; // Reset t after a complete cycle
+        for (int j = 0; j < NUM_LEGS; j++) {
+            inverse_kinematics(legs[j], (float[]){ x[j], legs[j]->joints[3][1], z[j] }, leg_positions[j]);
         }
 
         usleep((long)(dt * 1e6));
@@ -220,34 +205,23 @@ void stand_position(void)
 
 void move_forward(void)
 {
-    struct bezier2d swing_curve[NUM_LEGS];
-    struct bezier2d stance_curve[NUM_LEGS];
-
-    // Generate swing and stance trajectories for each leg
+    struct bezier2d curve[NUM_LEGS];
     for (int i = 0; i < NUM_LEGS; i++) {
-        bezier2d_init(&swing_curve[i]);
-        bezier2d_init(&stance_curve[i]);
-        if (leg_positions[i] == KIRI_DEPAN || leg_positions[i] == KANAN_DEPAN) {
-            generate_swing_phase(&swing_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                                 STRIDE_LENGTH, SWING_HEIGHT, 1);
-            generate_stance_phase(&stance_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                                  STRIDE_LENGTH, 1);
+        bezier2d_init(&curve[i]);
+        if (leg_positions[i] == KANAN_BELAKANG || leg_positions[i] == KIRI_BELAKANG) {
+            generate_walk_back_leg_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+                                   leg_positions[i]);
         } else {
-            generate_swing_phase(&swing_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                                 STRIDE_LENGTH, SWING_HEIGHT, -1);
-            generate_stance_phase(&stance_curve[i], legs[i]->joints[3][0], legs[i]->joints[3][2],
-                                  STRIDE_LENGTH, -1);
+            generate_walk_trajectory(&curve[i], legs[i], STRIDE_LENGTH, SWING_HEIGHT,
+                                     leg_positions[i]);
         }
     }
 
     while (is_program_running) {
-        update_leg_trot_gait(swing_curve, stance_curve, NUM_POINTS, legs, leg_positions);
-        usleep(10000);
+        update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+        usleep(100);
     }
 }
-
-
-
 
 void move_left_turn(void)
 {
