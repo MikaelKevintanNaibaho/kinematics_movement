@@ -22,5 +22,10 @@ struct CalibrationData
     int max_pulse_width;
 }calibration_data[12];
 
+void set_zero(void);
+void set_pwm_angle_manual(uint8_t channel, int pulse_width);
+void calibrate_servo(uint8_t channel);
+int read_int_from_terminal();
+char read_char_from_terminal();
 
 #endif //CALIBRATE_SERVO_H
