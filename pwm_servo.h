@@ -31,8 +31,8 @@
 #define PRE_SCALE 0xFE // prescaler for output frequency
 #define CLOCK_FREQ 25000000.0 // 25MHz default osc clock
 #define ANGLE_RANGE 180
-#define MIN_PULSE_WIDTH 500
-#define MAX_PULSE_WIDTH 2500
+#define MIN_PULSE_WIDTH 400
+#define MAX_PULSE_WIDTH 2600
 
 extern int i2c_fd;
 
