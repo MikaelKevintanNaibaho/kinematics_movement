@@ -16,4 +16,11 @@
 #define SERVO_CHANNEL_11 11
 #define SERVO_CHANNEL_12 12
 
+struct CalibrationData
+{
+    int min_pulse_width;
+    int max_pulse_width;
+}calibration_data[12];
+
+
 #endif //CALIBRATE_SERVO_H
