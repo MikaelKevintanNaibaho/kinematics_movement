@@ -22,23 +22,17 @@ void set_pwm_angle_manual(uint8_t channel, int pulse_width)
 
 void calibrate_servo(uint8_t channel)
 {
-    int min_pulse_width, max_pulse_width;
+    int min_pulse_width;
     char done;
     do {
+       int min_pulse_width;
+        printf("Calibrating minimum pulse width for channel %d\n", channel);
         // Set servo to minimum position
         printf("Set servo to minimum position and enter pulse width: ");
         min_pulse_width = read_int_from_terminal();
-        set_pwm_angle_manual(channel, min_pulse_width);
-
-        // Set servo to maximum position
-        printf("Set servo to maximum position and enter pulse width: ");
-        max_pulse_width = read_int_from_terminal();
-        set_pwm_angle_manual(channel, max_pulse_width);
-
-        // Print the calibration values
-        printf("Channel %d - Min Pulse Width: %d, Max Pulse Width: %d\n", channel, min_pulse_width, max_pulse_width);
-        printf("Are you satisfied with these values? (y/n): ");
-        done = read_char_from_terminal();
+        set_pwm_duty(channel, min_pulse_width);
+        // Save the minimum pulse width to calibration data
+        calibration_data[channel - 1].min_pulse_width = min_pulse_width;
     } while (done != 'y' && done != 'Y');
 }
 
@@ -78,8 +72,9 @@ int main(void) {
 
     for (int i = 0; i <= 12; i++) {
         calibrate_servo(i);
-        adjust_servo(i, 0);
     }
+
+    save_calibration_data("calibration_data.bin", calibration_data);
 
     return 0;
 }
