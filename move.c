@@ -218,7 +218,7 @@ void move_forward(void)
     }
 
     while (is_program_running) {
-        update_leg_wave_gait(curve, NUM_POINTS, legs, leg_positions);
+        update_leg_trot_gait(curve, NUM_POINTS, legs, leg_positions);
         usleep(100);
     }
 }
