@@ -1,74 +1,34 @@
-# Compiler
-CC = gcc
+# Directories
+SRC_DIR = src
+TEST_DIR = tests
 
-# Compiler flags
-CFLAGS = -Wall -Wextra -std=c11 -g 
-LDFLAGS = -lgsl -lgslcblas -lwiringPi -lm
+# Targets
+.PHONY: all clean format check test
 
-# Source files
-SRC = \
-	main.c \
-	pwm_servo.c \
-	ik.c \
-	move.c \
-	dh.c \
-	leg.c \
-	bezier.c \
-	interrupt.c \
-	state_machine.c \
-	capit.c \
-	trajectory.c \
+all: $(SRC_DIR)/pwm_servo $(TEST_DIR)/test
 
-# Object files directory
-OBJ_DIR = build/obj
+# Build the main executable
+$(SRC_DIR)/pwm_servo:
+	$(MAKE) -C $(SRC_DIR)
 
-# Executable directory
-BIN_DIR = build/bin
+# Build the tests
+$(TEST_DIR)/test:
+	$(MAKE) -C $(TEST_DIR)
 
-# Object files
-OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
+# Run tests
+test: 
+	$(MAKE) -C $(SRC_DIR) test
+	$(MAKE) -C $(TEST_DIR) test
 
-# Executable name
-TARGET = $(BIN_DIR)/pwm_servo
+# Clean everything
+clean:
+	$(MAKE) -C $(SRC_DIR) clean
+	$(MAKE) -C $(TEST_DIR) clean
 
-# Formatting and Static Analysis tools
-CLANG_FORMAT = clang-format-12
-CPPCHECK = cppcheck
-
-CPPCHECK_INCLUDES = ./
-
-CPPCHECK_FLAGS = \
-	--quiet --enable=all --error-exitcode=1 \
-	--inline-suppr \
-	--suppress=missingIncludeSystem \
-	--suppress=unmatchedSuppression \
-	--suppress=unusedFunction \
-	$(addprefix -I,$(CPPCHECK_INCLUDES))
-
-.PHONY: all clean format check
-
-all: $(TARGET)
-
-$(TARGET): $(OBJ) | $(BIN_DIR)
-	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET) $(LDFLAGS)
-
-$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
-
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
-
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
-format: .clang-format
-	$(CLANG_FORMAT) -i $(SRC) $(wildcard *.h)
+format:
+	$(MAKE) -C $(SRC_DIR) format
+	$(MAKE) -C $(TEST_DIR) format
 
 cppcheck:
-	$(CPPCHECK) $(CPPCHECK_FLAGS)  $(SRC) $(wildcard *.h)
+	$(MAKE) -C $(SRC_DIR) cppcheck
 
-clean:
-	rm -rf build
-
-debug: $(TARGET)
-	gdb $(TARGET)

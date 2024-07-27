@@ -1,4 +1,5 @@
 #include "ik.h"
+#include "i2c_interface.h"
 
 float degrees(float rad)
 {
@@ -32,14 +33,14 @@ float *get_target(SpiderLeg *leg)
     return leg->joints[3];
 }
 
-void set_angles(SpiderLeg *leg, float angles[3])
+void set_angles(SpiderLeg *leg, const float angles[3])
 {
     leg->theta1 = normalize_angle(angles[0]);
     leg->theta2 = normalize_angle(angles[1]);
     leg->theta3 = normalize_angle(angles[2]);
 
     for (int i = 0; i < 3; i++) {
-        set_pwm_angle(leg->servo_channles[i], (int)angles[i]);
+        set_pwm_angle(i2c_iface, leg->servo_channles[i], (int)angles[i]);
         printf("theta%d: %.2f degrees\n", i + 1, angles[i]);
     }
 }
@@ -55,17 +56,29 @@ int angles_equal(const float angles1[3], const float angles2[3])
     return 1;
 }
 
+// calculate maximum angle change per step based on speed
+float calculate_delta_theta(int speed)
+{
+    return DELTA_THETA_MAX * (float)speed / 1.0;
+}
+
+void calculate_delta_direction(const float target_angles[3], const float current_angles[3],
+                               float delta_directions[3])
+{
+    for (int i = 0; i < 3; i++) {
+        delta_directions[i] = (target_angles[i] > current_angles[i]) ? 1.0 : -1.0;
+    }
+}
+
 void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed)
 {
     float current_angles[3] = { leg->theta1, leg->theta2, leg->theta3 };
 
     // hitung max change dalam angle per step berdasarkan speed
-    float delta_theta = DELTA_THETA_MAX * (float)speed / 1.0;
-
+    float delta_theta = calculate_delta_theta(speed);
     float delta_directions[3];
-    for (int i = 0; i < 3; i++) {
-        delta_directions[i] = (target_angles[i] > current_angles[i]) ? 1.0 : -1.0;
-    }
+
+    calculate_delta_direction(target_angles, current_angles, delta_directions);
 
     // adjust angle gradually toward the target
     while (!angles_equal(current_angles, target_angles)) {
@@ -88,7 +101,17 @@ void move_to_angle(SpiderLeg *leg, float target_angles[3], int speed)
     }
 }
 
-void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_leg)
+// Compute DH parameters
+void compute_dh_params(DHParameters params_array[NUM_LINKS], float theta1, float theta2,
+                       float theta3)
+{
+    init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
+    init_DH_params(&params_array[1], radians(0.0), FEMUR_LENGTH, 0.0, theta2);
+    init_DH_params(&params_array[2], radians(-90.0), TIBIA_LENGTH, 0.0, (theta3 - radians(90.0)));
+    init_DH_params(&params_array[3], radians(90.0), 0.0, 0.0, radians(-90.0));
+}
+
+void forward_kinematics(SpiderLeg *leg, const float angles[3], LegPosition position_leg)
 {
     // Convert to radians
     float theta1 = radians(angles[0]);
@@ -116,11 +139,7 @@ void forward_kinematics(SpiderLeg *leg, float angles[3], LegPosition position_le
     theta1 += radians(zero_offset);
 
     DHParameters params_array[NUM_LINKS];
-    init_DH_params(&params_array[0], radians(90.0), COXA_LENGTH, 0.0, (theta1 + radians(90.0)));
-    init_DH_params(&params_array[1], radians(0.0), FEMUR_LENGTH, 0.0, theta2);
-    init_DH_params(&params_array[2], radians(-90.0), TIBIA_LENGTH, 0.0, (theta3 - radians(90.0)));
-    init_DH_params(&params_array[3], radians(90.0), 0.0, 0.0, radians(-90.0));
-
+    compute_dh_params(params_array, theta1, theta2, theta3);
     gsl_matrix *trans_matrix = gsl_matrix_alloc(4, 4);
     calculate_DH_transformation(params_array, NUM_LINKS, trans_matrix);
 
@@ -195,6 +214,5 @@ void inverse_kinematics(SpiderLeg *leg, const float target_positions[3], LegPosi
     float angles[3] = { theta1, theta2, theta3 };
     set_angles(leg, angles);
     forward_kinematics(leg, angles, position_leg);
-    // printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
+    printf("theta1 = %.2f, theta2 = %.2f, theta3 = %.2f\n", theta1, theta2, theta3);
 }
-
