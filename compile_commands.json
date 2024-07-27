@@ -1,0 +1,211 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/main.o",
+      "main.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/main.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/pca9685.o",
+      "pca9685.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/pca9685.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/pca9685.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/ik.o",
+      "ik.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/ik.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/ik.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/move.o",
+      "move.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/move.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/move.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/dh.o",
+      "dh.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/dh.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/dh.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/leg.o",
+      "leg.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/leg.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/leg.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/bezier.o",
+      "bezier.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/bezier.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/bezier.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/interrupt.o",
+      "interrupt.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/interrupt.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/interrupt.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/state_machine.o",
+      "state_machine.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/state_machine.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/state_machine.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/trajectory.o",
+      "trajectory.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/trajectory.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/trajectory.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/i2c_utils.o",
+      "i2c_utils.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/i2c_utils.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/i2c_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-g",
+      "-c",
+      "-o",
+      "../build/obj/i2c_interface.o",
+      "i2c_interface.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/src",
+    "file": "/home/mikael/code/c/kinematics_movement/src/i2c_interface.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/obj/i2c_interface.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-I../src",
+      "-I/usr/local/include",
+      "-c",
+      "-o",
+      "../build/test//obj/test_bezier2d.o",
+      "test_bezier2d.c"
+    ],
+    "directory": "/home/mikael/code/c/kinematics_movement/tests",
+    "file": "/home/mikael/code/c/kinematics_movement/tests/test_bezier2d.c",
+    "output": "/home/mikael/code/c/kinematics_movement/build/test/obj/test_bezier2d.o"
+  }
+]

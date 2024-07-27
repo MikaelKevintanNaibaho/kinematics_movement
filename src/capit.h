@@ -1,9 +1,9 @@
 #ifndef CAPIT_H
 #define CAPIT_H
 
-#include "pwm_servo.h"
+#include "pca9685.h"
 
-//channel
+// channel
 #define CAPIT_BASE 13
 #define CAPIT_UJUNG 14
 #define FREQ 50
@@ -19,4 +19,4 @@ void naik_capit(void);
 void capit(void);
 void letak(void);
 
-#endif //CAPIT_H
+#endif // CAPIT_H

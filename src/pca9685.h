@@ -1,14 +1,8 @@
-#ifndef PWM_SERVO_H
-#define PWM_SERVO_H
+#ifndef PCA9685_H
+#define PCA9685_H
 
-#include <fcntl.h>
-#include <linux/i2c-dev.h>
-#include <math.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
+#include "i2c_interface.h"
 #define I2C_DEVICE "/dev/i2c-2"
 #define PCA9685_SLAVE_ADDR 0x40
 #define MODE1 0x00 // Mode  register  1
@@ -34,17 +28,11 @@
 #define MIN_PULSE_WIDTH 400
 #define MAX_PULSE_WIDTH 2600
 
-extern int i2c_fd;
+int pca9685_init(I2CInterface *i2c_iface);
+void set_pwm_freq(I2CInterface *i2c_iface, int freq);
+void set_pwm_duty(I2CInterface *i2c_iface, uint8_t channel, int value);
+void set_pwm(I2CInterface *i2c_iface, uint8_t channel, int on_value, int off_value);
+int get_pwm(I2CInterface *i2c_iface, uint8_t channel);
+void set_pwm_angle(I2CInterface *i2c_iface, uint8_t channel, int angle);
 
-void PCA9685_init();
-void write_byte(uint8_t reg, uint8_t val);
-void set_pwm_freq(int freq);
-void set_pwm_duty(uint8_t channel, int value);
-void set_pwm(uint8_t channel, int on_value, int off_value);
-void set_pwm_angle(uint8_t channel, int angle);
-
-int get_pwm(uint8_t channel);
-
-uint8_t read_byte(uint8_t reg);
-
-#endif /*PWM_SERVO_H*/
+#endif // PCA9685_H
