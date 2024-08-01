@@ -4,8 +4,9 @@
 
 // Use the global i2c_iface for I2C operations
 
-int pca9685_init(I2CInterface *i2c_iface)
+int pca9685_init(void)
 {
+    I2CInterface *i2c_iface = get_i2c_interface();
     if (i2c_iface->open(I2C_DEVICE) < 0) {
         return -1;
     }
@@ -20,14 +21,15 @@ int pca9685_init(I2CInterface *i2c_iface)
         return -1;
     }
 
-    set_pwm_freq(i2c_iface, 50);
+    set_pwm_freq(50);
 
     i2c_iface->close();
     return 0;
 }
 
-void set_pwm_freq(I2CInterface *i2c_iface, int freq)
+void set_pwm_freq(int freq)
 {
+    I2CInterface *i2c_iface = get_i2c_interface();
     uint8_t prescale_val = (uint8_t)((CLOCK_FREQ / 4096 * freq) - 1);
     if (i2c_iface->open(I2C_DEVICE) < 0) {
         return;
@@ -41,13 +43,14 @@ void set_pwm_freq(I2CInterface *i2c_iface, int freq)
     i2c_iface->close();
 }
 
-void set_pwm_duty(I2CInterface *i2c_iface, uint8_t channel, int value)
+void set_pwm_duty(uint8_t channel, int value)
 {
-    set_pwm(i2c_iface, channel, 0, value);
+    set_pwm(channel, 0, value);
 }
 
-void set_pwm(I2CInterface *i2c_iface, uint8_t channel, int on_value, int off_value)
+void set_pwm(uint8_t channel, int on_value, int off_value)
 {
+    I2CInterface *i2c_iface = get_i2c_interface();
     if (i2c_iface->open(I2C_DEVICE) < 0) {
         return;
     }
@@ -60,8 +63,9 @@ void set_pwm(I2CInterface *i2c_iface, uint8_t channel, int on_value, int off_val
     i2c_iface->close();
 }
 
-int get_pwm(I2CInterface *i2c_iface, uint8_t channel)
+int get_pwm(uint8_t channel)
 {
+    I2CInterface *i2c_iface = get_i2c_interface();
     int channel_value = 0;
     if (i2c_iface->open(I2C_DEVICE) < 0) {
         return 0;
@@ -75,7 +79,7 @@ int get_pwm(I2CInterface *i2c_iface, uint8_t channel)
     return channel_value;
 }
 
-void set_pwm_angle(I2CInterface *i2c_iface, uint8_t channel, int angle)
+void set_pwm_angle(uint8_t channel, int angle)
 {
     if (angle < 0) {
         angle = 0;
@@ -85,5 +89,5 @@ void set_pwm_angle(I2CInterface *i2c_iface, uint8_t channel, int angle)
 
     int pulse_width = MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * angle / 180);
 
-    set_pwm_duty(i2c_iface, channel, pulse_width);
+    set_pwm_duty(channel, pulse_width);
 }

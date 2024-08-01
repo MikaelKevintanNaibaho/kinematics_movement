@@ -1,6 +1,7 @@
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
+#include "gpio_interface.h"
 #include <stdio.h>
 
 #define SWITCH_PIN 17

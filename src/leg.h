@@ -41,8 +41,7 @@ typedef struct
     int servo_channles[3];
 } SpiderLeg;
 
-typedef enum
-{
+typedef enum {
     KANAN_DEPAN,
     KANAN_BELAKANG,
     KIRI_BELAKANG,

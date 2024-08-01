@@ -19,4 +19,4 @@ typedef enum {
 void handle_event(RobotEvent event);
 void trigger_event(RobotEvent event);
 
-#endif //STATE_MACHINE_H
+#endif // STATE_MACHINE_H

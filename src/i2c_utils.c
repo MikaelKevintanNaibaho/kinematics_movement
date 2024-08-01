@@ -1,4 +1,5 @@
 // i2c_utils.c
+#include "i2c_utils.h"
 #include "i2c_interface.h"
 #include <fcntl.h>
 #include <linux/i2c-dev.h>
@@ -60,18 +61,14 @@ static uint8_t i2c_read_byte(uint8_t reg)
     return buf[0];
 }
 
-
 // Define the default I2C interface
-static I2CInterface real_i2c_interface = {
-    .open = i2c_open,
-    .set_slave_address = i2c_set_slave_address,
-    .close = i2c_close,
-    .write_byte = i2c_write_byte,
-    .read_byte = i2c_read_byte
-};
+static I2CInterface real_i2c_interface = { .open = i2c_open,
+                                           .set_slave_address = i2c_set_slave_address,
+                                           .close = i2c_close,
+                                           .write_byte = i2c_write_byte,
+                                           .read_byte = i2c_read_byte };
 
-// Set the default I2C interface
-__attribute__((constructor))
-static void init_i2c_interface() {
+void set_real_i2c(void)
+{
     set_i2c_interface(&real_i2c_interface);
 }

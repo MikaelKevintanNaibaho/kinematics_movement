@@ -1,6 +1,5 @@
 #include "capit.h"
 
-
 void set_angle_mg(int angle)
 {
     set_pwm_angle(CAPIT_BASE, angle);
@@ -33,7 +32,6 @@ void capit(void)
     turun_capit();
     sleep(1);
     buka_capit();
-
 }
 void letak(void)
 {

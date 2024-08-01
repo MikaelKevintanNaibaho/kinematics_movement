@@ -5,8 +5,7 @@ RobotEvent current_event = EVENT_NONE;
 
 void handle_event(RobotEvent event)
 {
-    switch (current_state)
-    {
+    switch (current_state) {
     case STATE_IDLE:
         if (event == EVENT_START_MOVE_FORWARD) {
             current_state = STATE_MOVE_FORWARD;
@@ -16,7 +15,7 @@ void handle_event(RobotEvent event)
             move_left_turn();
         }
         break;
-    
+
     case STATE_MOVE_FORWARD:
         if (event == EVENT_STOP) {
             current_state == STATE_IDLE;
@@ -29,10 +28,10 @@ void handle_event(RobotEvent event)
         if (event == EVENT_STOP) {
             current_state == STATE_IDLE;
             stand_position();
-            is_program_running= 0;
+            is_program_running = 0;
         }
         break;
-    
+
     default:
         break;
     }
