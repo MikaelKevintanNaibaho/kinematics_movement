@@ -2,5 +2,6 @@
 #define I2C_UTILS_H
 #include "i2c_interface.h"
 
-I2CInterface *get_i2c_interface();
+void set_real_i2c(void);
+
 #endif // I2C_UTILS_H

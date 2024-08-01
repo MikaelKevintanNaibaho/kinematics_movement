@@ -16,7 +16,7 @@
 // Usage
 void test_pca9685_init(void)
 {
-    TEST_ASSERT_EQUAL_WITH_MESSAGE(0, pca9685_init(get_i2c_interface()), "pca9685_init failed");
+    TEST_ASSERT_EQUAL_WITH_MESSAGE(0, pca9685_init(), "pca9685_init failed");
 
     TEST_ASSERT_EQUAL_WITH_MESSAGE(2, get_mock_i2c_open_count(), "I2C open call count mismatch");
 
@@ -34,7 +34,7 @@ void test_pca9685_init(void)
 
 void test_set_pwm_freq(void)
 {
-    set_pwm_freq(get_i2c_interface(), 50);
+    set_pwm_freq(50);
     TEST_ASSERT_EQUAL_WITH_MESSAGE(1, get_mock_i2c_open_count(), "I2C open call count mismatch");
     TEST_ASSERT_EQUAL_STRING(I2C_DEVICE, get_mock_i2c_open_device());
     TEST_ASSERT_EQUAL_WITH_MESSAGE(4, get_mock_i2c_write_byte_count(),
@@ -44,7 +44,7 @@ void test_set_pwm_freq(void)
 void test_set_pwm(void)
 {
     int channel = 0;
-    set_pwm(get_i2c_interface(), channel, 0, 100);
+    set_pwm(channel, 0, 100);
 
     // Assert open call count and device
     TEST_ASSERT_EQUAL_WITH_MESSAGE(1, get_mock_i2c_open_count(), "I2C open call count mismatch");
@@ -86,7 +86,7 @@ void test_set_pwm_duty(void)
 {
     int channel = 0;
     // Call the function to test
-    set_pwm_duty(get_i2c_interface(), channel, 100);
+    set_pwm_duty(channel, 100);
 
     // Assert open call count and device
     TEST_ASSERT_EQUAL_WITH_MESSAGE(1, get_mock_i2c_open_count(), "I2C open call count mismatch");
@@ -135,7 +135,7 @@ void test_get_pwm(void)
     set_mock_i2c_read_byte_val(register1, 0x34);
     set_mock_i2c_read_byte_val(register2, 0x12);
 
-    int result = get_pwm(get_i2c_interface(), channel);
+    int result = get_pwm(channel);
 
     TEST_ASSERT_EQUAL_WITH_MESSAGE(1, get_mock_i2c_open_count(), "I2C open call count mismatch");
     TEST_ASSERT_EQUAL_STRING(I2C_DEVICE, get_mock_i2c_open_device());
@@ -167,7 +167,7 @@ void test_set_pwm_angle(void)
     reset_mock_i2c_counters();
 
     // Call the function to test
-    set_pwm_angle(get_i2c_interface(), channel, angle);
+    set_pwm_angle(channel, angle);
 
     // Assert write call count and check each register value
     TEST_ASSERT_EQUAL_WITH_MESSAGE(4, get_mock_i2c_write_byte_count(),

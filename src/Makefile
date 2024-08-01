@@ -2,8 +2,8 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -std=c11 -g 
-LDFLAGS = -lgsl -lgslcblas -lwiringPi -lm
+CFLAGS = -Wall -Wextra -std=c11 -g -pthread
+LDFLAGS = -lgsl -lgslcblas -lwiringPi -lm -lpthread
 
 # Source files
 SRC = \
@@ -17,8 +17,12 @@ SRC = \
 	interrupt.c \
 	state_machine.c \
 	trajectory.c \
-	i2c_utils.c \
 	i2c_interface.c \
+	gpio_interface.c \
+	i2c_utils.c \
+	gpio_utils.c \
+	mock_gpio.c \
+	mock_i2c.c \
 
 LIB_EXCLUDE = \
 			main.c \

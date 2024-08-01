@@ -7,6 +7,7 @@
 #include "test_pca9685.h"
 #include "test_ik.h"
 #include "test_dh.h"
+#include "test_trajectory.h"
 
 int main(void)
 {
@@ -56,5 +57,12 @@ int main(void)
     RUN_TEST(test_compute_dh_params);
     RUN_TEST(test_forward_kinematics);
     RUN_TEST(test_inverse_kinematics);
+
+    // Run all trajectory test
+    RUN_TEST(test_calculate_swing_stance_phase_front);
+    RUN_TEST(test_calculate_swing_stance_phase_back);
+    RUN_TEST(test_generate_swing_phase_front);
+    RUN_TEST(test_generate_swing_phase_back);
+
     return UNITY_END();
 }

@@ -5,13 +5,11 @@
 #include "ik.h"
 #include <pthread.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <time.h>
+#include <unistd.h>
 #include "interrupt.h"
 #include "trajectory.h"
 
-typedef enum
-{
+typedef enum {
     MOVE_FORWARD,
     MOVE_BACKWARD,
     MOVE_LEFT,
@@ -36,7 +34,7 @@ struct LegThreadData
 #define GROUP_SIZE 2
 #define LAG_TIME 0.5
 #define NUM_PHASES 2
-#define FORWARD_DISPLACEMENT 0.01 
+#define FORWARD_DISPLACEMENT 0.01
 #define LEG_HEIGHT_OFFSET 20.0
 
 #define PHASE_OFFSET_1 0.0 // Phase offset for leg 1
@@ -45,19 +43,12 @@ struct LegThreadData
 #define PHASE_OFFSET_4 0.75 // Phase offset for leg 4
 
 // Constants for balance control
-#define PITCH_THRESHOLD 5.0  // Threshold for pitch deviation (degrees)
-#define ROLL_THRESHOLD 5.0   // Threshold for roll deviation (degrees)
-#define LEG_ADJUSTMENT_ANGLE 2.0  // Angle to adjust leg position (degrees)
+#define PITCH_THRESHOLD 5.0 // Threshold for pitch deviation (degrees)
+#define ROLL_THRESHOLD 5.0 // Threshold for roll deviation (degrees)
+#define LEG_ADJUSTMENT_ANGLE 2.0 // Angle to adjust leg position (degrees)
 
-void generate_stright_back_trajectory(struct bezier2d *stright_back, SpiderLeg *leg,
-                                      float stride_length);
 void generate_turn_left_trajectory(struct bezier3d *curve, SpiderLeg *leg, float stride_length,
                                    float swing_height, LegPosition position_leg);
-
-// printing and saving//
-void print_trajectory(struct bezier2d *curve, int num_points);
-void print_trajectory_3d(struct bezier3d *curve, int num_points);
-void save_trajectory_points(struct bezier2d *curve, const char *filename, int num_points);
 
 // making leg posiiton update
 void update_leg_position_with_velocity(struct bezier2d *curve, int number_points, SpiderLeg *leg,

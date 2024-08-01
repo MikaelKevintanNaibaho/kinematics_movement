@@ -40,7 +40,7 @@ void set_angles(SpiderLeg *leg, const float angles[3])
     leg->theta3 = normalize_angle(angles[2]);
 
     for (int i = 0; i < 3; i++) {
-        set_pwm_angle(i2c_iface, leg->servo_channles[i], (int)angles[i]);
+        set_pwm_angle(leg->servo_channles[i], (int)angles[i]);
         printf("theta%d: %.2f degrees\n", i + 1, angles[i]);
     }
 }

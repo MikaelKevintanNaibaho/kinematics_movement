@@ -28,11 +28,11 @@
 #define MIN_PULSE_WIDTH 400
 #define MAX_PULSE_WIDTH 2600
 
-int pca9685_init(I2CInterface *i2c_iface);
-void set_pwm_freq(I2CInterface *i2c_iface, int freq);
-void set_pwm_duty(I2CInterface *i2c_iface, uint8_t channel, int value);
-void set_pwm(I2CInterface *i2c_iface, uint8_t channel, int on_value, int off_value);
-int get_pwm(I2CInterface *i2c_iface, uint8_t channel);
-void set_pwm_angle(I2CInterface *i2c_iface, uint8_t channel, int angle);
+int pca9685_init(void);
+void set_pwm_freq(int freq);
+void set_pwm_duty(uint8_t channel, int value);
+void set_pwm(uint8_t channel, int on_value, int off_value);
+int get_pwm(uint8_t channel);
+void set_pwm_angle(uint8_t channel, int angle);
 
 #endif // PCA9685_H
