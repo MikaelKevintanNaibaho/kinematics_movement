@@ -116,4 +116,3 @@ void save_trajectory_points(struct bezier2d *curve, const char *filename, int nu
 
     fclose(file);
 }
-

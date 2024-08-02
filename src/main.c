@@ -1,10 +1,6 @@
-#include "gpio_interface.h"
-#include "i2c_interface.h"
-#include "ik.h"
 #include "move.h"
 #include "pca9685.h"
 #include "interrupt.h"
-#include <stdio.h>
 #include <unistd.h>
 #include <wiringPi.h>
 
@@ -13,7 +9,7 @@
  * */
 
 #define MOCK
-//#define REAL
+// #define REAL
 
 #ifdef REAL
 #include "i2c_utils.h"
@@ -30,7 +26,6 @@ int main(void)
 #ifdef MOCK
     set_mock_i2c();
     set_mock_gpio_interface();
-    set_mock_pin_state(LOW);
 #endif
 #ifdef REAL
     set_real_i2c();
@@ -43,6 +38,9 @@ int main(void)
     stand_position();
 
     init_interrupt();
+#ifdef MOCK
+    set_mock_pin_state(LOW);
+#endif
     while (1) {
         if (is_program_running) {
             move_forward();
